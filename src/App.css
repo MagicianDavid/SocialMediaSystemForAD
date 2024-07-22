@@ -1,5 +1,7 @@
 .App {
-  text-align: center;
+  /*text-align: center;*/
+  display: flex;
+  height: 100vh;
 }
 
 .App-logo {
@@ -35,4 +37,29 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.main-content {
+  flex: 1;
+  padding-left: 250px; /* Adjust based on sidebar width */
+  transition: padding-left 0.3s;
+}
+
+.main-content.collapsed {
+  padding-left: 80px; /* Adjust based on collapsed sidebar width */
+}
+
+.app-container {
+  display: flex;
+}
+
+.content {
+  flex-grow: 1;
+  margin-left: 250px;
+  padding: 70px;
+  transition: margin-left 0.3s;
+}
+
+.navigation.collapsed + .content {
+  margin-left: 50px;
 }

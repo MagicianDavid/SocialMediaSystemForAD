@@ -1,36 +1,57 @@
-// src/services/AuthService.js
+// src/services/LoginService.js
 import axios from 'axios';
+import PasswordUtils from '../utils/pwdEncryption';
 
 const API_URL = 'http://localhost:8080/api/employee/';
 
-class LoginService {
-    login(username, password) {
-        return axios.post(API_URL + 'login', {
-            username,
-            password
-        }).then(response => {
-            if (response.data.accessToken) {
-                sessionStorage.setItem('currentUser', JSON.stringify(response.data));
-            }
-            return response.data;
-        });
-    }
-
-    logout() {
-        sessionStorage.removeItem('currentUser');
-    }
-
-    register(username, email, password) {
-        return axios.post(API_URL + 'register', {
-            username,
-            email,
-            password
-        });
-    }
-
-    getCurrentUser() {
-        return JSON.parse(sessionStorage.getItem('currentUser'));
-    }
+const login =(username, password) => {
+    password = PasswordUtils.encryptUserPassword(password);
+    console.log("password",password);
+    return axios.post(API_URL + 'login', {
+        username,
+        password
+    }).then(response => {
+        if (response.status === 200) {
+            const { id, auth, username } = response.data;  // retrieve id & auth
+            sessionStorage.setItem('currentUser', JSON.stringify({ id, auth, username }));
+            window.location.reload();
+        }
+        return response.data;
+    });
 }
 
-export default new AuthService();
+const logout=() => {
+    sessionStorage.removeItem('currentUser');
+}
+
+const register=(name,username, email, password,phoneNum)=> {
+    password = PasswordUtils.encryptUserPassword(password);
+    return axios.post(API_URL + 'register', {
+        name,
+        username,
+        email,
+        password,
+        phoneNum
+    }).then(response => {
+        if (response.status === 200) {
+            sessionStorage.setItem('currentUser', JSON.stringify({
+                id: response.data.id,
+                auth: response.data.auth,
+                username: response.data.username
+            }));
+        }
+        return response.data;
+    });
+}
+
+const getCurrentUser=()=> {
+    return JSON.parse(sessionStorage.getItem('currentUser'));
+}
+
+// eslint-disable-next-line import/no-anonymous-default-export
+export default {
+    login,
+    logout,
+    register,
+    getCurrentUser
+};
