@@ -63,3 +63,14 @@
 .navigation.collapsed + .content {
   margin-left: 50px;
 }
+
+.float-right-custom {
+  float: right !important;
+  background: #000;
+}
+
+.contentDiv {
+  width: 30vw; 
+  padding: 10px;
+  margin: auto; /* Center the div horizontally */
+}

@@ -1,4 +1,5 @@
 import React from 'react';
+
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import EmployeeList from './components/employee/EmployeeList';
 import EmployeeForm from './components/employee/EmployeeForm';
@@ -14,6 +15,12 @@ import Dashboard from './components/pages/Dashboard';
 import ProtectedRoute from './components/ProtectedRoute';
 import ErrorPage from './components/ErrorPage';
 import './App.css';
+import PostList from './components/pages/PostLists';
+import PostDetails from './components/pages/PostDetails';
+import FollowerFollowing from './components/pages/FollowerFollowing';
+import NotificationList from './components/pages/NotificationList';
+import Reports from './components/pages/Reports'
+import ReportDetail from './components/pages/ReportDetail'
 
 function App() {
 
@@ -28,7 +35,26 @@ function App() {
                                 <Route path="/login" element={<LoginForm/>}/>
                                 <Route path="/register" element={<RegisterForm/>}/>
                                 <Route path="/error" element={<ErrorPage />} />
-                                <Route element={<ProtectedRoute requiredPath="/dashboard" />}>
+
+                                <Route path="/dashboard" element={<Dashboard />} />
+                                <Route path="/employees" element={<EmployeeList />} />
+                                <Route path="/roles" element={<RoleList />} />
+                                <Route path="/auths" element={<AuthList />} />
+                                <Route path="/employees/add" element={<EmployeeForm/>}/>
+                                <Route path="/roles/add" element={<RoleForm/>}/>
+                                <Route path="/auths/add" element={<AuthForm/>}/>
+
+
+                                <Route path="/mainmenu" element={<PostList/>}/>
+                                <Route path="/posts/:postId" element={<PostDetails />} />
+                                <Route path="/friends" element={<FollowerFollowing/>}/>
+                                <Route path="/notificationlist" element={<NotificationList/>}/>
+
+                                <Route path="/reports" element={<Reports/>}/>
+                                <Route path="/report/:reportId" element={<ReportDetail />} />
+
+
+                                {/* <Route element={<ProtectedRoute requiredPath="/dashboard" />}>
                                     <Route path="/dashboard" element={<Dashboard />} />
                                 </Route>
 
@@ -66,7 +92,8 @@ function App() {
 
                                 <Route element={<ProtectedRoute requiredPath="/auths/edit/:id" />}>
                                     <Route path="/auths/edit/:id" element={<AuthForm/>}/>
-                                </Route>
+                                </Route> */}
+
                             </Routes>
                         </div>
                     </div>
