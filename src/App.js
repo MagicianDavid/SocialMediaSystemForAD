@@ -21,6 +21,8 @@ import FollowerFollowing from './components/pages/FollowerFollowing';
 import NotificationList from './components/pages/NotificationList';
 import Reports from './components/pages/Reports'
 import ReportDetail from './components/pages/ReportDetail'
+import AllUserDetails from './components/pages/AllUserDetails';
+import UserHistory from './components/pages/UserHistory';
 
 function App() {
 
@@ -52,6 +54,11 @@ function App() {
 
                                 <Route path="/reports" element={<Reports/>}/>
                                 <Route path="/report/:reportId" element={<ReportDetail />} />
+
+                                <Route path="/userlists" element={<AllUserDetails/>}/>
+                                <Route path="/userdetails/:userId" element={<UserHistory/>} />
+
+
 
 
                                 {/* <Route element={<ProtectedRoute requiredPath="/dashboard" />}>
