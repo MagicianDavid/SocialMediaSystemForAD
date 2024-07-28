@@ -15,6 +15,8 @@ import Dashboard from './components/pages/Dashboard';
 import ProtectedRoute from './components/ProtectedRoute';
 import ErrorPage from './components/ErrorPage';
 import './App.css';
+
+import UserProfile from './components/pages/UserProfile'
 import PostList from './components/pages/PostLists';
 import PostDetails from './components/pages/PostDetails';
 import FollowerFollowing from './components/pages/FollowerFollowing';
@@ -48,6 +50,8 @@ function App() {
 
 
                                 <Route path="/mainmenu" element={<PostList/>}/>
+                                <Route path="/profile/:userId" element={<UserProfile/>}/>
+
                                 <Route path="/posts/:postId" element={<PostDetails />} />
                                 <Route path="/friends" element={<FollowerFollowing/>}/>
                                 <Route path="/notificationlist" element={<NotificationList/>}/>

@@ -81,8 +81,9 @@ const PostDetails = () => {
                     />
             </div>
             <hr />
-            <CommentForm onSubmit={handleCommentSubmit} />
 
+            {/*  Comment Form  */}
+            <CommentForm onSubmit={handleCommentSubmit} />
 
             <h3>Comments</h3>
             <CommentList comments={comments}/>

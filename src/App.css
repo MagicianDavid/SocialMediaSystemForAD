@@ -70,7 +70,22 @@
 }
 
 .contentDiv {
-  width: 30vw; 
+  width: 30vw;
+  min-width: 500px;
   padding: 10px;
   margin: auto; /* Center the div horizontally */
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px; /* Adjust the gap between columns as needed */
+}
+
+.grid-item {
+  background-color: #f0f0f0;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  text-align: center;
 }

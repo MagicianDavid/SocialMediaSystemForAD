@@ -4,9 +4,17 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../services/AuthContext';
 import LoginService from '../../services/LoginService';
 
+import { PieChart } from '@mui/x-charts/PieChart';
+import { LineChart } from '@mui/x-charts/LineChart';
+
+import Slider from '@mui/material/Slider';
+import { Box } from '@mui/material'; 
+
 const Dashboard = () => {
     const navigate = useNavigate();
     const { currentUser, setCurrentUser } = useAuth();
+    const [itemNb, setItemNb] = React.useState(4);
+
 
     const handleLogout = () => {
         LoginService.logout();
@@ -15,14 +23,91 @@ const Dashboard = () => {
         window.location.reload();
     };
 
+    const handleItemNbChange = (event, newValue) => {
+        if (typeof newValue !== 'number') {
+          return;
+        }
+        setItemNb(newValue);
+        setItemNb(newValue);
+      };
+    
+
+    const data = [
+        { tags: 'angry', value: 500, color: '#f00' },
+        { tags: 'sad', value: 100, color: '#00f' },
+        { tags: 'violent', value: 700, color: '#FF5733' },
+        { tags: 'undefined', value: 600, color: '#0f0' },
+        // Add more data as needed
+      ];
+
+    const uData = [4000, 3000, 2000, 2780, 1890, 2390, 3490];
+    const pData = [2400, 1398, 9800, 3908, 4800, 3800, 4300];
+    const xLabels = [
+    'Page A',
+    'Page B',
+    'Page C',
+    'Page D',
+    'Page E',
+    'Page F',
+    'Page G',
+    ];
+
+
     return (
         <div>
             <h2>Dashboard</h2>
             {/*<Navigation />*/}
             {currentUser ? (
                 <div>
+
                     <p>Welcome, {currentUser.username}</p>
                     <button onClick={handleLogout}>Logout</button>
+
+
+
+                    <Box sx={{ width: 300 }}> {/* Adjust the width as needed */}
+                     {/* https://mui.com/x/react-charts/pie/ */}
+                    <PieChart
+                        skipAnimation
+                        series={[
+                            {
+                              data: data.slice(0, itemNb).map((item) => ({
+                                id: item.tags,
+                                value: item.value,
+                                color: item.color,
+                              })),
+                              arcLabel: (item) => `${item.id} (${item.value})`,
+                            },
+                          ]}
+                        width={400}
+                        height={400}
+                    />
+                        <Slider
+                            value={itemNb}
+                            onChange={handleItemNbChange}
+                            valueLabelDisplay="auto"
+                            min={1}
+                            max={4}
+                            aria-labelledby="input-item-number"
+                        />
+                    </Box>
+                    <LineChart
+                        width={500}
+                        height={300}
+                        series={[
+                            { data: pData, label: 'pv' },
+                            { data: uData, label: 'uv' },
+                        ]}
+                        xAxis={[{ scaleType: 'point', data: xLabels }]}
+                    />
+                    
+
+                    <div className="grid-container">
+                        <div className="grid-item">API call latest Report</div>
+                        <div className="grid-item">API call latest Enquiries</div>
+                        <div className="grid-item">API call top Post</div>
+                    </div>
+
                 </div>
             ) : (
                 <p>Loading...</p>
