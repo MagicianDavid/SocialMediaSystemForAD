@@ -48,11 +48,11 @@ function App() {
                                 <Route path="/roles/add" element={<RoleForm/>}/>
                                 <Route path="/auths/add" element={<AuthForm/>}/>
 
-
+                                {/* Delete post or comments not implemented yet*/}
                                 <Route path="/mainmenu" element={<PostList/>}/>
                                 <Route path="/profile/:userId" element={<UserProfile/>}/>
 
-                                <Route path="/posts/:postId" element={<PostDetails />} />
+                                <Route path="/posts/:id" element={<PostDetails />} />
                                 <Route path="/friends" element={<FollowerFollowing/>}/>
                                 <Route path="/notificationlist" element={<NotificationList/>}/>
 

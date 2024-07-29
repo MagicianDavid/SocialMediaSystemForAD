@@ -9,17 +9,18 @@ const PostForm = ({ onSubmit }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const post = {
-            content: content,
             imageUrl: null,
-            timeStamp: new Date().toISOString(), // Note: changed to timestamp
-            visibility: null, // Adjusted to match your data structure
-            status: null, // Adjusted to match your data structure
+            //need to get user Id
+            user: { id: 1 }, 
+            content: content,
+            timeStamp: new Date().toISOString(), 
+            visibility: true, 
+            status: true, 
             likes: 0,
-            comments: [],
-            user: { id: 1 }, // Ensure this matches your backend's expected structure
             tags: []
         };
     
+        // need to refresh???
         try {
             const response = await PostService.createPost(post);
             if (onSubmit) {

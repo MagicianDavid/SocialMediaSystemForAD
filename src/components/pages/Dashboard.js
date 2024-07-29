@@ -8,7 +8,6 @@ import { PieChart } from '@mui/x-charts/PieChart';
 import { LineChart } from '@mui/x-charts/LineChart';
 
 import Slider from '@mui/material/Slider';
-import { Box } from '@mui/material'; 
 
 const Dashboard = () => {
     const navigate = useNavigate();
@@ -54,65 +53,77 @@ const Dashboard = () => {
 
 
     return (
-        <div>
-            <h2>Dashboard</h2>
-            {/*<Navigation />*/}
-            {currentUser ? (
-                <div>
-
-                    <p>Welcome, {currentUser.username}</p>
-                    <button onClick={handleLogout}>Logout</button>
-
-
-
-                    <Box sx={{ width: 300 }}> {/* Adjust the width as needed */}
-                     {/* https://mui.com/x/react-charts/pie/ */}
-                    <PieChart
-                        skipAnimation
-                        series={[
-                            {
-                              data: data.slice(0, itemNb).map((item) => ({
-                                id: item.tags,
-                                value: item.value,
-                                color: item.color,
-                              })),
-                              arcLabel: (item) => `${item.id} (${item.value})`,
-                            },
-                          ]}
-                        width={400}
-                        height={400}
-                    />
-                        <Slider
-                            value={itemNb}
-                            onChange={handleItemNbChange}
-                            valueLabelDisplay="auto"
-                            min={1}
-                            max={4}
-                            aria-labelledby="input-item-number"
-                        />
-                    </Box>
-                    <LineChart
-                        width={500}
-                        height={300}
-                        series={[
-                            { data: pData, label: 'pv' },
-                            { data: uData, label: 'uv' },
-                        ]}
-                        xAxis={[{ scaleType: 'point', data: xLabels }]}
-                    />
-                    
-
-                    <div className="grid-container">
-                        <div className="grid-item">API call latest Report</div>
-                        <div className="grid-item">API call latest Enquiries</div>
-                        <div className="grid-item">API call top Post</div>
-                    </div>
-
-                </div>
-            ) : (
-                <p>Loading...</p>
-            )}
+        <div className="container">
+        <div className="row">
+          <div className="col-12">
+            <h2 className="text-left">Dashboard</h2>
+          </div>
         </div>
+        
+        {/* Check if the user is logged in */}
+        {currentUser ? (
+          <div className="row">
+            {/* Container for PieChart and Slider */}
+            <div className="col-lg-4 col-md-12 mb-4">
+              <PieChart
+                skipAnimation
+                series={[
+                  {
+                    data: data.slice(0, itemNb).map((item) => ({
+                      id: item.tags,
+                      value: item.value,
+                      color: item.color,
+                    })),
+                    arcLabel: (item) => `${item.id} (${item.value})`,
+                  },
+                ]}
+                width={400}
+                height={400}
+              />
+              <Slider
+                value={itemNb}
+                onChange={handleItemNbChange}
+                valueLabelDisplay="auto"
+                min={1}
+                max={4}
+                aria-labelledby="input-item-number"
+              />
+            </div>
+      
+            {/* Container for LineChart */}
+            <div className="col-lg-8 col-md-12">
+                <div style={{ height: "450px",width: '100%' }}>
+                <LineChart
+                    series={[
+                    { data: pData, label: 'pv' },
+                    { data: uData, label: 'uv' },
+                    ]}
+                    xAxis={[{ scaleType: 'point', data: xLabels }]}
+                />
+                </div>
+            </div>
+          </div>
+        ) : (
+          <div className="row">
+            <div className="col-12">
+              <p>Loading...</p>
+            </div>
+          </div>
+        )}
+      
+        {/* Grid container for additional information */}
+        <div className="row mt-4">
+          <div className="col-md-4 col-sm-12 mb-4">
+            <div className="grid-item">API call latest Report</div>
+          </div>
+          <div className="col-md-4 col-sm-12 mb-4">
+            <div className="grid-item">API call latest Enquiries</div>
+          </div>
+          <div className="col-md-4 col-sm-12 mb-4">
+            <div className="grid-item">API call top Post</div>
+          </div>
+        </div>
+      </div>
     );
 };
 

@@ -1,18 +1,37 @@
-// CommentForm.js
 import React, { useState } from 'react';
+import CommentService from '../../services/CommentService';
 
-const CommentForm = ({ onSubmit }) => {
+const CommentForm = ({ postId, onCommentSubmit }) => {
     const [comment, setComment] = useState('');
 
     const handleCommentChange = (e) => {
         setComment(e.target.value);
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (comment.trim()) {
-            onSubmit(comment);
-            setComment('');
+            const newCommentData = {
+                content: comment,
+                //need to get user Id
+                user_id: { id: 1 }, 
+                timeStamp: new Date().toISOString(),
+                likes: "0",
+                status: true,
+                post: {
+                    id: postId
+                }
+            };
+
+            try {
+                const response = await CommentService.createComment(newCommentData);
+                if (onCommentSubmit) {
+                    onCommentSubmit(response.data);
+                }
+                setComment('');
+            } catch (error) {
+                console.error("There was an error creating the comment!", error);
+            }
         }
     };
 

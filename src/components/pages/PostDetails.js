@@ -1,97 +1,98 @@
-import React, { useState } from 'react';
-import { useLocation, Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useLocation, Link, useParams } from 'react-router-dom';
 
 import CommentList from '../Classess/CommentList';
-import CommentForm from '../Classess/CommentForm'; // Import the CommentForm component
+import CommentForm from '../Classess/CommentForm'; 
+import TagLists from '../Classess/taglists';
 import ReportButton from '../button_utils/ReportButton'
+import PostService from '../../services/PostService';
+import CommentService from '../../services/CommentService';
+
 
 import { IconButton } from '@mui/material';
-import { Comment as CommentIcon, Favorite as FavoriteIcon, FlagOutlined as FlagOutlinedIcon } from '@mui/icons-material';
+import { Comment as CommentIcon, Favorite as FavoriteIcon } from '@mui/icons-material';
 
 const PostDetails = () => {
-    const location = useLocation();
-    const { post } = location.state;
+    const { id } = useParams();
+    const [post, setPost] = useState(null);
+    const [comments, setComments] = useState([]);
 
-    //API Call FETCH post ID
-    // const { id } = useParams();
-    // const [post, setPost] = useState(null);
-
-    // useEffect(() => {
-    //     // Fetch post data based on the id from the API or state management
-    //     // Example fetch from API:
-    //     fetch(`API_ENDPOINT/posts/${id}`)
-    //         .then(response => response.json())
-    //         .then(data => setPost(data))
-    //         .catch(error => console.error('Error fetching post:', error));
-    // }, [id]);
-
-
-    const [comments, setComments] = useState(post.comments);
+    useEffect(() => {
+        // Fetch post and comments concurrently
+        Promise.all([
+            PostService.getPostById(id),
+            CommentService.getlistComment(id)
+        ])
+        .then(([postResponse, commentsResponse]) => {
+            console.log('Fetched post:', postResponse.data);
+            console.log('Fetched comments:', commentsResponse.data);
+            setPost(postResponse.data);
+            setComments(commentsResponse.data);
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+        });
+    }, [id]);
 
     const handleCommentSubmit = (newComment) => {
-        const newCommentData = {
-            id: comments.length + 1,
-            user_id: 107, // Example user_id, you might want to use actual logged-in user's id
-            content: newComment,
-            timestamp: new Date().toISOString(),
-            visibility: 'public',
-            status: 'active',
-            likes: 0,
-        };
-        setComments([...comments, newCommentData]);
+        setComments([...comments, newComment]);
     };
 
     const handleReportSubmit = (reportData) => {
         console.log('Report submitted:', reportData);
     };
-    
 
     if (!post) {
-        return <p>Post not found</p>;
+        return <p>Loading post...</p>;
     }
 
     return (
         <div className="card mb-3 contentDiv">
-        <div className="card-body">
-            <div className="d-flex justify-content-between">
-                <div>
-                    <h5 className="card-title">User ID: {post.user_id}</h5>
-                    <h6 className="card-subtitle mb-2 text-muted">{post.timestamp}</h6>
+            <div className="card-body">
+                <div className="d-flex justify-content-between">
+                    <div>
+                        <h3 style={{ margin: '0', padding: '0' }}>{post.user_id?.username}</h3>
+                        <p className="text-muted" style={{ margin: '0', padding: '0' }}>{post.timeStamp}</p>
+                        <span>  
+                            <TagLists tagsString={post.tag?.tag || ''} />
+                        </span>
+                    </div>
+                    <div>
+                        <Link to="/mainmenu" className="btn btn-outline-secondary btn-sm">Back to Posts</Link>
+                    </div>
                 </div>
-                <div>
-                    <Link to="/mainmenu" className="btn btn-outline-secondary btn-sm">Back to Posts</Link>
-                </div>
-            </div>
-            <p className="card-text">{post.content}</p>
+                <p className="card-text">{post.content}</p>
 
-            <hr />
-            <div className="d-flex justify-content-between">
-                <div>
-                    <IconButton aria-label="comments" sx={{ mr: 1 }}>
+                <hr />
+                <div className="d-flex justify-content-between">
+                    <div>
+                        <IconButton aria-label="comments" sx={{ mr: 1 }}>
                             <CommentIcon />
-                    </IconButton>{post.comments.length}
-                    <IconButton aria-label="likes" sx={{ ml: 2 }}>
+                        </IconButton>{comments.length}
+                        <IconButton aria-label="likes" sx={{ ml: 2 }}>
                             <FavoriteIcon />
-                    </IconButton>{post.likes}
-                </div>
-                <ReportButton
+                        </IconButton>{post.likes}
+                    </div>
+                    <ReportButton
                         userId={post.user_id}
                         reportId={post.id}
                         onReportSubmit={handleReportSubmit}
                     />
+                </div>
+                <hr />
+
+                {/* Comment Form */}
+                <CommentForm postId={post.id} onCommentSubmit={handleCommentSubmit} />
+
+                <h3>Comments</h3>
+                {comments.length > 0 ? (
+                    <CommentList comments={comments} />
+                ) : (
+                    <p>No comments yet.</p>
+                )}
             </div>
-            <hr />
-
-            {/*  Comment Form  */}
-            <CommentForm onSubmit={handleCommentSubmit} />
-
-            <h3>Comments</h3>
-            <CommentList comments={comments}/>
-            </div>
-
-    </div>
+        </div>
     );
 };
-
 
 export default PostDetails;

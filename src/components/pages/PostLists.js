@@ -12,8 +12,7 @@ const PostList = () => {
     useEffect(() => {
         PostService.getAllPosts()
             .then(response => {
-                console.log('Fetched posts:', response.data); // Log the response data
-
+                //console.log('Fetched posts:', response.data); // Log the response data
                 setPosts(response.data);
             })
             .catch(error => {
@@ -78,7 +77,7 @@ const PostList = () => {
     return (
         <div className="contentDiv">
             {/*  Post Form  */}
-            <PostForm onSubmit={handlePostSubmit} />
+            <PostForm onSubmit={handlePostSubmit} /> 
             
             {posts.map(post => (
                 <Post key={post.id} post={post} />
