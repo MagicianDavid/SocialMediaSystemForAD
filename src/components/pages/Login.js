@@ -12,7 +12,7 @@ const LoginForm = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (currentUser && currentUser.auth) {
+        if (currentUser) {
             navigate('/dashboard');
         }
     }, [currentUser,navigate]);

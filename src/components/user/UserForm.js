@@ -4,18 +4,26 @@ import { useNavigate, useParams } from 'react-router-dom';
 import EmployeeService from '../../services/EmployeeService';
 import RoleService from '../../services/RoleService';
 import AuthService from '../../services/AuthService';
+import CountryService from '../../services/CountryService';
 import {useAuth} from "../../services/AuthContext";
 import PasswordUtils from '../../utils/pwdEncryption';
+import {getUserAllStatus} from "../../utils/userAllStatus";
 
 
 const EmployeeForm = () => {
     const { currentUser,setCurrentUser } = useAuth();
+    const statuses  = getUserAllStatus;
     const { id } = useParams();
     const navigate = useNavigate();
     const [employee, setEmployee] = useState({
         name: '',
         email: '',
         username: '',
+        country: '',
+        blockList: '',
+        gender: '',
+        socialScore: 120,
+        status: 'active',
         password: '',
         phoneNum: '',
         joinDate: '',
@@ -24,7 +32,10 @@ const EmployeeForm = () => {
     });
     const [roles, setRoles] = useState([]);
     const [auths, setAuths] = useState([]);
+    const [countries, setCountries] = useState([]);
     const [showPassword, setShowPassword] = useState(false);
+
+    const genderOptions = ['Male', 'Female', 'Other'];
 
     useEffect(() => {
         RoleService.getAllRoles().then((response) => {
@@ -33,6 +44,11 @@ const EmployeeForm = () => {
 
         AuthService.getAllAuths().then((response) => {
             setAuths(response.data);
+        });
+
+        CountryService.getAllCountries().then((response) => {
+            const countryNames = response.data.map(country => country.name.common);
+            setCountries(countryNames);
         });
 
         if (id) {
@@ -99,34 +115,45 @@ const EmployeeForm = () => {
                     setCurrentUser(JSON.stringify({ id, auth, username }));
                     sessionStorage.setItem('currentUser', JSON.stringify({ id, auth, username }));
                 }
-                navigate('/employees');
+                navigate('/users');
             });
         } else {
             EmployeeService.createEmployee(employee).then(() => {
-                navigate('/employees');
+                navigate('/users');
             });
         }
     };
 
     const cancel = () => {
-        navigate('/employees');
+        navigate('/users');
     };
 
     return (
         <div>
-            <h2>{id ? 'Update Employee' : 'Add Employee'}</h2>
+            <h2>{id ? 'Update User' : 'Add User'}</h2>
             <form>
                 <div>
                     <label>Name: </label>
-                    <input type="text" name="name" value={employee.name} onChange={handleChange} />
+                    <input type="text" name="name" value={employee.name} onChange={handleChange}/>
+                </div>
+                <div>
+                    <label>Gender: </label>
+                    <select name="gender" value={employee.gender} onChange={handleChange}>
+                        <option value="">Select Gender</option>
+                        {genderOptions.map((gender) => (
+                            <option key={gender} value={gender}>
+                                {gender}
+                            </option>
+                        ))}
+                    </select>
                 </div>
                 <div>
                     <label>Email: </label>
-                    <input type="email" name="email" value={employee.email} onChange={handleChange} />
+                    <input type="email" name="email" value={employee.email} onChange={handleChange}/>
                 </div>
                 <div>
                     <label>Username: </label>
-                    <input type="text" name="username" value={employee.username} onChange={handleChange} />
+                    <input type="text" name="username" value={employee.username} onChange={handleChange}/>
                 </div>
                 <div>
                     <label>Password: </label>
@@ -145,7 +172,18 @@ const EmployeeForm = () => {
                     <input type="text" name="phoneNum" value={employee.phoneNum} onChange={handleChange}/>
                 </div>
                 <div>
-                <label>Join Date: </label>
+                    <label>Country: </label>
+                    <select name="country" value={employee.country} onChange={handleChange}>
+                        <option value="">Select Country</option>
+                        {countries.map((country) => (
+                            <option key={country} value={country}>
+                                {country}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+                <div>
+                    <label>Join Date: </label>
                     <input type="date" name="joinDate" value={employee.joinDate} onChange={handleChange}/>
                 </div>
                 <div>
@@ -163,6 +201,21 @@ const EmployeeForm = () => {
                         <option value="">Select Auth</option>
                         {auths.map(auth => (
                             <option key={auth.id} value={auth.id}>{auth.rank}</option>
+                        ))}
+                    </select>
+                </div>
+                <div>
+                    <label>Social Score: </label>
+                    <input type="text" name="socialScore" value={employee.socialScore} onChange={handleChange}/>
+                </div>
+                <div>
+                    <label>Status: </label>
+                    <select name="status" value={employee.status} onChange={handleChange}>
+                        <option value="">Select Status</option>
+                        {statuses.map((s) => (
+                            <option key={s} value={s}>
+                                {s}
+                            </option>
                         ))}
                     </select>
                 </div>

@@ -18,8 +18,7 @@ const Dashboard = () => {
     return (
         <div>
             <h2>Dashboard</h2>
-            {/*<Navigation />*/}
-            {currentUser ? (
+            {currentUser && currentUser.auth ? (
                 <div>
                     <p>Welcome, {currentUser.username}</p>
                     <button onClick={handleLogout}>Logout</button>

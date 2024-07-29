@@ -1,7 +1,8 @@
 // src/components/auth/RegisterForm.js
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import LoginService from '../../services/LoginService';
+import CountryService from "../../services/CountryService";
 
 const RegisterForm = () => {
     const [name, setName] = useState('');
@@ -9,8 +10,21 @@ const RegisterForm = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [phoneNum, setPhoneNum] = useState('');
+    const [gender, setGender] = useState('');
+    const [country, setCountry] = useState('');
+    const [countries, setCountries] = useState([]);
     const [error, setError] = useState('');
     const navigate = useNavigate();
+
+    const genderOptions = ['Male', 'Female', 'Other'];
+
+    // get country list
+    useEffect(() => {
+        CountryService.getAllCountries().then((response) => {
+            const countryNames = response.data.map(country => country.name.common);
+            setCountries(countryNames);
+        });
+    },[]);
 
     const handleRegister = (e) => {
         e.preventDefault();
@@ -44,6 +58,28 @@ const RegisterForm = () => {
                 <div>
                     <label>Phone Number: </label>
                     <input type="text" value={phoneNum} onChange={(e) => setPhoneNum(e.target.value)} required/>
+                </div>
+                <div>
+                    <label>Gender: </label>
+                    <select name="gender" value={gender} onChange={(e) => setGender(e.target.value)}>
+                        <option value="">Select Gender</option>
+                        {genderOptions.map((gender) => (
+                            <option key={gender} value={gender}>
+                                {gender}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+                <div>
+                    <label>Country: </label>
+                    <select name="country" value={country} onChange={(e) => setCountry(e.target.value)}>
+                        <option value="">Select Country</option>
+                        {countries.map((country) => (
+                            <option key={country} value={country}>
+                                {country}
+                            </option>
+                        ))}
+                    </select>
                 </div>
                 {error && <div style={{color: 'red'}}>{error}</div>}
                 <button type="submit">Register</button>

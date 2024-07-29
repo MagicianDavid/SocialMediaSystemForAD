@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import AuthService from '../../services/AuthService';
 import RouteSelectionForm from './RouteSelectionForm';
 import {useAuth} from "../../services/AuthContext";
+import {getAllRoutes} from "../../utils/allRoutes";
 
 const AuthForm = () => {
     const { id } = useParams();
@@ -15,24 +16,7 @@ const AuthForm = () => {
 
     // routes controls the whole routes
     // using the structure below:
-    const [routes] = useState([
-        { path: '/dashboard', component: 'Dashboard', menuName: 'Dashboard'},
-        { path: '/employees', component: 'EmployeeList', menuName: 'Employees', children: [
-                { path: '/employees', menuName: 'Employee List' },
-                { path: '/employees/add', menuName: 'Add Employee' },
-                { path: '/employees/edit', menuName: 'Edit Employee' },
-            ] },
-        { path: '/roles', component: 'RoleList', menuName: 'Roles', children: [
-                { path: '/roles', menuName: 'Roles List' },
-                { path: '/roles/add', menuName: 'Add Role' },
-                { path: '/roles/edit', menuName: 'Edit Role' },
-            ] },
-        { path: '/auths', component: 'AuthList', menuName: 'Auths', children: [
-                { path: '/auths', menuName: 'Auth List' },
-                { path: '/auths/add', menuName: 'Add Auth' },
-                { path: '/auths/edit', menuName: 'Edit Auth' },
-            ] },
-    ]);
+    const [routes] = useState(getAllRoutes);
     const [selectedRoutes, setSelectedRoutes] = useState([]);
 
     useEffect(() => {

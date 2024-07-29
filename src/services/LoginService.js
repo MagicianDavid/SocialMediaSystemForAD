@@ -2,11 +2,10 @@
 import axios from 'axios';
 import PasswordUtils from '../utils/pwdEncryption';
 
-const API_URL = 'http://localhost:8080/api/employee/';
+const API_URL = 'http://localhost:8080/api/user/';
 
 const login =(username, password) => {
     password = PasswordUtils.encryptUserPassword(password);
-    console.log("password",password);
     return axios.post(API_URL + 'login', {
         username,
         password
@@ -24,14 +23,16 @@ const logout=() => {
     sessionStorage.removeItem('currentUser');
 }
 
-const register=(name,username, email, password,phoneNum)=> {
+const register=(name,username, email, password,phoneNum,country,gender)=> {
     password = PasswordUtils.encryptUserPassword(password);
     return axios.post(API_URL + 'register', {
         name,
         username,
         email,
         password,
-        phoneNum
+        phoneNum,
+        country,
+        gender,
     }).then(response => {
         if (response.status === 200) {
             sessionStorage.setItem('currentUser', JSON.stringify({

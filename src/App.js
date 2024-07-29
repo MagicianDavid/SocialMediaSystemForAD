@@ -1,7 +1,8 @@
 import React from 'react';
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
-import EmployeeList from './components/employee/EmployeeList';
-import EmployeeForm from './components/employee/EmployeeForm';
+import UserList from './components/user/UserList';
+import UserForm from './components/user/UserForm';
+import UserProfile from "./components/user/UserProfile";
 import RoleList from './components/role/RoleList';
 import RoleForm from './components/role/RoleForm';
 import AuthList from './components/auth/AuthList';
@@ -14,6 +15,7 @@ import Dashboard from './components/pages/Dashboard';
 import ProtectedRoute from './components/ProtectedRoute';
 import ErrorPage from './components/ErrorPage';
 import './App.css';
+
 
 function App() {
 
@@ -28,12 +30,13 @@ function App() {
                                 <Route path="/login" element={<LoginForm/>}/>
                                 <Route path="/register" element={<RegisterForm/>}/>
                                 <Route path="/error" element={<ErrorPage />} />
+                                <Route path="/userProfile" element={<UserProfile />} />
                                 <Route element={<ProtectedRoute requiredPath="/dashboard" />}>
                                     <Route path="/dashboard" element={<Dashboard />} />
                                 </Route>
 
-                                <Route element={<ProtectedRoute requiredPath="/employees" />}>
-                                    <Route path="/employees" element={<EmployeeList />} />
+                                <Route element={<ProtectedRoute requiredPath="/users" />}>
+                                    <Route path="/users" element={<UserList />} />
                                 </Route>
 
                                 <Route element={<ProtectedRoute requiredPath="/roles" />}>
@@ -44,12 +47,12 @@ function App() {
                                     <Route path="/auths" element={<AuthList />} />
                                 </Route>
 
-                                <Route element={<ProtectedRoute requiredPath="/employees/add" />}>
-                                    <Route path="/employees/add" element={<EmployeeForm/>}/>
+                                <Route element={<ProtectedRoute requiredPath="/users/add" />}>
+                                    <Route path="/users/add" element={<UserForm/>}/>
                                 </Route>
 
-                                <Route element={<ProtectedRoute requiredPath="/employees/edit/:id" />}>
-                                    <Route path="/employees/edit/:id" element={<EmployeeForm/>}/>
+                                <Route element={<ProtectedRoute requiredPath="/users/edit/:id" />}>
+                                    <Route path="/users/edit/:id" element={<UserForm/>}/>
                                 </Route>
 
                                 <Route element={<ProtectedRoute requiredPath="/roles/add" />}>
