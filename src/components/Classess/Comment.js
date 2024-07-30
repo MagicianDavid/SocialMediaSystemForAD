@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import ReportButton from '../button_utils/ReportButton'
-
+import MoreOption from '../button_utils/moreOption';
 
 import { IconButton } from '@mui/material';
 import { ChatBubbleOutlineOutlined as ChatBubbleOutlineOutlinedIcon , Favorite as FavoriteIcon, FlagOutlined as FlagOutlinedIcon } from '@mui/icons-material';
@@ -30,12 +30,13 @@ const Comment = ({ comment, addReply }) => {
 
     return (
         <div >
-            <div className="d-flex justify-content-between"  style={{ marginBottom:'10px'}}> 
+            <div className="d-flex justify-content-between" > 
                 <div>
-                    <h6 style={{ margin: '0', padding: '0' }}>User ID: {comment.user_id}</h6>
-                    <small className="text-muted" style={{ margin: '0', padding: '0' }}>{comment.timestamp}</small>
+                    <h6 style={{ margin: '0', padding: '0' }}>User ID: {comment.userId}</h6>
+                    <small className="text-muted" style={{ margin: '0', padding: '0' }}>{comment.timeStamp}</small>
                 </div>
-    
+                <MoreOption id={comment.id} />
+
             </div>
             <p>{comment.content}</p>
          

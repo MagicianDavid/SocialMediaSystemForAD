@@ -1,8 +1,9 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { IconButton } from '@mui/material';
-import { Comment as CommentIcon, Favorite as FavoriteIcon, FlagOutlined as FlagOutlinedIcon } from '@mui/icons-material';
+import { Comment as CommentIcon, Favorite as FavoriteIcon, MoreHoriz as MoreHorizIcon} from '@mui/icons-material';
 import ReportButton from '../button_utils/ReportButton';
+import MoreOption from '../button_utils/moreOption';
 import TagLists from './taglists';
 
 const Post = ({ post }) => {
@@ -28,6 +29,7 @@ const Post = ({ post }) => {
         console.log('Report submitted:', reportData);
     };
 
+
     const formatDate = (dateString) => {
         const options = { 
             year: "numeric", 
@@ -48,12 +50,20 @@ const Post = ({ post }) => {
                 <div className="d-flex justify-content-between">
                     <div>
                         <h3 style={{ margin: '0', padding: '0' }}>{post.user_id.username}</h3> {/* Use optional chaining */}
-                        <p className="text-muted" style={{ margin: '0', padding: '0' }}>{formatDate(post.timeStamp)}</p>
+                   
+                    </div>
+                    <MoreOption id={post.id} />
+                </div>
+
+                <div className="d-flex justify-content-between">
+                    <div>
+                    <p className="text-muted" style={{ margin: '0', padding: '0' }}>{formatDate(post.timeStamp)}</p>
                         <span>  
                             <TagLists tagsString={post.tag.tag} />
                         </span>
                     </div>
                 </div>
+
                 <p className="card-text">{post.content}</p>
     
                 <hr />

@@ -63,8 +63,6 @@ function App() {
                                 <Route path="/userdetails/:userId" element={<UserHistory/>} />
 
 
-
-
                                 {/* <Route element={<ProtectedRoute requiredPath="/dashboard" />}>
                                     <Route path="/dashboard" element={<Dashboard />} />
                                 </Route>
