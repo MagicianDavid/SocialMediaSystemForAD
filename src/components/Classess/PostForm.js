@@ -11,7 +11,7 @@ const PostForm = ({ onSubmit }) => {
         const post = {
             imageUrl: null,
             //need to get user Id
-            user: { id: 2 }, 
+            user: { id: 3 }, 
             content: content,
             timeStamp: new Date().toISOString(), 
             visibility: true, 

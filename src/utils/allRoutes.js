@@ -5,6 +5,8 @@ const allRoutes = [
             { path: '/userProfile', menuName: 'User Profile' },
             { path: '/users/add', menuName: 'Add User' },
             { path: '/users/edit', menuName: 'Edit User' },
+            { path: '/users/reports', menuName:'Reports'},
+            { path: '/users/reportdetail', menuName:'Report Detail'},
         ] },
     { path: '/roles', component: 'RoleList', menuName: 'Roles', children: [
             { path: '/roles', menuName: 'Roles List' },
@@ -15,6 +17,13 @@ const allRoutes = [
             { path: '/auths', menuName: 'Auth List' },
             { path: '/auths/add', menuName: 'Add Auth' },
             { path: '/auths/edit', menuName: 'Edit Auth' },
+        ] },
+    { path: '/public', component: 'PostList', menuName: 'Public', children: [
+            { path: '/mainmenu', menuName: 'New Feeds' },
+            { path: '/friends', menuName: 'Friends' },
+            { path: '/notificationlist', menuName: 'Notification' },
+            { path: '/userdetails', menuName:'User Profile'},
+            { path: '/postsdetails', menuName:"Post Details"}
         ] },
 ]
 

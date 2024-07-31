@@ -15,7 +15,7 @@ const Post = ({ post }) => {
     }
 
     const getPostDetails = (id) => {
-        navigate(`/posts/${post.id}`);
+        navigate(`/postsdetails/${post.id}`);
         console.log(`Detail post with id: ${id}`);
     };
 

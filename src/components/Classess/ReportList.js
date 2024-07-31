@@ -22,7 +22,7 @@ const ReportList = ({ reports }) => {
                             {report.endTimestamp && <div><strong>End Timestamp:</strong> {report.endTimestamp}</div>}
                         </Col>
                         <Col xs={6} className="d-flex justify-content-end">
-                            <Link to={`/report/${report.report_id}`}>
+                            <Link to={`users/reportdetail/${report.report_id}`}>
                                 <Button variant="primary">
                                     View Details
                                 </Button>

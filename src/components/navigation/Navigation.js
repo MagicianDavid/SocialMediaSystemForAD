@@ -72,7 +72,7 @@ const Navigation = () => {
                                             {/* Since user can not edit something only through like employees/edit
                                                 not knowing  which one to edit exactly. so simply do not show
                                                 edit in navigation bar */}
-                                            {item.children.filter(c=>!c.path.includes("edit"))
+                                            {item.children.filter(c=>!c.path.includes("edit") && !c.path.includes("detail"))
                                                 .map((subItem, subIndex) => (
                                                 <li key={subIndex}>
                                                     <a href={subItem.path}>{subItem.menuName}</a>

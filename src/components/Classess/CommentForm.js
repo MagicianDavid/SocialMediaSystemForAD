@@ -18,9 +18,7 @@ const CommentForm = ({ postId, onCommentSubmit }) => {
                 timeStamp: new Date().toISOString(),
                 likes: "0",
                 status: true,
-                post: {
-                    id: postId
-                }
+                postId: postId
             };
 
             try {
