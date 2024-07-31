@@ -20,12 +20,12 @@ class EmployeeService {
         return axios.put(`${EMPLOYEE_API_BASE_URL}/update/${employeeId}`, employee);
     }
 
-    deleteEmployee(employeeId) {
-        return axios.put(`${EMPLOYEE_API_BASE_URL}/delete/${employeeId}`);
+    updateEmployeeStatus(employeeId,status) {
+        return axios.put(`${EMPLOYEE_API_BASE_URL}/updateStatus/${employeeId}?status=${status}`);
     }
 
-    banEmployee(employeeId) {
-        return axios.put(`${EMPLOYEE_API_BASE_URL}/ban/${employeeId}`);
+    blockUser(userId,blockUserId) {
+        return axios.put(`${EMPLOYEE_API_BASE_URL}/${userId}/block/${blockUserId}`);
     }
 }
 

@@ -12,7 +12,7 @@ import {getUserAllStatus} from "../../utils/userAllStatus";
 
 const EmployeeForm = () => {
     const { currentUser,setCurrentUser } = useAuth();
-    const statuses  = getUserAllStatus;
+    const [statuses, setStatuses]  = useState(getUserAllStatus);
     const { id } = useParams();
     const navigate = useNavigate();
     const [employee, setEmployee] = useState({
@@ -60,6 +60,9 @@ const EmployeeForm = () => {
                     auth: employeeData.auth || { id: '' },
                 });
             });
+        } else {
+            // when creating new user, his/her status can only be active
+            setStatuses(["active"])
         }
     }, [id]);
 
@@ -206,7 +209,7 @@ const EmployeeForm = () => {
                 </div>
                 <div>
                     <label>Social Score: </label>
-                    <input type="text" name="socialScore" value={employee.socialScore} onChange={handleChange}/>
+                    <input type="text" name="socialScore" value={employee.socialScore == null ? 0 : employee.socialScore} onChange={handleChange}/>
                 </div>
                 <div>
                     <label>Status: </label>
