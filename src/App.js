@@ -52,6 +52,7 @@ function App() {
                                 {/* Delete post or comments not implemented yet*/}
                                 {/* lays parts */}
 
+                                <Route path="/userProfile/:id?" element={<UserProfile />} />
 
                                 <Route element={<ProtectedRoute requiredPath="/mainmenu" />}>
                                     <Route path="/mainmenu" element={<PostList/>}/>
