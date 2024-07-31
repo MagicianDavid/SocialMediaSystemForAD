@@ -1,26 +1,60 @@
 // src/components/user/UserDetail.js
 import React, { useState, useEffect } from 'react';
 import EmployeeService from '../../services/EmployeeService';
+import {useNavigate} from "react-router-dom";
 
 const UserDetail = (id) => {
     const [user, setUser] = useState(null);
+    const currentUserId = JSON.parse(sessionStorage.getItem('currentUser')).id;
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [isFollowed, setIsFollowed] = useState(false);
+    const [isBlocked, setIsBlocked] = useState(false);
+    const [isLiked, setIsLiked] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
-        EmployeeService.getEmployeeById(id).then((response) => {
+        let findId = id ? id : currentUserId;
+        EmployeeService.getEmployeeById(findId).then((response) => {
             let employeeData = response.data;
             setUser({
                 ...employeeData,
                 role: employeeData.role || { id: '' },
                 auth: employeeData.auth || { id: '' },
             });
+            if (id) {
+                EmployeeService.getEmployeeById(currentUserId).then((response)=>{
+                    setIsBlocked(response.data.blockList.includes(id));
+                });
+            }
             setLoading(false);
         }).catch((error) => {
             setError(error.message);
             setLoading(false);
         });
-    });
+    },[currentUserId,id]);
+
+    const toggleFollow = () => {
+        setIsFollowed(!isFollowed);
+    };
+
+    const toggleBlock = () => {
+        // add this user into currentUser's blockList
+        // remove this user from currentUser's blockList
+        EmployeeService.blockUser(currentUserId,id).then().catch((error) => {
+            setError(error.message);
+            setLoading(false);
+        });
+        setIsBlocked(!isBlocked);
+    };
+
+    const toggleLike = () => {
+        setIsLiked(!isLiked);
+    };
+
+    const toggleBack = () => {
+        navigate(-1);
+    };
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
@@ -45,6 +79,21 @@ const UserDetail = (id) => {
                     <p><strong>Auth:</strong> {user.auth ? user.auth.rank : 'N/A'}</p>
                 </div>
             )}
+            {!id ? <></> :
+                <div style={{marginTop: '20px'}}>
+                    <button onClick={toggleFollow}>
+                        {isFollowed ? 'Unfollow' : 'Follow'}
+                    </button>
+                    <button onClick={toggleBlock} style={{marginLeft: '10px'}}>
+                        {isBlocked ? 'Unblock' : 'Block'}
+                    </button>
+                    <button onClick={toggleLike} style={{marginLeft: '10px'}}>
+                        {isLiked ? 'Unlike' : 'Like'}
+                    </button>
+                </div>}
+            <button onClick={toggleBack}>
+                back
+            </button>
         </div>
     );
 };

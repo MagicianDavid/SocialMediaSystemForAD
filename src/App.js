@@ -40,7 +40,7 @@ function App() {
                                 <Route path="/register" element={<RegisterForm/>}/>
                                 <Route path="/error" element={<ErrorPage />} />
 
-                                {/* <Route path="/userProfile" element={<UserProfile />} />
+                                {/* <Route path="/userProfile/:id?" element={<UserProfile />} />
                                 <Route path="/dashboard" element={<Dashboard />} />
                                 <Route path="/employees" element={<EmployeeList />} />
                                 <Route path="/roles" element={<RoleList />} />

@@ -19,8 +19,8 @@ const LoginForm = () => {
 
     const handleLogin = (e) => {
         e.preventDefault();
-        LoginService.login(username, password).then().catch(() => {
-            setError('Invalid username or password');
+        LoginService.login(username, password).then().catch((e) => {
+            setError(e.response.data.message);
         });
 
     };

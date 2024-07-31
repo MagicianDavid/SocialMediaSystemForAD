@@ -1,9 +1,14 @@
 // src/components/user/UserProfile.js
 import UserDetail from "./UserDetail";
-import LoginService from "../../services/LoginService";
+import {useParams} from "react-router-dom";
 
 const UserProfile = () => {
-    return UserDetail(parseInt(LoginService.getCurrentUser().id),10);
+    const { id } = useParams();
+    if (id) {
+        return UserDetail(parseInt(id), 10);
+    } else {
+        return UserDetail();
+    }
 };
 
 export default UserProfile;
