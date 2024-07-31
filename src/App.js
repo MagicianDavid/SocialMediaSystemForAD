@@ -1,4 +1,5 @@
 import React from 'react';
+
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import UserList from './components/user/UserList';
 import UserForm from './components/user/UserForm';
@@ -16,6 +17,15 @@ import ProtectedRoute from './components/ProtectedRoute';
 import ErrorPage from './components/ErrorPage';
 import './App.css';
 
+import UserProfile from './components/pages/UserProfile'
+import PostList from './components/pages/PostLists';
+import PostDetails from './components/pages/PostDetails';
+import FollowerFollowing from './components/pages/FollowerFollowing';
+import NotificationList from './components/pages/NotificationList';
+import Reports from './components/pages/Reports'
+import ReportDetail from './components/pages/ReportDetail'
+import AllUserDetails from './components/pages/AllUserDetails';
+import UserHistory from './components/pages/UserHistory';
 
 function App() {
 
@@ -30,8 +40,32 @@ function App() {
                                 <Route path="/login" element={<LoginForm/>}/>
                                 <Route path="/register" element={<RegisterForm/>}/>
                                 <Route path="/error" element={<ErrorPage />} />
+
                                 <Route path="/userProfile" element={<UserProfile />} />
-                                <Route element={<ProtectedRoute requiredPath="/dashboard" />}>
+                                <Route path="/dashboard" element={<Dashboard />} />
+                                <Route path="/employees" element={<EmployeeList />} />
+                                <Route path="/roles" element={<RoleList />} />
+                                <Route path="/auths" element={<AuthList />} />
+                                <Route path="/employees/add" element={<EmployeeForm/>}/>
+                                <Route path="/roles/add" element={<RoleForm/>}/>
+                                <Route path="/auths/add" element={<AuthForm/>}/>
+
+                                {/* Delete post or comments not implemented yet*/}
+                                <Route path="/mainmenu" element={<PostList/>}/>
+                                <Route path="/profile/:userId" element={<UserProfile/>}/>
+
+                                <Route path="/posts/:id" element={<PostDetails />} />
+                                <Route path="/friends" element={<FollowerFollowing/>}/>
+                                <Route path="/notificationlist" element={<NotificationList/>}/>
+
+                                <Route path="/reports" element={<Reports/>}/>
+                                <Route path="/report/:reportId" element={<ReportDetail />} />
+
+                                <Route path="/userlists" element={<AllUserDetails/>}/>
+                                <Route path="/userdetails/:userId" element={<UserHistory/>} />
+
+
+                                {/* <Route element={<ProtectedRoute requiredPath="/dashboard" />}>
                                     <Route path="/dashboard" element={<Dashboard />} />
                                 </Route>
 
@@ -69,7 +103,8 @@ function App() {
 
                                 <Route element={<ProtectedRoute requiredPath="/auths/edit/:id" />}>
                                     <Route path="/auths/edit/:id" element={<AuthForm/>}/>
-                                </Route>
+                                </Route> */}
+
                             </Routes>
                         </div>
                     </div>

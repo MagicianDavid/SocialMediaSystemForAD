@@ -63,3 +63,35 @@
 .navigation.collapsed + .content {
   margin-left: 50px;
 }
+
+.float-right-custom {
+  float: right !important;
+  background: #000;
+}
+
+.contentDiv {
+  width: 30vw;
+  min-width: 500px;
+  padding: 10px;
+  margin: auto; /* Center the div horizontally */
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px; /* Adjust the gap between columns as needed */
+}
+
+.grid-item {
+  background-color: #f0f0f0;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.top-right-corner {
+  position: absolute;
+  top: 10px;  /* Adjust as needed */
+  right: 10px;  /* Adjust as needed */
+}
