@@ -53,7 +53,6 @@ function App() {
                                 {/* lays parts */}
 
 
-
                                 <Route element={<ProtectedRoute requiredPath="/mainmenu" />}>
                                     <Route path="/mainmenu" element={<PostList/>}/>
                                 </Route>
