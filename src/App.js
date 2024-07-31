@@ -41,14 +41,14 @@ function App() {
                                 <Route path="/register" element={<RegisterForm/>}/>
                                 <Route path="/error" element={<ErrorPage />} />
 
-                                <Route path="/userProfile" element={<UserProfile />} />
+                                {/* <Route path="/userProfile" element={<UserProfile />} />
                                 <Route path="/dashboard" element={<Dashboard />} />
                                 <Route path="/employees" element={<EmployeeList />} />
                                 <Route path="/roles" element={<RoleList />} />
                                 <Route path="/auths" element={<AuthList />} />
                                 <Route path="/employees/add" element={<EmployeeForm/>}/>
                                 <Route path="/roles/add" element={<RoleForm/>}/>
-                                <Route path="/auths/add" element={<AuthForm/>}/>
+                                <Route path="/auths/add" element={<AuthForm/>}/> */}
 
                                 {/* Delete post or comments not implemented yet*/}
                                 <Route path="/mainmenu" element={<PostList/>}/>
@@ -65,7 +65,7 @@ function App() {
                                 <Route path="/userdetails/:userId" element={<UserHistory/>} />
 
 
-                                {/* <Route element={<ProtectedRoute requiredPath="/dashboard" />}>
+                                <Route element={<ProtectedRoute requiredPath="/dashboard" />}>
                                     <Route path="/dashboard" element={<Dashboard />} />
                                 </Route>
 
@@ -103,7 +103,7 @@ function App() {
 
                                 <Route element={<ProtectedRoute requiredPath="/auths/edit/:id" />}>
                                     <Route path="/auths/edit/:id" element={<AuthForm/>}/>
-                                </Route> */}
+                                </Route> 
 
                             </Routes>
                         </div>
