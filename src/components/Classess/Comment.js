@@ -1,38 +1,59 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReportButton from '../button_utils/ReportButton'
 import MoreOption from '../button_utils/moreOption';
+import CommentForm from '../Classess/CommentForm'; 
 
 import { IconButton } from '@mui/material';
-import { ChatBubbleOutlineOutlined as ChatBubbleOutlineOutlinedIcon , Favorite as FavoriteIcon, FlagOutlined as FlagOutlinedIcon } from '@mui/icons-material';
+import { ChatBubbleOutlineOutlined as ChatBubbleOutlineOutlinedIcon } from '@mui/icons-material';
+import LikeButton from '../button_utils/LikeButton';
+import PC_MsgService from '../../services/PC_MsgService';
 
-const Comment = ({ comment, addReply }) => {
+const MAX_NESTING_LEVEL = 1; // Define the maximum nesting level
+const MIN_WIDTH = 80; // Define the minimum width percentage
+
+const Comment = ({ comment, addReply, nestingLevel = 0 }) => {
     const [showReplyInput, setShowReplyInput] = useState(false);
-    const [replyContent, setReplyContent] = useState('');
+    const [showChildComments, setShowChildComments] = useState(false);
+    const [childComments, setChildComments] = useState([]);
+    const [commentCount, setCommentCount] = useState(0);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                if (comment && comment.id) {
+                    const response = await PC_MsgService.getChildrenByPCMId(comment.id);
+                    setCommentCount(response.data.length);
+                    setChildComments(response.data);
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        fetchData();
+    }, [showChildComments, comment.id]);
+
 
     const handleReplyClick = () => {
         setShowReplyInput(!showReplyInput);
     };
 
-    const handleReplyChange = (e) => {
-        setReplyContent(e.target.value);
-    };
 
-    const handleReplySubmit = (e) => {
-        e.preventDefault();
-        addReply(comment.id, replyContent);
-        setReplyContent('');
-        setShowReplyInput(false);
+    const toggleChildComments = () => {
+        setShowChildComments(!showChildComments);
     };
 
     const handleReportSubmit = (reportData) => {
         console.log('Report submitted:', reportData);
     };
+    
+    const adjustedWidth = `${Math.max(100 - nestingLevel * 5, MIN_WIDTH)}%`;
 
     return (
-        <div >
+        <div style={{ marginLeft: `${nestingLevel * 20}px`, width: adjustedWidth }}>
             <div className="d-flex justify-content-between" > 
                 <div>
-                    <h6 style={{ margin: '0', padding: '0' }}>User ID: {comment.userId}</h6>
+                    <h6 style={{ margin: '0', padding: '0' }}>{comment.user.name}</h6>
                     <small className="text-muted" style={{ margin: '0', padding: '0' }}>{comment.timeStamp}</small>
                 </div>
                 <MoreOption id={comment.id} />
@@ -42,12 +63,14 @@ const Comment = ({ comment, addReply }) => {
          
             <div className="d-flex justify-content-between">
                 <div>
-                    <IconButton aria-label="likes">
+                    {/* <IconButton aria-label="likes">
                         <FavoriteIcon />
-                    </IconButton>{comment.likes}
+                    </IconButton>{comment.likes} */}
                     <IconButton aria-label="reply" sx={{ ml: 1 }} onClick={handleReplyClick}>
                         <ChatBubbleOutlineOutlinedIcon />
-                    </IconButton>
+                    </IconButton>{commentCount}
+                    <LikeButton  userId={comment.user?.id} msgId={comment.id}/>
+
                 </div>
                 <ReportButton
                     userId={comment.user_id}
@@ -58,21 +81,24 @@ const Comment = ({ comment, addReply }) => {
             <hr />
 
             {showReplyInput && (
-                <form onSubmit={handleReplySubmit}>
-                    <div className="input-group mt-2">
-                        <input
-                            type="text"
-                            className="form-control me-2"
-                            value={replyContent}
-                            onChange={handleReplyChange}
-                            placeholder="Write your reply here"
+                <div>
+                <CommentForm
+                sourceId={comment.id}
+                onCommentSubmit={(newReply) => {
+                    setShowReplyInput(false);
+                }}
+                userId={4}
+                />
+               {childComments.map((childComment) => (
+                        <Comment
+                            key={childComment.id}
+                            comment={childComment}
+                            addReply={addReply}
+                            userId={4}
+                            nestingLevel={Math.min(nestingLevel + 1, MAX_NESTING_LEVEL)} // Cap nesting level
                         />
-                        <div className="input-group-append">
-                            <button type="submit" className="btn btn-primary">Submit</button>
-                            <button type="button" className="btn btn-secondary ms-2" onClick={handleReplyClick}>Cancel</button>
-                        </div>
-                    </div>
-                </form>
+                    ))}
+                </div>
             )}
         </div>
     );

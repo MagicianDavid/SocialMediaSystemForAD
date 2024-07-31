@@ -70,9 +70,8 @@ function App() {
                                     <Route path="/profile/:userId" element={<UserProfile/>}/>
                                 </Route>
 
-                                <Route element={<ProtectedRoute requiredPath="/postsdetails/:id" />}>
-                                    <Route path="/postsdetails/:id" element={<PostDetails />} />
-                                </Route>
+                                {/* Not protected yet */}
+                                <Route path="/postsdetails/:id" element={<PostDetails />} />
 
                                 <Route element={<ProtectedRoute requiredPath="/users/reportdetail/:id" />}>
                                     <Route path="/users/reportdetail/:reportId" element={<ReportDetail />} />

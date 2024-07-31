@@ -5,8 +5,8 @@ import CommentList from '../Classess/CommentList';
 import CommentForm from '../Classess/CommentForm'; 
 import TagLists from '../Classess/taglists';
 import ReportButton from '../button_utils/ReportButton'
-import PostService from '../../services/PostService';
-import CommentService from '../../services/CommentService';
+import PC_MsgService from '../../services/PC_MsgService';
+import LikeButton from '../button_utils/LikeButton';
 
 
 import { IconButton } from '@mui/material';
@@ -19,15 +19,11 @@ const PostDetails = () => {
 
     useEffect(() => {
         // Fetch post and comments concurrently
-        Promise.all([
-            PostService.getPostById(id),
-            CommentService.getlistComment(id)
-        ])
-        .then(([postResponse, commentsResponse]) => {
-            console.log('Fetched post:', postResponse.data);
-            console.log('Fetched comments:', commentsResponse.data);
-            setPost(postResponse.data);
-            setComments(commentsResponse.data);
+        PC_MsgService.getPostById(id)
+        .then(response => {
+            console.log('Fetched post:', response.data);
+            setPost(response.data.pcmsg);
+            setComments(response.data.comments);
         })
         .catch(error => {
             console.error('Error fetching data:', error);
@@ -51,7 +47,7 @@ const PostDetails = () => {
             <div className="card-body">
                 <div className="d-flex justify-content-between">
                     <div>
-                        <h3 style={{ margin: '0', padding: '0' }}>{post.user_id?.username}</h3>
+                        <h3 style={{ margin: '0', padding: '0' }}>{post.user.name}</h3>
                         <p className="text-muted" style={{ margin: '0', padding: '0' }}>{post.timeStamp}</p>
                         <span>  
                             <TagLists tagsString={post.tag?.tag || ''} />
@@ -65,13 +61,12 @@ const PostDetails = () => {
 
                 <hr />
                 <div className="d-flex justify-content-between">
-                    <div>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
                         <IconButton aria-label="comments" sx={{ mr: 1 }}>
                             <CommentIcon />
                         </IconButton>{comments.length}
-                        <IconButton aria-label="likes" sx={{ ml: 2 }}>
-                            <FavoriteIcon />
-                        </IconButton>{post.likes}
+                        <LikeButton  userId={post.user?.id} msgId={post.id}/>
+
                     </div>
                     <ReportButton
                         userId={post.user_id}
@@ -80,9 +75,9 @@ const PostDetails = () => {
                     />
                 </div>
                 <hr />
-
+                <p>{post.Comment}</p>
                 {/* Comment Form */}
-                <CommentForm postId={post.id} onCommentSubmit={handleCommentSubmit} />
+                <CommentForm sourceId={post.id} onCommentSubmit={handleCommentSubmit} userId={4} />
 
                 <h3>Comments</h3>
                 {comments.length > 0 ? (

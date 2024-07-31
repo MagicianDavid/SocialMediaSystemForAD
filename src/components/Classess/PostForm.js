@@ -1,17 +1,14 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import PostService from '../../services/PostService';
+import PC_MsgService from '../../services/PC_MsgService';
 
-const PostForm = ({ onSubmit }) => {
+const PostForm = ({ onSubmit, userId }) => {
     const [content, setContent] = useState('');
-    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         const post = {
             imageUrl: null,
-            //need to get user Id
-            user: { id: 3 }, 
+            user: { id: userId }, 
             content: content,
             timeStamp: new Date().toISOString(), 
             visibility: true, 
@@ -22,7 +19,7 @@ const PostForm = ({ onSubmit }) => {
     
         // need to refresh???
         try {
-            const response = await PostService.createPost(post);
+            const response = await PC_MsgService.createPost(post);
             if (onSubmit) {
                 onSubmit(response.data);
             }

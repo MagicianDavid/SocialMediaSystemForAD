@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from 'react';
+import { useAuth } from '../../services/AuthContext';
+
 import Post from '../Classess/Post';
 import PostForm from '../Classess/PostForm'
-import PostService from '../../services/PostService';
+import PC_MsgService from '../../services/PC_MsgService';
 
 const PostList = () => {
 
-    //API Call
     const [posts, setPosts] = useState([]);
-
+    //Need session currentUser.id
+    const { currentUser } = useAuth();
+                        
     //Fetch Post by User ID, User Follower
-    useEffect(() => {
-        PostService.getAllPosts()
+    useEffect(() => {                      
+        PC_MsgService.getAllPostsByUserId(4)
             .then(response => {
                 console.log('Fetched posts:', response.data); // Log the response data
                 setPosts(response.data);
@@ -18,7 +21,7 @@ const PostList = () => {
             .catch(error => {
                 console.error('Error fetching posts:', error);
             });
-    }, []);
+    }, [currentUser]);
 
 
     const handlePostSubmit = (newPost) => {
@@ -28,8 +31,7 @@ const PostList = () => {
     return (
         <div className="contentDiv">
             {/*  Post Form  */}
-            <PostForm onSubmit={handlePostSubmit} /> 
-            
+            <PostForm onSubmit={handlePostSubmit} userId={4} /> 
             {posts.map(post => (
                 <Post key={post.id} post={post} />
             ))}

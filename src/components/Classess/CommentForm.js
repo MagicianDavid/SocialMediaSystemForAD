@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import CommentService from '../../services/CommentService';
-
-const CommentForm = ({ postId, onCommentSubmit }) => {
+import PC_MsgService from '../../services/PC_MsgService';
+ 
+const CommentForm = ({onCommentSubmit, sourceId, userId}) => {
     const [comment, setComment] = useState('');
+    //console.log(sourceId);
 
     const handleCommentChange = (e) => {
         setComment(e.target.value);
@@ -14,15 +15,17 @@ const CommentForm = ({ postId, onCommentSubmit }) => {
             const newCommentData = {
                 content: comment,
                 //need to get user Id
-                user_id: { id: 1 }, 
+                user: { id: userId }, 
                 timeStamp: new Date().toISOString(),
-                likes: "0",
+                likes: 0,
+                visibility: true, 
                 status: true,
-                postId: postId
+                sourceId:sourceId 
             };
 
+            console.log(sourceId);
             try {
-                const response = await CommentService.createComment(newCommentData);
+                const response = await PC_MsgService.createComment(newCommentData);
                 if (onCommentSubmit) {
                     onCommentSubmit(response.data);
                 }
