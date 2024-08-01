@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation, Link, useParams } from 'react-router-dom';
+import {Link, useParams } from 'react-router-dom';
 
 import CommentList from '../Classess/CommentList';
 import CommentForm from '../Classess/CommentForm'; 
@@ -7,18 +7,25 @@ import TagLists from '../Classess/taglists';
 import ReportButton from '../button_utils/ReportButton'
 import PC_MsgService from '../../services/PC_MsgService';
 import LikeButton from '../button_utils/LikeButton';
-
+import useCurrentUser from '../customhook/CurrentUser';
+import TimeFormat from '../Classess/timeFormat';
 
 import { IconButton } from '@mui/material';
-import { Comment as CommentIcon, Favorite as FavoriteIcon } from '@mui/icons-material';
+import { Comment as CommentIcon} from '@mui/icons-material';
 
 const PostDetails = () => {
+    //This come from Posts Event 'getPostDetails(id)' 
     const { id } = useParams();
     const [post, setPost] = useState(null);
     const [comments, setComments] = useState([]);
+    const currentUser = useCurrentUser();
 
     useEffect(() => {
         // Fetch post and comments concurrently
+        fetchComments();
+    }, [id]);
+
+    const fetchComments = () => {
         PC_MsgService.getPostById(id)
         .then(response => {
             console.log('Fetched post:', response.data);
@@ -28,10 +35,11 @@ const PostDetails = () => {
         .catch(error => {
             console.error('Error fetching data:', error);
         });
-    }, [id]);
+    };
 
     const handleCommentSubmit = (newComment) => {
         setComments([...comments, newComment]);
+        fetchComments();
     };
 
     const handleReportSubmit = (reportData) => {
@@ -48,7 +56,8 @@ const PostDetails = () => {
                 <div className="d-flex justify-content-between">
                     <div>
                         <h3 style={{ margin: '0', padding: '0' }}>{post.user.name}</h3>
-                        <p className="text-muted" style={{ margin: '0', padding: '0' }}>{post.timeStamp}</p>
+                        {/* <p className="text-muted" style={{ margin: '0', padding: '0' }}>{post.timeStamp}</p> */}
+                        <TimeFormat msgtimeStamp = {post.timeStamp}/>
                         <span>  
                             <TagLists tagsString={post.tag?.tag || ''} />
                         </span>
@@ -77,8 +86,9 @@ const PostDetails = () => {
                 <hr />
                 <p>{post.Comment}</p>
                 {/* Comment Form */}
-                <CommentForm sourceId={post.id} onCommentSubmit={handleCommentSubmit} userId={4} />
-
+                {currentUser && (
+                    <CommentForm sourceId={post.id} onCommentSubmit={handleCommentSubmit} userId={currentUser.id} />
+                )}
                 <h3>Comments</h3>
                 {comments.length > 0 ? (
                     <CommentList comments={comments} />

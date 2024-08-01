@@ -1,28 +1,26 @@
 import React, { useEffect, useState } from 'react';
-import { useAuth } from '../../services/AuthContext';
-
+import useCurrentUser from '../customhook/CurrentUser';
 import Post from '../Classess/Post';
 import PostForm from '../Classess/PostForm'
 import PC_MsgService from '../../services/PC_MsgService';
-
 const PostList = () => {
 
     const [posts, setPosts] = useState([]);
     //Need session currentUser.id
-    const { currentUser } = useAuth();
-                        
+    const currentUser = useCurrentUser();
+
     //Fetch Post by User ID, User Follower
-    useEffect(() => {                      
-        PC_MsgService.getAllPostsByUserId(4)
+    useEffect(() => {      
+        if (currentUser) {
+        PC_MsgService.getAllPostsByUserId(currentUser.id)
             .then(response => {
-                console.log('Fetched posts:', response.data); // Log the response data
                 setPosts(response.data);
             })
             .catch(error => {
                 console.error('Error fetching posts:', error);
             });
+        }
     }, [currentUser]);
-
 
     const handlePostSubmit = (newPost) => {
         setPosts([...posts, newPost]);
@@ -31,7 +29,7 @@ const PostList = () => {
     return (
         <div className="contentDiv">
             {/*  Post Form  */}
-            <PostForm onSubmit={handlePostSubmit} userId={4} /> 
+            {currentUser && <PostForm onSubmit={handlePostSubmit} userId={currentUser.id} />} 
             {posts.map(post => (
                 <Post key={post.id} post={post} />
             ))}

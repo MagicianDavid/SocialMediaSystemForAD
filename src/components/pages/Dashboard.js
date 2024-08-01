@@ -14,7 +14,6 @@ const Dashboard = () => {
     const { currentUser, setCurrentUser } = useAuth();
     const [itemNb, setItemNb] = React.useState(4);
 
-
     const handleLogout = () => {
         LoginService.logout();
         setCurrentUser(null);
