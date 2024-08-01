@@ -2,7 +2,6 @@ const allRoutes = [
     { path: '/dashboard', component: 'Dashboard', menuName: 'Dashboard'},
     { path: '/employees', component: 'UserList', menuName: 'Users', children: [
             { path: '/users', menuName: 'User List' },
-            { path: '/userProfile', menuName: 'User Profile' },
             { path: '/users/add', menuName: 'Add User' },
             { path: '/users/edit', menuName: 'Edit User' },
             { path: '/users/reports', menuName:'Reports'},
@@ -20,10 +19,12 @@ const allRoutes = [
         ] },
     { path: '/public', component: 'PostList', menuName: 'Public', children: [
             { path: '/mainmenu', menuName: 'New Feeds' },
+            { path: '/userProfile', menuName: 'User Profile' },
             { path: '/friends', menuName: 'Friends' },
             { path: '/notificationlist', menuName: 'Notification' },
             { path: '/userdetails', menuName:'User Profile'},
-            { path: '/postsdetails', menuName:"Post Details"}
+            { path: '/postsdetails', menuName:"Post Details"},
+            { path: '/lobby', menuName:"Lobby"}
         ] },
 ]
 

@@ -7,14 +7,16 @@ const PostList = () => {
 
     const [posts, setPosts] = useState([]);
     //Need session currentUser.id
-    const currentUser = 4;
+    const currentUser = useCurrentUser();
 
     //Fetch Post by User ID, User Follower
     useEffect(() => {      
         if (currentUser) {
-        PC_MsgService.getAllPostsByUserId(currentUser.id)
+        console.log(currentUser.id)
+        PC_MsgService.findAllPosts()
             .then(response => {
                 setPosts(response.data);
+                console.log(response.data);
             })
             .catch(error => {
                 console.error('Error fetching posts:', error);

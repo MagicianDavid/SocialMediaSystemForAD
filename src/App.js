@@ -23,8 +23,8 @@ import FollowerFollowing from './components/pages/FollowerFollowing';
 import NotificationList from './components/pages/NotificationList';
 import Reports from './components/pages/Reports'
 import ReportDetail from './components/pages/ReportDetail'
-import AllUserDetails from './components/pages/AllUserDetails';
 import UserHistory from './components/pages/UserHistory';
+import Lobby from './components/pages/Lobby'
 
 function App() {
 
@@ -40,19 +40,15 @@ function App() {
                                 <Route path="/register" element={<RegisterForm/>}/>
                                 <Route path="/error" element={<ErrorPage />} />
 
-                                {/* <Route path="/userProfile/:id?" element={<UserProfile />} />
-                                <Route path="/dashboard" element={<Dashboard />} />
-                                <Route path="/employees" element={<EmployeeList />} />
-                                <Route path="/roles" element={<RoleList />} />
-                                <Route path="/auths" element={<AuthList />} />
-                                <Route path="/employees/add" element={<EmployeeForm/>}/>
-                                <Route path="/roles/add" element={<RoleForm/>}/>
-                                <Route path="/auths/add" element={<AuthForm/>}/> */}
-
                                 {/* Delete post or comments not implemented yet*/}
                                 {/* lays parts */}
 
                                 <Route path="/userProfile/:id?" element={<UserProfile />} />
+                                 {/* Not protected yet */}
+                                 <Route path="/postsdetails/:id" element={<PostDetails />} />
+                                <Route path="/lobby" element={<Lobby/>} />
+                                <Route path="/:id/friends" element={<FollowerFollowing/>}/>
+
 
                                 <Route element={<ProtectedRoute requiredPath="/mainmenu" />}>
                                     <Route path="/mainmenu" element={<PostList/>}/>
@@ -65,13 +61,6 @@ function App() {
                                 <Route element={<ProtectedRoute requiredPath="/notificationlist" />}>
                                     <Route path="/notificationlist" element={<NotificationList/>}/>
                                 </Route>
-
-                                <Route element={<ProtectedRoute requiredPath="/profile/:userId" />}>
-                                    <Route path="/profile/:userId" element={<UserProfile/>}/>
-                                </Route>
-
-                                {/* Not protected yet */}
-                                <Route path="/postsdetails/:id" element={<PostDetails />} />
 
                                 <Route element={<ProtectedRoute requiredPath="/users/reportdetail/:id" />}>
                                     <Route path="/users/reportdetail/:reportId" element={<ReportDetail />} />
@@ -86,7 +75,6 @@ function App() {
                                 <Route element={<ProtectedRoute requiredPath="/users/reports" />}>
                                     <Route path="/users/reports" element={<Reports/>}/>
                                 </Route>
-
 
                                 {/* David parts */}
                                 <Route element={<ProtectedRoute requiredPath="/dashboard" />}>

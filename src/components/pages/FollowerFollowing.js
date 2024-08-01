@@ -1,7 +1,9 @@
-// FollowerFollowing.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Tabs, Tab } from 'react-bootstrap';
 import UserList from '../Classess/UsersList';
+import EmployeeService from '../../services/EmployeeService';
+import { useParams } from 'react-router-dom';
+
 
 const TAB_NAMES = {
     FOLLOWING: 'following',
@@ -9,21 +11,36 @@ const TAB_NAMES = {
     BLOCKED: 'blocked',
 };
 
-const FollowerFollowing = () => {
-    const initialUsers = [
-        { id: 1, description: 'Following User 1 description', isFollowing: true, isBlocked: false },
-        { id: 2, description: 'Following User 2 description', isFollowing: true, isBlocked: false },
-        { id: 3, description: 'Following User 3 description', isFollowing: true, isBlocked: false },
-        { id: 4, description: 'Follower User 1 description', isFollowing: false, isBlocked: false },
-        { id: 5, description: 'Follower User 2 description', isFollowing: false, isBlocked: false },
-        { id: 6, description: 'Follower User 3 description', isFollowing: false, isBlocked: false },
-        { id: 7, description: 'Blocked User 1 description', isFollowing: false, isBlocked: true },
-        { id: 8, description: 'Blocked User 2 description', isFollowing: false, isBlocked: true },
-        { id: 9, description: 'Blocked User 3 description', isFollowing: false, isBlocked: true },
-    ];
+const FollowerFollowing = ({ userId }) => {
+    const { id: paramId } = useParams();
+    const currentUserId = JSON.parse(sessionStorage.getItem('currentUser')).id;
+    const actualUserId = userId || paramId || currentUserId;
 
     const [tabIndex, setTabIndex] = useState(TAB_NAMES.FOLLOWING);
-    const [users, setUsers] = useState(initialUsers);
+    const [users, setUsers] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchUsers = async () => {
+            try {
+                setLoading(true);
+                let response;
+                if (tabIndex === TAB_NAMES.FOLLOWING) {
+                    response = await EmployeeService.getFollowingList(actualUserId);
+                } else if (tabIndex === TAB_NAMES.FOLLOWERS) {
+                    response = await EmployeeService.getFollowList(actualUserId);
+                }
+                setUsers(response.data);
+                setLoading(false);
+            } catch (err) {
+                setError(err.message);
+                setLoading(false);
+            }
+        };
+
+        fetchUsers();
+    }, [tabIndex, actualUserId]);
 
     const handleFollow = (userId) => {
         setUsers(users.map(user => user.id === userId ? { ...user, isFollowing: true } : user));
@@ -51,6 +68,9 @@ const FollowerFollowing = () => {
         if (tabIndex === TAB_NAMES.BLOCKED) return user.isBlocked;
         return false;
     });
+
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>Error: {error}</p>;
 
     return (
         <div className='contentDiv'>

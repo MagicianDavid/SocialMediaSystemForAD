@@ -4,6 +4,11 @@ import axios from 'axios';
 const ROLE_API_BASE_URL = "http://localhost:8080/api/pcmsgs";
 
 class RoleService {
+
+    findAllPosts(){
+        return axios.get(`${ROLE_API_BASE_URL}/findHotPosts`);
+    }
+
     getAllPostsByUserId(id) {
         return axios.get(`${ROLE_API_BASE_URL}/findAllPostsByUserId/${id}`);
     }

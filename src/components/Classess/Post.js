@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { IconButton } from '@mui/material';
 import { Comment as CommentIcon} from '@mui/icons-material';
+import { Link } from 'react-router-dom';
+
 import ReportButton from '../button_utils/ReportButton';
 import MoreOption from '../button_utils/moreOption';
 import TagLists from './taglists';
@@ -53,8 +55,9 @@ const Post = ({ post }) => {
             <div className="card-body">
                 <div className="d-flex justify-content-between">
                     <div>
-                        <h3 style={{ margin: '0', padding: '0' }}>{post.user_id.username}</h3> {/* Use optional chaining */}
-                   
+                        <h3 style={{ margin: '0', padding: '0' }}>
+                            <Link to={`/userProfile/${post.user_id.id}`}>{post.user_id.name}</Link>
+                        </h3>
                     </div>
                     <MoreOption id={post.id} />
                 </div>

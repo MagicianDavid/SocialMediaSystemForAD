@@ -27,6 +27,25 @@ class EmployeeService {
     blockUser(userId,blockUserId) {
         return axios.put(`${EMPLOYEE_API_BASE_URL}/${userId}/block/${blockUserId}`);
     }
+
+
+    followUser(userId,followingUserId){
+        return axios.post(`${EMPLOYEE_API_BASE_URL}/${userId}/follow/${followingUserId}`);
+    }
+
+    unfollowUser(userId,followingUserId){
+        return axios.post(`${EMPLOYEE_API_BASE_URL}/${userId}/unfollow/${followingUserId}`);
+    }
+
+    getFollowList(userId){
+        return axios.get(`${EMPLOYEE_API_BASE_URL}/${userId}/followers`);
+    }
+
+    getFollowingList(userId){
+        return axios.get(`${EMPLOYEE_API_BASE_URL}/${userId}/followings`);
+    }
+
+    
 }
 
 // eslint-disable-next-line import/no-anonymous-default-export

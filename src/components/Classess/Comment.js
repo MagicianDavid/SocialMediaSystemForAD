@@ -4,6 +4,7 @@ import MoreOption from '../button_utils/moreOption';
 import CommentForm from '../Classess/CommentForm'; 
 import CommentChild from '../Classess/CommentChild';
 import useCurrentUser from '../customhook/CurrentUser';
+import { Link } from 'react-router-dom';
 
 import { IconButton } from '@mui/material';
 import { ChatBubbleOutlineOutlined as ChatBubbleOutlineOutlinedIcon } from '@mui/icons-material';
@@ -53,8 +54,10 @@ const Comment = ({ comment, nestingLevel = 0}) => {
         <div style={{ marginLeft: `${nestingLevel * 20}px`, width: adjustedWidth }}>
             <div className="d-flex justify-content-between" > 
                 <div>
-                    <h6 style={{ margin: '0', padding: '0' }}>{comment.user.name}</h6>
-                    <TimeFormat msgtimeStamp = {comment.timeStamp}/>
+                        <h6 style={{ margin: '0', padding: '0' }}>
+                            <Link to={`/userProfile/${comment.user.id}`}>{comment.user.name}</Link>
+                        </h6>
+                        <TimeFormat msgtimeStamp = {comment.timeStamp}/>
                 </div>
                 <MoreOption id={comment.id} />
 
