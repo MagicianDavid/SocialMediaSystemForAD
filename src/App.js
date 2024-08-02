@@ -15,6 +15,7 @@ import Dashboard from './components/pages/Dashboard';
 import ProtectedRoute from './components/ProtectedRoute';
 import ErrorPage from './components/ErrorPage';
 import './App.css';
+import ScrollPosts from "./components/pages/TestPageable";
 
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
                                 <Route path="/register" element={<RegisterForm/>}/>
                                 <Route path="/error" element={<ErrorPage />} />
                                 <Route path="/userProfile/:id?" element={<UserProfile />} />
+                                <Route path="/postsPageable" element={<ScrollPosts />} />
                                 <Route element={<ProtectedRoute requiredPath="/dashboard" />}>
                                     <Route path="/dashboard" element={<Dashboard />} />
                                 </Route>
