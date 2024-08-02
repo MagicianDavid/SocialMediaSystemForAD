@@ -6,8 +6,8 @@ import PC_MsgService from '../../services/PC_MsgService';
 const PostList = () => {
 
     const [posts, setPosts] = useState([]);
-    //Need session currentUser.id
-    const currentUser = 4;
+    const [newPostSubmitted, setNewPostSubmitted] = useState(false);
+    const currentUser = useCurrentUser();
 
     //Fetch Post by User ID, User Follower
     useEffect(() => {      
@@ -15,14 +15,16 @@ const PostList = () => {
         PC_MsgService.getAllPostsByUserId(currentUser.id)
             .then(response => {
                 setPosts(response.data);
+                setNewPostSubmitted(false); // Reset the new post submission state
             })
             .catch(error => {
                 console.error('Error fetching posts:', error);
             });
         }
-    }, [currentUser]);
+    }, [currentUser, newPostSubmitted]);
 
     const handlePostSubmit = (newPost) => {
+        setNewPostSubmitted(true); // Set the state to trigger the useEffect hook
         setPosts([...posts, newPost]);
     };
 

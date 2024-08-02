@@ -28,7 +28,6 @@ class EmployeeService {
         return axios.put(`${EMPLOYEE_API_BASE_URL}/${userId}/block/${blockUserId}`);
     }
 
-
     followUser(userId,followingUserId){
         return axios.post(`${EMPLOYEE_API_BASE_URL}/${userId}/follow/${followingUserId}`);
     }

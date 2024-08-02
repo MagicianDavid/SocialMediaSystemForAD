@@ -31,6 +31,7 @@ const FollowerFollowing = ({ userId }) => {
                 } else if (tabIndex === TAB_NAMES.FOLLOWERS) {
                     response = await EmployeeService.getFollowList(actualUserId);
                 }
+                console.log(response.data);
                 setUsers(response.data);
                 setLoading(false);
             } catch (err) {

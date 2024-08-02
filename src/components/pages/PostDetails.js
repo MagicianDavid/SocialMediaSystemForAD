@@ -12,6 +12,7 @@ import TimeFormat from '../Classess/timeFormat';
 
 import { IconButton } from '@mui/material';
 import { Comment as CommentIcon} from '@mui/icons-material';
+import PostCount from '../Classess/PostCount';
 
 const PostDetails = () => {
     //This come from Posts Event 'getPostDetails(id)' 
@@ -22,7 +23,9 @@ const PostDetails = () => {
 
     useEffect(() => {
         // Fetch post and comments concurrently
+        if(id){
         fetchComments();
+        }
     }, [id]);
 
     const fetchComments = () => {
@@ -55,7 +58,7 @@ const PostDetails = () => {
             <div className="card-body">
                 <div className="d-flex justify-content-between">
                     <div>
-                        <h3 style={{ margin: '0', padding: '0' }}>{post.user.name}</h3>
+                        <h3 style={{ margin: '0', padding: '0' }}>{post.user_id.name}</h3>
                         {/* <p className="text-muted" style={{ margin: '0', padding: '0' }}>{post.timeStamp}</p> */}
                         <TimeFormat msgtimeStamp = {post.timeStamp}/>
                         <span>  
@@ -73,7 +76,7 @@ const PostDetails = () => {
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                         <IconButton aria-label="comments" sx={{ mr: 1 }}>
                             <CommentIcon />
-                        </IconButton>{comments.length}
+                        </IconButton><PostCount postId={post.id}/>
                         <LikeButton  userId={post.user?.id} msgId={post.id}/>
 
                     </div>

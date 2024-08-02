@@ -69,6 +69,8 @@ const UserDetail = () => {
 
     const toggleFollow = () => {
         if (!currentUser || !id) return; // Add null check
+        console.log(currentUser.id);
+        console.log(id);
 
         if (isFollowed) {
             EmployeeService.unfollowUser(currentUser.id, id)

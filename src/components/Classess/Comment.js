@@ -26,7 +26,7 @@ const Comment = ({ comment, nestingLevel = 0}) => {
         const fetchData = async () => {
             
             try {
-                if (comment) {
+                if (comment && comment.id) {
                     const response = await PC_MsgService.getChildrenByPCMId(comment.id);
                     setCommentCount(response.data.length);
                     setChildComments(response.data);
@@ -55,7 +55,7 @@ const Comment = ({ comment, nestingLevel = 0}) => {
             <div className="d-flex justify-content-between" > 
                 <div>
                         <h6 style={{ margin: '0', padding: '0' }}>
-                            <Link to={`/userProfile/${comment.user.id}`}>{comment.user.name}</Link>
+                            <Link to={`/userProfile/${comment.user_id.id}`}>{comment.user_id.name}</Link>
                         </h6>
                         <TimeFormat msgtimeStamp = {comment.timeStamp}/>
                 </div>

@@ -10,12 +10,16 @@ const LikeButton = ({ userId, msgId }) => {
     useEffect(() => {
         const fetchLikeStatusAndCount = async () => {
             try {
+                if (userId && msgId) {
                 const [likeStatusResponse, likeCountResponse] = await Promise.all([
                     PC_MsgService.hasUserLikedPost(userId, msgId),
                     PC_MsgService.getCountLikesByPostId(msgId)
                 ]);
                 setIsLiked(likeStatusResponse.data);
                 setLikeCount(likeCountResponse.data);
+
+                console.log(likeCountResponse.data);
+                }
             } catch (error) {
                 console.error("Error fetching like status and count:", error);
             }

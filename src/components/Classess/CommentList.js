@@ -7,10 +7,10 @@ const CommentList = ({ comments, reportPost }) => {
         <div className="list-group" >
             {comments.map(comment => (
                 <div key={comment.id} className="list-group-item">
-                    <Comment 
+                    { <Comment 
                         comment={comment} 
                         reportPost={reportPost} 
-                    />
+                    /> }
                 </div>
             ))}
         </div>

@@ -10,8 +10,8 @@ const UserList = ({ users, onFollow, onUnfollow, onBlock, onUnblock }) => {
                 <ListGroup.Item key={user.id}>
                     <Row className="align-items-center">
                         <Col xs={6}>
-                            <div><strong>User ID:</strong> {user.id}</div>
-                            <div>{user.description}</div>
+                            <div>{user.username}</div>
+                            <div>{user.name}</div>
                         </Col>
                         <Col xs={6} className="d-flex justify-content-end">
                             {onFollow && onUnfollow && (
