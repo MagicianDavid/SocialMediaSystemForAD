@@ -9,8 +9,13 @@ class RoleService {
         return axios.get(`${ROLE_API_BASE_URL}/findHotPosts`);
     }
 
+    // this maybe more important for moderator 
     getAllPostsByUserId(id) {
         return axios.get(`${ROLE_API_BASE_URL}/findAllPostsByUserId/${id}`);
+    }
+
+    findAllFollowingPostsAndNotDeletedByUserId(id){
+        return axios.get(`${ROLE_API_BASE_URL}/findAllFollowingPostsAndNotDeletedByUserId/${id}`);
     }
 
     getPostById(postId) {

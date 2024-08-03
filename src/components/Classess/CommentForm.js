@@ -19,7 +19,7 @@ const CommentForm = ({onCommentSubmit, sourceId, userId}) => {
                 timeStamp: new Date().toISOString(),
                 likes: 0,
                 visibility: true, 
-                status: true,
+                status: "show",
                 sourceId:sourceId 
             };
 

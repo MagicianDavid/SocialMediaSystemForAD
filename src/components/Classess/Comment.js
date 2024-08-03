@@ -4,6 +4,7 @@ import MoreOption from '../button_utils/moreOption';
 import CommentForm from '../Classess/CommentForm'; 
 import CommentChild from '../Classess/CommentChild';
 import useCurrentUser from '../customhook/CurrentUser';
+import TagLists from './taglists';
 import { Link } from 'react-router-dom';
 
 import { IconButton } from '@mui/material';
@@ -24,9 +25,8 @@ const Comment = ({ comment, nestingLevel = 0}) => {
 
     useEffect(() => {
         const fetchData = async () => {
-            
             try {
-                if (comment && comment.id) {
+                if (comment && comment.id && currentUser) {
                     const response = await PC_MsgService.getChildrenByPCMId(comment.id);
                     setCommentCount(response.data.length);
                     setChildComments(response.data);
@@ -35,7 +35,6 @@ const Comment = ({ comment, nestingLevel = 0}) => {
                 console.error('Error fetching data:', error);
             }
         };
-
         fetchData();
     }, [showChildComments, comment, childComments]);
 
@@ -50,19 +49,35 @@ const Comment = ({ comment, nestingLevel = 0}) => {
     
     const adjustedWidth = `${Math.max(100 - nestingLevel * 5, MIN_WIDTH)}%`;
 
+    const isAdmin = currentUser?.auth.rank === 'L1';
+
+    const isCommentRemoved = !isAdmin && (comment.status === 'delete' || comment.status === 'hide');
+
+
     return (
         <div style={{ marginLeft: `${nestingLevel * 20}px`, width: adjustedWidth }}>
             <div className="d-flex justify-content-between" > 
                 <div>
                         <h6 style={{ margin: '0', padding: '0' }}>
-                            <Link to={`/userProfile/${comment.user_id.id}`}>{comment.user_id.name}</Link>
+                            {isCommentRemoved ? (
+                                'removed'
+                            ) : (
+                                <Link to={`/userProfile/${comment.user_id.id}`}>{comment.user_id.name}</Link>
+                            )}
                         </h6>
-                        <TimeFormat msgtimeStamp = {comment.timeStamp}/>
+
+                        {!isCommentRemoved &&
+                        <>
+                            <TimeFormat msgtimeStamp = {comment.timeStamp}/>
+                            <span>  
+                                <TagLists tagsString={comment.tag?.tag} />
+                            </span>
+                        </>}
                 </div>
                 <MoreOption id={comment.id} />
 
             </div>
-            <p>{comment.content}</p>
+            <p>{isCommentRemoved ? 'Comments have been removed.' : comment.content}</p>
          
             <div className="d-flex justify-content-between">
                 <div>

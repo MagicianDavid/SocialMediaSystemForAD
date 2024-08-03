@@ -13,7 +13,7 @@ const PostList = () => {
     useEffect(() => {      
         if (currentUser) {
         //get post that is not deleted or hide
-        PC_MsgService.getAllPostsByUserId(currentUser.id)
+        PC_MsgService.findAllFollowingPostsAndNotDeletedByUserId(currentUser.id)
             .then(response => {
                 setPosts(response.data);
                 setNewPostSubmitted(false); // Reset the new post submission state

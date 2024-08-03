@@ -158,7 +158,7 @@ const UserDetail = () => {
                 </div>
                    
                     {/* when user view it own profile, this should not show*/}
-                    {(id && id != currentUser.id) && (
+                    {(id && id !== currentUser.id) && (
                        <div style={styles.buttonContainer}>
                         <button className="btn btn-primary" style={styles.roundedButton} onClick={toggleFollow}>
                             {isFollowed ? 'Unfollow' : 'Follow'}
