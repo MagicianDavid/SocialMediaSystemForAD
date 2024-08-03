@@ -5,21 +5,30 @@ import { MoreHoriz as MoreHorizIcon } from '@mui/icons-material';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
+import PC_MsgService from '../../services/PC_MsgService';
 
 
-
-const handleDelete = (id) => {
-    console.log("Delete "+ id)
+const handleDelete = async (id) => {
+    console.log("Delete " + id);
+    try {
+        const response = await PC_MsgService.deletePost(id);
+        console.log(`Post ${id} deleted successfully.`);
+        // Perform any additional actions, like updating state or UI
+    } catch (error) {
+        console.error('Error deleting post:', error);
+    }
 };
 
-const handleEdit = (id) => {
-    console.log("Edit "+ id)
+const handleHide = async (id) => {
+    console.log("Hide " + id);
+    try {
+        const response = await PC_MsgService.hidePost(id);
+        console.log(`Post ${id} hidden successfully.`);
+        // Perform any additional actions, like updating state or UI
+    } catch (error) {
+        console.error('Error hiding post:', error);
+    }
 };
-
-const handleHide = (id) => {
-    console.log("Hide "+ id)
-};
-
 
 
 const MoreOption = ({ id }) => {
@@ -36,7 +45,7 @@ const MoreOption = ({ id }) => {
                 <MoreHorizIcon />
             </IconButton>
             <Menu {...bindMenu(popupState)}>
-                <MenuItem onClick={() => handleEdit(id)}>Edit</MenuItem>
+                {/* <MenuItem onClick={() => handleEdit(id)}>Edit</MenuItem> */}
                 <MenuItem onClick={() => handleDelete(id)}>Delete</MenuItem>
                 <MenuItem onClick={() => handleHide(id)}>Hide</MenuItem>
             </Menu>

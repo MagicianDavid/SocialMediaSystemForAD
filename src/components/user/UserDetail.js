@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import EmployeeService from '../../services/EmployeeService';
 import useCurrentUser from '../customhook/CurrentUser';
 import PC_MsgService from '../../services/PC_MsgService';
+
 import Post from '../Classess/Post';
 import FollowerFollowing from '../Classess/FollowerFollowingCount';
 
@@ -17,8 +18,8 @@ const UserDetail = () => {
     const currentUser = useCurrentUser();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [isFollowed, setIsFollowed] = useState(false);
-    const [isBlocked, setIsBlocked] = useState(false);
+    const [isFollowed, setIsFollowed] = useState(true);
+    const [isBlocked, setIsBlocked] = useState(true);
     const [isLiked, setIsLiked] = useState(false);
     const [posts, setPosts] = useState([]);
     const navigate = useNavigate();
@@ -29,14 +30,21 @@ const UserDetail = () => {
                 try {
                     setLoading(true);
                     const findId = id ? id : currentUser.id;
+                    let isFollower = true; // Default to false if the user is visiting their own profile
+                
                     const [employeeResponse, postsResponse] = await Promise.all([
                         EmployeeService.getEmployeeById(findId),
-                        PC_MsgService.getAllPostsByUserId(findId)
+                        PC_MsgService.getAllPostsByUserId(findId),
                     ]);
-
+                
+                    // Only check if the user is a follower if they are visiting another user's profile
+                    if (findId !== currentUser.id) {
+                        const isFollowerResponse = await EmployeeService.isfollower(currentUser.id, findId);
+                        isFollower = isFollowerResponse.data;
+                    }
+                
                     const employeeData = employeeResponse.data;
                     const postsData = postsResponse.data;
-                    console.log(currentUser.id);
 
                     setUser({
                         ...employeeData,
@@ -150,7 +158,7 @@ const UserDetail = () => {
                 </div>
                    
                     {/* when user view it own profile, this should not show*/}
-                    {(id && id !== currentUser.id) && (
+                    {(id && id != currentUser.id) && (
                        <div style={styles.buttonContainer}>
                         <button className="btn btn-primary" style={styles.roundedButton} onClick={toggleFollow}>
                             {isFollowed ? 'Unfollow' : 'Follow'}

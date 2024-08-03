@@ -12,7 +12,7 @@ import LikeButton from '../button_utils/LikeButton';
 import TimeFormat from '../Classess/timeFormat';
 
 
-const Post = ({ post }) => {
+const Post = ({ post , curId}) => {
     const navigate = useNavigate();
     const [commentCount, setCommentCount] = useState();
 
@@ -31,7 +31,7 @@ const Post = ({ post }) => {
         };
 
         fetchData();
-    }, [post]);
+    }, [post,]);
 
 
 
@@ -66,7 +66,7 @@ const Post = ({ post }) => {
                     <div>
                     <TimeFormat msgtimeStamp = {post.timeStamp}/>
                         <span>  
-                            <TagLists tagsString={post.tag.tag} />
+                            <TagLists tagsString={post.tag?.tag} />
                         </span>
                     </div>
                 </div>
@@ -79,7 +79,7 @@ const Post = ({ post }) => {
                         <IconButton aria-label="comments" sx={{ mr: 1 }} onClick={(event) => { event.stopPropagation(); getPostDetails(post.id); }}>
                             <CommentIcon />
                         </IconButton>{commentCount}
-                        <LikeButton  userId={post.user?.id} msgId={post.id}/>
+                        <LikeButton msgId={post.id}/>
                     </div>
                     <ReportButton
                         userId={post.user?.id}

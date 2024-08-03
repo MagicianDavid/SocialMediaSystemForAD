@@ -12,7 +12,7 @@ const PostForm = ({ onSubmit, userId }) => {
             content: content,
             timeStamp: new Date().toISOString(), 
             visibility: true, 
-            status: true, 
+            status: "show", 
             likes: 0,
             tags: []
         };

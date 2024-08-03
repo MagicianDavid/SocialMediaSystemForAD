@@ -30,6 +30,7 @@ const PostList = () => {
 
     return (
         <div className="contentDiv">
+            <h3> Trending </h3>
             {/*  Post Form  */}
             {currentUser && <PostForm onSubmit={handlePostSubmit} userId={currentUser.id} />} 
             {posts.map(post => (

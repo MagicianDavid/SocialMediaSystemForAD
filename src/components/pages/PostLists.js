@@ -12,6 +12,7 @@ const PostList = () => {
     //Fetch Post by User ID, User Follower
     useEffect(() => {      
         if (currentUser) {
+        //get post that is not deleted or hide
         PC_MsgService.getAllPostsByUserId(currentUser.id)
             .then(response => {
                 setPosts(response.data);
@@ -30,10 +31,11 @@ const PostList = () => {
 
     return (
         <div className="contentDiv">
+            <h3>News Feeds</h3>
             {/*  Post Form  */}
             {currentUser && <PostForm onSubmit={handlePostSubmit} userId={currentUser.id} />} 
             {posts.map(post => (
-                <Post key={post.id} post={post} />
+                <Post key={post.id} post={post} curId={currentUser} />
             ))}
         </div>
     );

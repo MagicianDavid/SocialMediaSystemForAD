@@ -1,18 +1,21 @@
 import React, { useState, useEffect } from 'react';
+import useCurrentUser from '../customhook/CurrentUser';
+
 import { IconButton } from '@mui/material';
 import { Favorite as FavoriteIcon, FavoriteBorder as FavoriteBorderIcon} from '@mui/icons-material';
 import PC_MsgService from '../../services/PC_MsgService';
 
-const LikeButton = ({ userId, msgId }) => {
+const LikeButton = ({ msgId }) => {
     const [isLiked, setIsLiked] = useState(false);
     const [likeCount, setLikeCount] = useState(0);
+    const currentUser = useCurrentUser();
 
     useEffect(() => {
         const fetchLikeStatusAndCount = async () => {
             try {
-                if (userId && msgId) {
+                if (currentUser && msgId) {
                 const [likeStatusResponse, likeCountResponse] = await Promise.all([
-                    PC_MsgService.hasUserLikedPost(userId, msgId),
+                    PC_MsgService.hasUserLikedPost(currentUser.id, msgId),
                     PC_MsgService.getCountLikesByPostId(msgId)
                 ]);
                 setIsLiked(likeStatusResponse.data);
@@ -26,7 +29,7 @@ const LikeButton = ({ userId, msgId }) => {
         };
 
         fetchLikeStatusAndCount();
-    }, [userId, msgId]);
+    }, [currentUser, msgId]);
 
     const handleLikeClick = async (event) => {
         event.stopPropagation();
@@ -36,7 +39,7 @@ const LikeButton = ({ userId, msgId }) => {
             setIsLiked(newIsLiked);
             setLikeCount(newIsLiked ? likeCount + 1 : likeCount - 1);
 
-            await PC_MsgService.LikeOrUnlikePCMsg(userId, msgId);
+            await PC_MsgService.LikeOrUnlikePCMsg(currentUser.id, msgId);
             console.log('Liked post:', msgId);
         } catch (error) {
             console.error("There was an error liking/unliking the post!", error);

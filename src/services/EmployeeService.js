@@ -23,18 +23,7 @@ class EmployeeService {
     updateEmployeeStatus(employeeId,status) {
         return axios.put(`${EMPLOYEE_API_BASE_URL}/updateStatus/${employeeId}?status=${status}`);
     }
-
-    blockUser(userId,blockUserId) {
-        return axios.put(`${EMPLOYEE_API_BASE_URL}/${userId}/block/${blockUserId}`);
-    }
-
-    followUser(userId,followingUserId){
-        return axios.post(`${EMPLOYEE_API_BASE_URL}/${userId}/follow/${followingUserId}`);
-    }
-
-    unfollowUser(userId,followingUserId){
-        return axios.post(`${EMPLOYEE_API_BASE_URL}/${userId}/unfollow/${followingUserId}`);
-    }
+    
 
     getFollowList(userId){
         return axios.get(`${EMPLOYEE_API_BASE_URL}/${userId}/followers`);
@@ -42,6 +31,30 @@ class EmployeeService {
 
     getFollowingList(userId){
         return axios.get(`${EMPLOYEE_API_BASE_URL}/${userId}/followings`);
+    }
+
+    getUserBlockList(userId){
+        return axios.get(`${EMPLOYEE_API_BASE_URL}/findAllBlockUserByUId/${userId}`);
+    }
+
+    blockUser(userId,blockUserId) {
+        return axios.put(`${EMPLOYEE_API_BASE_URL}/${userId}/block/${blockUserId}`);
+    }
+
+    unblockUser(userId,unblockId) {
+        return axios.put(`${EMPLOYEE_API_BASE_URL}/${userId}/unblock/${unblockId}`);
+    }
+
+    followUser(userId,followingUserId){
+        return axios.post(`${EMPLOYEE_API_BASE_URL}/${userId}/follow/${followingUserId}`);
+    }
+
+    unfollowUser(userId,followingUserId){
+        return axios.delete(`${EMPLOYEE_API_BASE_URL}/${userId}/unfollow/${followingUserId}`);
+    }
+
+    isfollower(userId,followingUserId){
+        return axios.get(`${EMPLOYEE_API_BASE_URL}/${userId}/isfollower/${followingUserId}`);
     }
 
     

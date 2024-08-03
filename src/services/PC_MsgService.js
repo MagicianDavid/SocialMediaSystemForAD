@@ -47,6 +47,13 @@ class RoleService {
     }
 
 
+    deletePost(postId){
+        return axios.put(`${ROLE_API_BASE_URL}/delete/${postId}`, postId);
+    }
+
+    hidePost(postId){
+        return axios.put(`${ROLE_API_BASE_URL}/hide/${postId}`, postId);
+    }
 }
 
 export default new RoleService();
