@@ -95,3 +95,42 @@
   top: 10px;  /* Adjust as needed */
   right: 10px;  /* Adjust as needed */
 }
+
+
+/* SmcardPanel */
+.flex-container {
+  display: flex;
+  flex-wrap: nowrap; /* Prevent wrapping */
+}
+
+/* Ensure the flex items take up equal height */
+.flex-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+}
+
+.sm-card-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px; /* Adjust the gap as needed */
+  justify-content: space-between;
+}
+
+/* Individual card styles */
+.sm-card {
+  flex: 1 1 100%; /* Ensure each card takes up 25% of the container height */
+  margin-bottom: 10px; /* Adjust the margin as needed */
+  background-color: #f8f9fa;
+  text-align: center;
+}
+
+/* Remove bottom margin for the last card */
+.sm-card:last-child {
+  margin-bottom: 0;
+}
+.card-content {
+  padding: 20px;
+  background-color: #f8f9fa;
+  text-align: center;
+}

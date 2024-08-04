@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { IconButton } from '@mui/material';
 import { Comment as CommentIcon} from '@mui/icons-material';
 import { Link } from 'react-router-dom';
+import useCurrentUser from '../customhook/CurrentUser';
 
 import ReportButton from '../button_utils/ReportButton';
 import MoreOption from '../button_utils/moreOption';
@@ -14,12 +15,15 @@ import TimeFormat from '../Classess/timeFormat';
 
 const Post = ({ post , curId}) => {
     const navigate = useNavigate();
-    const [commentCount, setCommentCount] = useState();
+    const [commentCount, setCommentCount] = useState(0);
+    const [refresh, setRefresh] = useState(false);
+    const currentUser = useCurrentUser();
+    const isAdmin = currentUser?.auth.rank === 'L1';
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                if (post) {
+                if (post && post.id) {
                     const response = await PC_MsgService.getCountCommentsByPostId(post.id);
                     setCommentCount(response.data);
                     //setIsLiked(!likestate);
@@ -31,9 +35,15 @@ const Post = ({ post , curId}) => {
         };
 
         fetchData();
-    }, [post,]);
+    }, [post,refresh]);
 
+    //refresh Tags
+    const refreshTags = () => {
+        setRefresh(prev => !prev); // Toggle the refresh state to trigger useEffect
 
+        // Logic to refresh tags
+        // Assuming post is being passed from parent, you may need to trigger a fetch or pass a callback from parent
+    };
 
     if (!post) {
         return null; // Add a safeguard in case post is undefined
@@ -59,14 +69,14 @@ const Post = ({ post , curId}) => {
                             <Link to={`/userProfile/${post.user_id.id}`}>{post.user_id.name}</Link>
                         </h3>
                     </div>
-                    <MoreOption id={post.id} />
+                    <MoreOption id={post.id} auth={isAdmin} refreshTags={refreshTags}/>
                 </div>
 
                 <div className="d-flex justify-content-between">
                     <div>
                     <TimeFormat msgtimeStamp = {post.timeStamp}/>
                         <span>  
-                            <TagLists tagsString={post.tag?.tag} />
+                            {isAdmin && <><TagLists tagsString={post.tag?.tag} /></> }
                         </span>
                     </div>
                 </div>

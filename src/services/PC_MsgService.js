@@ -5,6 +5,10 @@ const ROLE_API_BASE_URL = "http://localhost:8080/api/pcmsgs";
 
 class RoleService {
 
+    getTagCounts(){
+        return axios.get(`${ROLE_API_BASE_URL}/tag-counts`);
+    }
+
     findAllPosts(){
         return axios.get(`${ROLE_API_BASE_URL}/findHotPosts`);
     }
@@ -59,6 +63,17 @@ class RoleService {
     hidePost(postId){
         return axios.put(`${ROLE_API_BASE_URL}/hide/${postId}`, postId);
     }
+
+
+
+    getTagById(Id){
+        return axios.get(`${ROLE_API_BASE_URL}/getTag/${Id}`, Id);
+    }
+
+    updateTag(id, tagData) {
+        return axios.put(`${ROLE_API_BASE_URL}/editTag/${id}`, tagData);
+    }
+
 }
 
 export default new RoleService();

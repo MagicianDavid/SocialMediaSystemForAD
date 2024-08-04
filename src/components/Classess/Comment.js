@@ -22,6 +22,8 @@ const Comment = ({ comment, nestingLevel = 0}) => {
     const [childComments, setChildComments] = useState([]);
     const [commentCount, setCommentCount] = useState(0);
     const currentUser = useCurrentUser();
+    const isAdmin = currentUser?.auth.rank === 'L1';
+    const isCommentRemoved = !isAdmin && (comment.status === 'delete' || comment.status === 'hide');
 
     useEffect(() => {
         const fetchData = async () => {
@@ -49,11 +51,6 @@ const Comment = ({ comment, nestingLevel = 0}) => {
     
     const adjustedWidth = `${Math.max(100 - nestingLevel * 5, MIN_WIDTH)}%`;
 
-    const isAdmin = currentUser?.auth.rank === 'L1';
-
-    const isCommentRemoved = !isAdmin && (comment.status === 'delete' || comment.status === 'hide');
-
-
     return (
         <div style={{ marginLeft: `${nestingLevel * 20}px`, width: adjustedWidth }}>
             <div className="d-flex justify-content-between" > 
@@ -70,11 +67,11 @@ const Comment = ({ comment, nestingLevel = 0}) => {
                         <>
                             <TimeFormat msgtimeStamp = {comment.timeStamp}/>
                             <span>  
-                                <TagLists tagsString={comment.tag?.tag} />
+                                {isAdmin && <><TagLists tagsString={comment.tag?.tag} /></> }
                             </span>
                         </>}
                 </div>
-                <MoreOption id={comment.id} />
+                <MoreOption id={comment.id} auth={isAdmin} />
 
             </div>
             <p>{isCommentRemoved ? 'Comments have been removed.' : comment.content}</p>

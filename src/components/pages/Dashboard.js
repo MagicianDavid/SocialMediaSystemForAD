@@ -1,19 +1,51 @@
 // src/components/Dashboard.js
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../services/AuthContext';
 import LoginService from '../../services/LoginService';
+import LatestReports from '../Dashboard/LastReport';
+import HotPosts  from '../Dashboard/HotPosts';
+import LatestPosts  from '../Dashboard/LatestPosts';
 
 import { PieChart } from '@mui/x-charts/PieChart';
-import { LineChart } from '@mui/x-charts/LineChart';
+import PC_MsgService from '../../services/PC_MsgService';
 
-import Slider from '@mui/material/Slider';
+import {Box, FormControl, FormControlLabel, Checkbox, FormGroup, FormLabel } from '@mui/material';
+import SmCardPanel from '../Dashboard/SmCardPanel';
 
 const Dashboard = () => {
     const navigate = useNavigate();
     const { currentUser, setCurrentUser } = useAuth();
-    const [itemNb, setItemNb] = React.useState(4);
+    const [selectedTags, setSelectedTags] = useState([]);
+    const [countTags , setcountTags] = useState([]);
 
+
+    useEffect(() => {
+      const fetchData = async () => {
+          try {
+              const response = await PC_MsgService.getTagCounts();
+              setcountTags(response.data);
+              const initialTags = Object.entries(response.data)
+              .filter(([_, value]) => value > 0) 
+              .map(([label, _]) => label);
+              setSelectedTags(initialTags); 
+          } catch (error) {
+              console.error('Error fetching data:', error);
+          }
+      };
+
+      fetchData();
+    }, []);
+
+    const handleTagChange = (event) => {
+      const tag = event.target.value;
+      setSelectedTags(prevTags =>
+        prevTags.includes(tag)
+          ? prevTags.filter(t => t !== tag)
+          : [...prevTags, tag]
+      );
+    };
+  
     const handleLogout = () => {
         LoginService.logout();
         setCurrentUser(null);
@@ -21,35 +53,28 @@ const Dashboard = () => {
         window.location.reload();
     };
 
-    const handleItemNbChange = (event, newValue) => {
-        if (typeof newValue !== 'number') {
-          return;
-        }
-        setItemNb(newValue);
-        setItemNb(newValue);
+
+    const getColor = (label) => {
+      const colors = {
+        toxic: '#FF6384',
+        racism: '#36A2EB',
+        attack: '#FFCE56',
+        sexism: '#66BB6A',
+        aggressive: '#FF7043',
+        undefined: '#AB47BC',
       };
-    
+      return colors[label] || '#8D6E63';
+    };
 
-    const data = [
-        { tags: 'angry', value: 500, color: '#f00' },
-        { tags: 'sad', value: 100, color: '#00f' },
-        { tags: 'violent', value: 700, color: '#FF5733' },
-        { tags: 'undefined', value: 600, color: '#0f0' },
-        // Add more data as needed
-      ];
-
-    const uData = [4000, 3000, 2000, 2780, 1890, 2390, 3490];
-    const pData = [2400, 1398, 9800, 3908, 4800, 3800, 4300];
-    const xLabels = [
-    'Page A',
-    'Page B',
-    'Page C',
-    'Page D',
-    'Page E',
-    'Page F',
-    'Page G',
-    ];
-
+    const data = Object.entries(countTags).map(([label, value]) => ({
+      label,
+      value,
+      color: getColor(label), // Define a function to get colors based on the label
+    }));
+  
+    const filteredData = selectedTags.length === 0
+                      ? data.filter(item => item.value > 0)
+                      : data.filter((item) => selectedTags.includes(item.label))
 
     return (
 
@@ -59,8 +84,8 @@ const Dashboard = () => {
             <h2 className="text-left">Dashboard</h2>
             {currentUser && currentUser.auth ? (
                 <div>
-                    <p>Welcome, {currentUser.username}</p>
-                    <button onClick={handleLogout}>Logout</button>
+                    <h4>Hi, Welcome back, {currentUser.username}</h4>
+                    {/* <button onClick={handleLogout}>Logout</button> */}
                 </div>
             ) : (
                 <p>Loading...</p>
@@ -71,47 +96,60 @@ const Dashboard = () => {
         
         {/* Check if the user is logged in */}
         {currentUser ? (
-          <div className="row">
-            {/* Container for PieChart and Slider */}
-            <div className="col-lg-4 col-md-12 mb-4">
+          <div className="row flex-container">
+          <div className="col-lg-8 col-md-6 col-12 mb-4 flex-item">
+            <div className="card" style={{ padding: '20px', backgroundColor: '#f8f9fa', textAlign: 'center' }}>
               <PieChart
                 skipAnimation
+                margin={{left: 100, right:100, bottom: 0}}
                 series={[
                   {
-                    data: data.slice(0, itemNb).map((item) => ({
-                      id: item.tags,
+                    data: filteredData.map((item) => ({
+                      id: item.label,
+                      label: item.label,
                       value: item.value,
                       color: item.color,
                     })),
                     arcLabel: (item) => `${item.id} (${item.value})`,
                   },
                 ]}
-                width={400}
-                height={400}
+             
+                height={400} 
+                slotProps={{
+                  legend: {
+                    direction: 'column',
+                    position: { vertical: 'top', horizontal: 'left' },
+                    padding: 14,
+                  },
+                }}
               />
-              <Slider
-                value={itemNb}
-                onChange={handleItemNbChange}
-                valueLabelDisplay="auto"
-                min={1}
-                max={4}
-                aria-labelledby="input-item-number"
-              />
-            </div>
-      
-            {/* Container for LineChart */}
-            <div className="col-lg-8 col-md-12">
-                <div style={{ height: "450px",width: '100%' }}>
-                <LineChart
-                    series={[
-                    { data: pData, label: 'pv' },
-                    { data: uData, label: 'uv' },
-                    ]}
-                    xAxis={[{ scaleType: 'point', data: xLabels }]}
-                />
-                </div>
+              <FormControl component="fieldset" style={{ marginTop: '20px' }}>
+                <Box display="flex" flexWrap="wrap" overflow="auto" sx={{ m: 0 }}>
+                  <FormGroup row sx={{ m: 0 }}>
+                    {data.map((item) => (
+                      <FormControlLabel
+                        key={item.label}
+                        control={
+                          <Checkbox
+                            checked={selectedTags.includes(item.label)}
+                            onChange={handleTagChange}
+                            value={item.label}
+                            disabled={item.value === 0}
+                          />
+                        }
+                        label={item.label}
+                      />
+                    ))}
+                  </FormGroup>
+                </Box>
+              </FormControl>
             </div>
           </div>
+          
+          <div className="col-lg-4 col-md-6 col-12 mb-4">
+              <SmCardPanel/>
+          </div>
+        </div>
         ) : (
           <div className="row">
             <div className="col-12">
@@ -121,15 +159,16 @@ const Dashboard = () => {
         )}
       
         {/* Grid container for additional information */}
-        <div className="row mt-4">
+        <div className="row">
           <div className="col-md-4 col-sm-12 mb-4">
-            <div className="grid-item">API call latest Report</div>
+              <LatestReports />
+            {/* <div className="grid-item">API call latest Report</div> */}
           </div>
           <div className="col-md-4 col-sm-12 mb-4">
-            <div className="grid-item">API call latest Enquiries</div>
+              <HotPosts />
           </div>
           <div className="col-md-4 col-sm-12 mb-4">
-            <div className="grid-item">API call top Post</div>
+              <LatestPosts />
           </div>
         </div>
       </div>
