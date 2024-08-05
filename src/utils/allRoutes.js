@@ -17,6 +17,11 @@ const allRoutes = [
             { path: '/auths/add', menuName: 'Add Auth' },
             { path: '/auths/edit', menuName: 'Edit Auth' },
         ] },
+    { path: '/labels', component: 'LabelList', menuName: 'Label', children: [
+            { path: '/labellist', menuName: 'Label List' },
+            { path: '/labels/add', menuName: 'Add Label' },
+            { path: '/labels/edit', menuName: 'Edit Label' },
+        ] },
     { path: '/public', component: 'PostList', menuName: 'Public', children: [
             { path: '/mainmenu', menuName: 'New Feeds' },
             { path: '/userProfile', menuName: 'User Profile' },

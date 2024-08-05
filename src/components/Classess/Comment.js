@@ -32,22 +32,23 @@ const Comment = ({ comment, nestingLevel = 0}) => {
                     const response = await PC_MsgService.getChildrenByPCMId(comment.id);
                     setCommentCount(response.data.length);
                     setChildComments(response.data);
+                    // console.log("myid" + currentUser.id);
                 }
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
         };
         fetchData();
-    }, [showChildComments, comment, childComments]);
-
+    }, [showChildComments, comment, childComments,currentUser]);
+   
+    if (!currentUser) {
+        return <div>Loading...</div>;
+    }
 
     const handleReplyClick = () => {
         setShowReplyInput(!showReplyInput);
     };
 
-    const handleReportSubmit = (reportData) => {
-        console.log('Report submitted:', reportData);
-    };
     
     const adjustedWidth = `${Math.max(100 - nestingLevel * 5, MIN_WIDTH)}%`;
 
@@ -88,8 +89,8 @@ const Comment = ({ comment, nestingLevel = 0}) => {
                 {currentUser && (
                     <ReportButton
                         userId={currentUser.id}
+                        objType={"comment"}
                         reportId={comment.id}
-                        onReportSubmit={handleReportSubmit}
                     />
                 )}
             </div>

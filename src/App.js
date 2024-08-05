@@ -21,12 +21,12 @@ import PostList from './components/pages/PostLists';
 import PostDetails from './components/pages/PostDetails';
 import FollowerFollowing from './components/pages/FollowerFollowing';
 import NotificationList from './components/pages/NotificationList';
-import Reports from './components/pages/Reports'
-import ReportDetail from './components/pages/ReportDetail'
+import Reports from './components/report/Reports'
 import UserHistory from './components/pages/UserHistory';
 import Lobby from './components/pages/Lobby'
 import ScrollPosts from "./components/pages/TestPageable";
 import LabelList from "./components/Label/LabelList";
+import LabelForm from './components/Label/LabelForm';
 
 function App() {
 
@@ -52,6 +52,8 @@ function App() {
                                 <Route path="/lobby" element={<Lobby/>} />
                                 <Route path="/:id/friends" element={<FollowerFollowing/>}/>
                                 <Route path="/labellist" element={<LabelList/>} />
+                                <Route path="/labels/edit/:id" element={<LabelForm/>} />
+                                <Route path="/labels/add" element={<LabelForm/>} />
 
 
                                 <Route element={<ProtectedRoute requiredPath="/mainmenu" />}>
@@ -65,10 +67,10 @@ function App() {
                                 <Route element={<ProtectedRoute requiredPath="/notificationlist" />}>
                                     <Route path="/notificationlist" element={<NotificationList/>}/>
                                 </Route>
-
+{/* 
                                 <Route element={<ProtectedRoute requiredPath="/users/reportdetail/:id" />}>
                                     <Route path="/users/reportdetail/:reportId" element={<ReportDetail />} />
-                                </Route>
+                                </Route> */}
 
                                 <Route element={<ProtectedRoute requiredPath="/userdetails/:userId" />}>
                                     <Route path="/userdetails/:userId" element={<UserHistory/>} /> 

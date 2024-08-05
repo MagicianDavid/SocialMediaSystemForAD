@@ -1,12 +1,28 @@
-// ReportButton.js
-import React, { useState } from 'react';
+  // ReportButton.js
+import React, { useEffect, useState } from 'react';
 import { IconButton, Modal, Box, Typography, RadioGroup, FormControlLabel, Radio, TextField, Button } from '@mui/material';
 import { FlagOutlined as FlagOutlinedIcon } from '@mui/icons-material';
+import LabelService from '../../services/LabelService';
+import ReportService from '../../services/ReportService';
+import PC_MsgService from '../../services/PC_MsgService';
 
-const ReportButton = ({ userId, reportId, onReportSubmit }) => {
+const ReportButton = ({ userId, objType, reportId }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [labels, setLabels] = useState([]);
     const [reportType, setReportType] = useState('');
-    const [remarks, setRemarks] = useState('');
+    const [reason, setReason] = useState('');
+    const [error, setError] = useState('');
+
+    useEffect(()=>{
+        LabelService.getAllLabels()
+            .then((response) => {
+                setLabels(response.data);
+                console.log(userId);
+            })
+            .catch((error) => {
+                console.error('There was an error retrieving the labels!', error);
+            });
+    }, []);
 
     const handleReportClick = () => {
         setIsModalOpen(true);
@@ -15,29 +31,51 @@ const ReportButton = ({ userId, reportId, onReportSubmit }) => {
     const handleReportClose = () => {
         setIsModalOpen(false);
         setReportType('');
-        setRemarks('');
+        setReason('');
     };
 
     const handleReportTypeChange = (event) => {
         setReportType(event.target.value);
     };
 
-    const handleRemarksChange = (event) => {
-        setRemarks(event.target.value);
+    const handleReasonChange = (event) => {
+        setReason(event.target.value);
     };
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        const timestamp = new Date().toISOString();
-        onReportSubmit({
-            userId,
-            reportId,
-            reportType,
-            remarks,
-            timestamp,
-        });
-        handleReportClose();
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        let prefixedReportId = '';
+        if (objType === 'user') {
+            prefixedReportId = `u${reportId}`;
+        } else if (objType === 'post') {
+            prefixedReportId = `p${reportId}`;
+        } else if (objType === 'comment') {
+            prefixedReportId = `c${reportId}`;
+        }
+
+        const report = {
+            label: { id: labels.find(label => label.label === reportType).id },
+            reason: reason,
+            reportedId: prefixedReportId,
+            reportUser: { id: parseInt(userId) }, // Use a User object
+            reportDate: new Date().toISOString(),
+            status:'Pending'
+        };
+
+        ReportService.createReport(report)
+            .then(() => {
+                // Clear the form fields
+                setReportType('');
+                setReason('');
+                setError('');
+                setIsModalOpen(false);
+            })
+            .catch((error) => {
+                console.error('There was an error saving the report!', error);
+                setError('There was an error saving the report. Please try again.');
+            });
     };
+
 
     return (
         <>
@@ -59,37 +97,41 @@ const ReportButton = ({ userId, reportId, onReportSubmit }) => {
                     <Typography id="report-modal-title" variant="h6" component="h2">
                         Report
                     </Typography>
-                    <form onSubmit={handleSubmit}>
-                        <RadioGroup
-                            aria-labelledby="report-type-group-label"
-                            name="reportType"
-                            value={reportType}
-                            onChange={handleReportTypeChange}
-                        >
-                            <FormControlLabel value="spam" control={<Radio />} label="Spam" />
-                            <FormControlLabel value="abuse" control={<Radio />} label="Abuse" />
-                            <FormControlLabel value="harassment" control={<Radio />} label="Harassment" />
-                            <FormControlLabel value="other" control={<Radio />} label="Other" />
-                        </RadioGroup>
-                        <TextField
-                            fullWidth
-                            label="Remarks"
-                            multiline
-                            rows={4}
-                            value={remarks}
-                            onChange={handleRemarksChange}
-                            variant="outlined"
-                            margin="normal"
-                        />
-                        <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
-                            <Button variant="contained" color="primary" type="submit">
-                                Submit
-                            </Button>
-                            <Button variant="outlined" color="secondary" onClick={handleReportClose}>
-                                Cancel
-                            </Button>
-                        </Box>
-                    </form>
+                 <form onSubmit={handleSubmit}>
+                <Box mb={2}>
+                    <RadioGroup
+                        aria-labelledby="report-type-group-label"
+                        name="reportType"
+                        value={reportType}
+                        onChange={handleReportTypeChange}
+                    >
+                        {labels.map(label => (
+                            <FormControlLabel 
+                                key={label.id} 
+                                value={label.label} 
+                                control={<Radio />} 
+                                label={label.label} 
+                            />
+                        ))}
+                    </RadioGroup>
+                </Box>
+                <Box mb={2}>
+                    <TextField
+                        label="Reason"
+                        name="reason"
+                        value={reason}
+                        onChange={handleReasonChange}
+                        required
+                        multiline
+                        rows={4} // Adjust the number of rows to make the TextField bigger
+                        fullWidth
+                    />
+                </Box>
+                {error && <Typography color="error">{error}</Typography>}
+                <Button type="submit" variant="contained" color="primary">
+                    Submit
+                </Button>
+            </form>
                 </Box>
             </Modal>
         </>

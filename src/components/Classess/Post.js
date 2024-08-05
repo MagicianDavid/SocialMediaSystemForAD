@@ -23,11 +23,11 @@ const Post = ({ post , curId}) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                if (post && post.id) {
+                if (post && post.id && currentUser) {
                     const response = await PC_MsgService.getCountCommentsByPostId(post.id);
                     setCommentCount(response.data);
-                    //setIsLiked(!likestate);
                     console.log('Fetched Comment Count:', response.data);
+                    console.log("myid", currentUser);
                 }
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -35,7 +35,12 @@ const Post = ({ post , curId}) => {
         };
 
         fetchData();
-    }, [post,refresh]);
+    }, [post, refresh, currentUser]);
+
+
+    if (!currentUser) {
+        return <div>Loading...</div>;
+    }
 
     //refresh Tags
     const refreshTags = () => {
@@ -54,10 +59,6 @@ const Post = ({ post , curId}) => {
         console.log(`Detail post with id: ${id}`);
     };
 
-
-    const handleReportSubmit = (reportData) => {
-        console.log('Report submitted:', reportData);
-    };
 
 
     return (
@@ -92,9 +93,9 @@ const Post = ({ post , curId}) => {
                         <LikeButton msgId={post.id}/>
                     </div>
                     <ReportButton
-                        userId={post.user?.id}
+                        userId={currentUser}
                         reportId={post.id}
-                        onReportSubmit={handleReportSubmit}
+                        objType={"post"}
                     />
                 </div>
                 <hr />
