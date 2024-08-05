@@ -4,7 +4,8 @@ import {useParams} from "react-router-dom";
 
 const UserProfile = () => {
     const { id } = useParams();
-    if (id) {
+
+    if (!id) {
         return UserDetail(parseInt(id), 10);
     } else {
         return UserDetail();

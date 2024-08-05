@@ -65,6 +65,8 @@ class RoleService {
     }
 
 
+    //getPageable() to be provided
+
 
     getTagById(Id){
         return axios.get(`${ROLE_API_BASE_URL}/getTag/${Id}`, Id);

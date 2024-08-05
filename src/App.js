@@ -25,6 +25,8 @@ import Reports from './components/pages/Reports'
 import ReportDetail from './components/pages/ReportDetail'
 import UserHistory from './components/pages/UserHistory';
 import Lobby from './components/pages/Lobby'
+import ScrollPosts from "./components/pages/TestPageable";
+import LabelList from "./components/Label/LabelList";
 
 function App() {
 
@@ -43,11 +45,13 @@ function App() {
                                 {/* Delete post or comments not implemented yet*/}
                                 {/* lays parts */}
 
+                                <Route path="/postsPageable" element={<ScrollPosts />} />
                                 <Route path="/userProfile/:id?" element={<UserProfile />} />
                                  {/* Not protected yet */}
                                  <Route path="/postsdetails/:id" element={<PostDetails />} />
                                 <Route path="/lobby" element={<Lobby/>} />
                                 <Route path="/:id/friends" element={<FollowerFollowing/>}/>
+                                <Route path="/labellist" element={<LabelList/>} />
 
 
                                 <Route element={<ProtectedRoute requiredPath="/mainmenu" />}>

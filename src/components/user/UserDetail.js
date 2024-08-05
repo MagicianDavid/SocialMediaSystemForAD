@@ -7,7 +7,6 @@ import PC_MsgService from '../../services/PC_MsgService';
 import Post from '../Classess/Post';
 import FollowerFollowing from '../Classess/FollowerFollowingCount';
 
-
 import { useParams, useNavigate } from "react-router-dom";
 import { IconButton } from '@mui/material';
 import { ArrowBack as ArrowBackIcon } from '@mui/icons-material';
@@ -18,8 +17,8 @@ const UserDetail = () => {
     const currentUser = useCurrentUser();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [isFollowed, setIsFollowed] = useState(true);
-    const [isBlocked, setIsBlocked] = useState(true);
+    const [isFollowed, setIsFollowed] = useState(false);
+    const [isBlocked, setIsBlocked] = useState(false);
     const [isLiked, setIsLiked] = useState(false);
     const [posts, setPosts] = useState([]);
     const navigate = useNavigate();
@@ -156,9 +155,8 @@ const UserDetail = () => {
                 <div style={styles.profileDetails}>
                     
                 </div>
-                   
                     {/* when user view it own profile, this should not show*/}
-                    {(id && id !== currentUser.id) && (
+                    {(id && parseInt(id) !== currentUser.id) && (
                        <div style={styles.buttonContainer}>
                         <button className="btn btn-primary" style={styles.roundedButton} onClick={toggleFollow}>
                             {isFollowed ? 'Unfollow' : 'Follow'}
