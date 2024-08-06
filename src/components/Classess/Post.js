@@ -93,7 +93,7 @@ const Post = ({ post , curId}) => {
                         <LikeButton msgId={post.id}/>
                     </div>
                     <ReportButton
-                        userId={currentUser}
+                        userId={currentUser.id}
                         reportId={post.id}
                         objType={"post"}
                     />
