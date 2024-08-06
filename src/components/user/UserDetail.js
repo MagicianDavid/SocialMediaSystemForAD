@@ -42,7 +42,7 @@ const UserDetail = (id) => {
         // add this user into currentUser's blockList
         // remove this user from currentUser's blockList
         EmployeeService.blockUser(currentUserId,id).then().catch((error) => {
-            setError(error.message);
+            setError(error.response.data.message);
             setLoading(false);
         });
         setIsBlocked(!isBlocked);
