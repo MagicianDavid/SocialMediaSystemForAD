@@ -1,4 +1,5 @@
 import React from 'react';
+
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import UserList from './components/user/UserList';
 import UserForm from './components/user/UserForm';
@@ -15,8 +16,17 @@ import Dashboard from './components/pages/Dashboard';
 import ProtectedRoute from './components/ProtectedRoute';
 import ErrorPage from './components/ErrorPage';
 import './App.css';
-import ScrollPosts from "./components/pages/TestPageable";
 
+import PostList from './components/pages/PostLists';
+import PostDetails from './components/pages/PostDetails';
+import FollowerFollowing from './components/pages/FollowerFollowing';
+import NotificationList from './components/pages/NotificationList';
+import Reports from './components/report/Reports'
+import UserHistory from './components/pages/UserHistory';
+import Lobby from './components/pages/Lobby'
+import ScrollPosts from "./components/pages/TestPageable";
+import LabelList from "./components/Label/LabelList";
+import LabelForm from './components/Label/LabelForm';
 
 function App() {
 
@@ -31,8 +41,47 @@ function App() {
                                 <Route path="/login" element={<LoginForm/>}/>
                                 <Route path="/register" element={<RegisterForm/>}/>
                                 <Route path="/error" element={<ErrorPage />} />
-                                <Route path="/userProfile/:id?" element={<UserProfile />} />
+
+                                {/* Delete post or comments not implemented yet*/}
+                                {/* lays parts */}
+
                                 <Route path="/postsPageable" element={<ScrollPosts />} />
+                                <Route path="/userProfile/:id?" element={<UserProfile />} />
+                                 {/* Not protected yet */}
+                                 <Route path="/postsdetails/:id" element={<PostDetails />} />
+                                <Route path="/lobby" element={<Lobby/>} />
+                                <Route path="/:id/friends" element={<FollowerFollowing/>}/>
+                                <Route path="/labellist" element={<LabelList/>} />
+                                <Route path="/labels/edit/:id" element={<LabelForm/>} />
+                                <Route path="/labels/add" element={<LabelForm/>} />
+
+
+                                <Route element={<ProtectedRoute requiredPath="/mainmenu" />}>
+                                    <Route path="/mainmenu" element={<PostList/>}/>
+                                </Route>
+
+                                <Route element={<ProtectedRoute requiredPath="/friends" />}>
+                                    <Route path="/friends" element={<FollowerFollowing/>}/>
+                                </Route>
+
+                                <Route element={<ProtectedRoute requiredPath="/notificationlist" />}>
+                                    <Route path="/notificationlist" element={<NotificationList/>}/>
+                                </Route>
+
+                                {/*<Route element={<ProtectedRoute requiredPath="/users/reportdetail/:id" />}>*/}
+                                {/*    <Route path="/users/reportdetail/:reportId" element={<ReportDetail />} />*/}
+                                {/*</Route>*/}
+
+                                <Route element={<ProtectedRoute requiredPath="/userdetails/:userId" />}>
+                                    <Route path="/userdetails/:userId" element={<UserHistory/>} /> 
+                                </Route>
+
+
+                                <Route element={<ProtectedRoute requiredPath="/users/reports" />}>
+                                    <Route path="/users/reports" element={<Reports/>}/>
+                                </Route>
+
+                                {/* David parts */}
                                 <Route element={<ProtectedRoute requiredPath="/dashboard" />}>
                                     <Route path="/dashboard" element={<Dashboard />} />
                                 </Route>
@@ -71,7 +120,8 @@ function App() {
 
                                 <Route element={<ProtectedRoute requiredPath="/auths/edit/:id" />}>
                                     <Route path="/auths/edit/:id" element={<AuthForm/>}/>
-                                </Route>
+                                </Route> 
+
                             </Routes>
                         </div>
                     </div>

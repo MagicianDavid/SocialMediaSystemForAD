@@ -15,9 +15,9 @@ const ScrollPosts = () => {
         setLoading(true);
         try {
             // TODO: fetchData(0) will run twice, haven't find out proper way to solve it
-            if (countFetchZeroPage === 2) {return;}
+            if (countFetchZeroPage === 2) {setLoading(false); return;}
             const response = await axios.get(`http://localhost:8080/api/pcmsgs/findAllPostsPageable?page=${currentPage}`);
-            const fetchedData = response.data._embedded.pCMsgDTOList;
+            const fetchedData = response?.data?._embedded?.pCMsgDTOList;
             setData(prevData => [...prevData, ...fetchedData]);
             setHasMore(currentPage < response.data.page.totalPages - 1);
         } catch (error) {
