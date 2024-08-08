@@ -1,37 +1,68 @@
-import React  from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { Modal, Button } from 'react-bootstrap';
 import Notification from '../Classess/Notification';
+import './NotificationList.css'
+import {useNotification} from "../../services/NotificationContext";
 
 const NotificationList = () => {
+    const { unreadNotifications,readNotifications, markAsRead } = useNotification();
+    const [showModal, setShowModal] = useState(false);
+    const [selectedNotification, setSelectedNotification] = useState(null);
 
+    const handleNotificationClick = (notification) => {
+        setSelectedNotification(notification);
+        setShowModal(true);
+        if (notification.notificationStatus === 'Unread') {
+            markAsRead(notification.id);
+        }
+    };
 
-    // Example posts data
-    const messages = [
-        {
-            id: 1,
-            content: 'This is the first notification.',
-            timestamp: '2023-07-01',
-        },
-        {
-            id: 2,
-            content: 'This is the second notification.',
-            timestamp: '2023-07-02',
-        },
-        {
-            id: 3,
-            content: 'This is the third notification.',
-            timestamp: '2023-07-03',
-        },
-    ];
+    return (
+        <div className="notification-list">
 
-   return (
-        <div className="contentDiv">
-            {messages.map(message => (
-                <Notification key={message.id} message={message} />
-            ))}
+            {unreadNotifications.length > 0 &&
+                <>
+                    Unread:
+                    {unreadNotifications
+                        .sort((a, b) => new Date(b.notificationTime) - new Date(a.notificationTime))
+                        .map(notification => (
+                            <Notification
+                                key={notification.id}
+                                message={notification}
+                                onClick={() => handleNotificationClick(notification)}
+                            ></Notification>
+                        ))}
+                </>
+            }
+            {readNotifications.length > 0 &&
+                <>
+                    Read:
+                    {readNotifications.sort((a, b) => new Date(b.notificationTime) - new Date(a.notificationTime))
+                        .map(notification => (
+                            <Notification
+                                key={notification.id}
+                                message={notification}
+                                onClick={() => handleNotificationClick(notification)}
+                            ></Notification>
+                        ))}
+                </>
+            }
+            {readNotifications.length === 0 && unreadNotifications.length === 0 && <>No Notifications yet!</>}
+
+            <Modal show={showModal} onHide={() => setShowModal(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>{selectedNotification?.title}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>{selectedNotification?.message}</Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setShowModal(false)}>
+                        Close
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </div>
     );
 };
-
-
 
 export default NotificationList;

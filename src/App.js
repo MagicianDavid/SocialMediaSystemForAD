@@ -9,13 +9,16 @@ import RoleForm from './components/role/RoleForm';
 import AuthList from './components/auth/AuthList';
 import AuthForm from './components/auth/AuthForm';
 import { AuthProvider } from './services/AuthContext';
+import { NotificationProvider } from './services/NotificationContext';
 import Navigation from './components/navigation/Navigation';
 import LoginForm from './components/pages/Login';
 import RegisterForm from './components/pages/Register';
 import Dashboard from './components/pages/Dashboard';
 import ProtectedRoute from './components/ProtectedRoute';
 import ErrorPage from './components/ErrorPage';
+import NotificationBell from './components/button_utils/NotificationBell';
 import './App.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 import PostList from './components/pages/PostLists';
 import PostDetails from './components/pages/PostDetails';
@@ -32,9 +35,11 @@ function App() {
 
     return (
         <AuthProvider>
+            <NotificationProvider>
                 <Router>
                     <div className="app-container">
                         <Navigation/>
+                        <NotificationBell />
                         <div className="content">
                             <Routes>
                                 <Route path="/" element={<LoginForm/>}/>
@@ -126,6 +131,7 @@ function App() {
                         </div>
                     </div>
                 </Router>
+            </NotificationProvider>
         </AuthProvider>
 );
 }

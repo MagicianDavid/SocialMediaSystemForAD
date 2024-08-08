@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import EmployeeService from '../../services/EmployeeService';
+import CheckUserThenBanService from '../../services/CheckUserThenBanService';
 import RoleService from '../../services/RoleService';
 import AuthService from '../../services/AuthService';
 import CountryService from '../../services/CountryService';
@@ -120,6 +121,8 @@ const EmployeeForm = () => {
                 }
                 navigate('/users');
             });
+            // add changeAndBan APi
+            CheckUserThenBanService.updateUserAuthAndNotify(id).then(() => {});
         } else {
             EmployeeService.createEmployee(employee).then(() => {
                 navigate('/users');
