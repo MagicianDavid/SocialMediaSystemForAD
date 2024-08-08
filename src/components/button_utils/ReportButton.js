@@ -72,7 +72,7 @@ const ReportButton = ({ userId, objType, reportId }) => {
             })
             .catch((error) => {
                 console.error('There was an error saving the report!', error);
-                setError('There was an error saving the report. Please try again.');
+                setError(error.response.data.message);
             });
     };
 
