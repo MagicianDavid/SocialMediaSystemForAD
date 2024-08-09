@@ -3,7 +3,8 @@ import PC_MsgService from '../../services/PC_MsgService';
  
 const CommentForm = ({onCommentSubmit, sourceId, userId}) => {
     const [comment, setComment] = useState('');
-    //console.log(sourceId);
+    console.log(userId);
+    console.log(sourceId);
 
     const handleCommentChange = (e) => {
         setComment(e.target.value);

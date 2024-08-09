@@ -3,6 +3,7 @@ import PC_MsgService from '../../services/PC_MsgService';
 
 const PostForm = ({ onSubmit, userId }) => {
     const [content, setContent] = useState('');
+    console.log(userId);
 
     const handleSubmit = async (e) => {
         e.preventDefault();

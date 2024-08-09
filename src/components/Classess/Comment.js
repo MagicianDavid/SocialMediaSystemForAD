@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import ReportButton from '../button_utils/ReportButton'
 import MoreOption from '../button_utils/moreOption';
 import CommentForm from '../Classess/CommentForm'; 
@@ -18,37 +18,57 @@ const MIN_WIDTH = 80; // Define the minimum width percentage
 const Comment = ({ comment, nestingLevel = 0}) => {
     
     const [showReplyInput, setShowReplyInput] = useState(false);
-    const [showChildComments] = useState(false);
+    const [showChildComments, setShowChildComments] = useState(false);
     const [childComments, setChildComments] = useState([]);
     const [commentCount, setCommentCount] = useState(0);
     const currentUser = useCurrentUser();
     const isAdmin = currentUser?.auth.rank === 'L1';
     const isCommentRemoved = !isAdmin && (comment.status === 'delete' || comment.status === 'hide');
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                if (comment && comment.id && currentUser) {
-                    const response = await PC_MsgService.getChildrenByPCMId(comment.id);
-                    setCommentCount(response.data.length);
-                    setChildComments(response.data);
-                    // console.log("myid" + currentUser.id);
-                }
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        };
-        fetchData();
-    }, [showChildComments, comment, childComments,currentUser]);
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         try {
+    //             if (comment && comment.id && currentUser) {
+    //                 const response = await PC_MsgService.getChildrenByPCMId(comment.id);
+    //                 setCommentCount(response.data.length);
+    //                 setChildComments(response.data);
+    //                 // console.log("myid" + currentUser.id);
+    //             }
+    //         } catch (error) {
+    //             console.error('Error fetching data:', error);
+    //         }
+    //     };
+    //     fetchData();
+    // }, [showChildComments, comment, currentUser]);
    
+
+
+    const fetchChildComments = useCallback(async () => {
+        try {
+            if (comment && comment.id && currentUser) {
+                const response = await PC_MsgService.getChildrenByPCMId(comment.id);
+                setCommentCount(response.data.length);
+                setChildComments(response.data);
+            }
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    }, [comment, currentUser]);
+
+    useEffect(() => {
+        fetchChildComments();
+    }, [fetchChildComments]);
+
     if (!currentUser) {
         return <div>Loading...</div>;
     }
 
     const handleReplyClick = () => {
         setShowReplyInput(!showReplyInput);
+        if (!showReplyInput) {
+            setShowChildComments(true); // Ensure child comments are shown when replying
+        }
     };
-
     
     const adjustedWidth = `${Math.max(100 - nestingLevel * 5, MIN_WIDTH)}%`;
 
@@ -102,8 +122,9 @@ const Comment = ({ comment, nestingLevel = 0}) => {
                 sourceId={comment.id}
                 onCommentSubmit={() => {
                     setShowReplyInput(true);
+                    fetchChildComments(); // Fetch child comments after a new reply is added
                 }}
-                userId={currentUser.id}
+                userId={parseInt(currentUser.id)}
                 />
                 <CommentChild CommentChild = {childComments} nestingLvl = {nestingLevel}/>
                 

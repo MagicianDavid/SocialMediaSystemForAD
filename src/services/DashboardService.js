@@ -1,6 +1,7 @@
 import axios from 'axios';
+import { BASE_API_URL } from './config';
 
-const API_BASE_URL = 'http://localhost:8080/api/dashboard';
+const API_BASE_URL = `${BASE_API_URL}/dashboard`;
 
 class DashboardService {
     getDashboardCounts() {

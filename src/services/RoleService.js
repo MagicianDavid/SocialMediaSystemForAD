@@ -1,7 +1,8 @@
 // src/services/RoleService.js
 import axios from 'axios';
+import { BASE_API_URL } from './config';
 
-const ROLE_API_BASE_URL = "http://localhost:8080/api/role";
+const ROLE_API_BASE_URL = `${BASE_API_URL}/role`;
 
 class RoleService {
     getAllRoles() {
