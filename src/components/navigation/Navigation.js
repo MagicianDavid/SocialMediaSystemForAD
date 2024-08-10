@@ -51,7 +51,7 @@ const Navigation = () => {
         <>{currentUser ? (
             <div className={`navigation ${isCollapsed ? 'collapsed' : ''}`}>
                 <button className="collapse-btn" onClick={toggleCollapse}>
-                    {isCollapsed ? 'Expand' : 'Collapse'}
+                    {isCollapsed ? '>' : 'Collapse'}
                 </button>
                 {currentUser ? (
                     <button className="collapse-btn" onClick={handleLogOut}>

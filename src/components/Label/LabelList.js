@@ -22,6 +22,24 @@ class LabelList extends Component {
         });
     }
 
+    handleColorChange = (id, event) => {
+        const newColor = event.target.value;
+        this.setState((prevState) => ({
+            labels: prevState.labels.map((label) =>
+                label.id === id ? { ...label, colorCode: newColor } : label
+            ),
+        }),() => {
+            const updatedLabel = this.state.labels.find(label => label.id === id);
+
+            // Send the updated label to the backend
+            LabelService.updateLabels(id, updatedLabel).then(() => {
+                console.log('Color updated successfully');
+            }).catch((error) => {
+                console.error('Error updating color:', error);
+            });
+        });
+    }
+
     render () {
         const { navigate } = this.props;
         return(
@@ -43,13 +61,19 @@ class LabelList extends Component {
                             <td>{label.id}</td>
                             <td>{label.label}</td>
                             <td>{label.penaltyScore}</td>
-                            <td>{label.colorCode}</td>
+                            <td>
+                                <input
+                                    type="color"
+                                    value={label.colorCode}
+                                    onChange={(event) => this.handleColorChange(label.id, event)}
+                                />
+                            </td>
                             <td>
                                 <button onClick={() => navigate(`/labels/edit/${label.id}`)}>Edit</button>
                                 <button onClick={() => this.deleteLabel(label.id)}>Delete</button>
                             </td>
                         </tr>
-                        ))}
+                    ))}
                     </tbody>
                 </table>
             </div>

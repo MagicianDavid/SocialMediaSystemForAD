@@ -30,6 +30,8 @@ import Lobby from './components/pages/Lobby'
 import ScrollPosts from "./components/pages/TestPageable";
 import LabelList from "./components/Label/LabelList";
 import LabelForm from './components/Label/LabelForm';
+import SendNotification from "./components/pages/SendNotification";
+import SearchResults from "./components/pages/SearchResult";
 
 function App() {
 
@@ -46,10 +48,10 @@ function App() {
                                 <Route path="/login" element={<LoginForm/>}/>
                                 <Route path="/register" element={<RegisterForm/>}/>
                                 <Route path="/error" element={<ErrorPage />} />
-
+                                <Route path="/search" element={<SearchResults />} />
                                 {/* Delete post or comments not implemented yet*/}
                                 {/* lays parts */}
-
+                                <Route path="/sendNotification/:id?" element={<SendNotification />} />
                                 <Route path="/postsPageable" element={<ScrollPosts />} />
                                 <Route path="/userProfile/:id?" element={<UserProfile />} />
                                  {/* Not protected yet */}

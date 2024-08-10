@@ -7,13 +7,13 @@ const Modal = ({ isOpen, onClose, onConfirm, title, children }) => {
 
     return (
         <div className="modal-overlay">
-            <div className="modal">
+            <div className="modal-content">
                 <button className="close-button" onClick={onClose}>&times;</button>
                 <h2>{title}</h2>
-                <div className="modal-content">
+                <div className="modal-body">
                     {children}
                 </div>
-                <div className="modal-actions">
+                <div className="modal-footer">
                     <button onClick={onConfirm}>Confirm</button>
                     <button onClick={onClose}>Cancel</button>
                 </div>

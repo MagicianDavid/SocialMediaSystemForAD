@@ -4,6 +4,7 @@ import Post from '../Classess/Post';
 import PostForm from '../Classess/PostForm';
 import PC_MsgService from '../../services/PC_MsgService';
 import { debounce } from "lodash";
+import SearchBar from "../button_utils/SearchBar";
 
 const PostList = () => {
     const [posts, setPosts] = useState([]);
@@ -68,6 +69,7 @@ const PostList = () => {
 
     return (
         <div className="contentDiv">
+            <SearchBar />
             <h3> Trending </h3>
             {currentUser && <PostForm onSubmit={handlePostSubmit} userId={currentUser.id} />}
             <div style={{ minHeight: '70vh', overflow: 'auto' }}>

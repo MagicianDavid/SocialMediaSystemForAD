@@ -37,7 +37,7 @@ const NotificationBell = () => {
 
                 <Dropdown.Menu>
                     {unreadNotifications.length === 0 && <>All Notification read</>}
-                    {unreadNotifications.slice(0, 3).map(notification => (
+                    {unreadNotifications.sort((a, b) => new Date(b.notificationTime) - new Date(a.notificationTime)).slice(0, 3).map(notification => (
                         <Dropdown.Item key={notification.id} onClick={() => handleNotificationClick(notification)}>
                             {notification.title}
                         </Dropdown.Item>

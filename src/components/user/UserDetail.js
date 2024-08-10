@@ -8,8 +8,8 @@ import Post from '../Classess/Post';
 import FollowerFollowing from '../Classess/FollowerFollowingCount';
 
 import { useParams, useNavigate } from "react-router-dom";
-import { IconButton } from '@mui/material';
-import { ArrowBack as ArrowBackIcon } from '@mui/icons-material';
+import { IconButton, Tooltip } from '@mui/material';
+import { ArrowBack as ArrowBackIcon, Notifications as NotificationsIcon } from '@mui/icons-material';
 
 const UserDetail = () => {
     const { id } = useParams(); // Use useParams to get the id from the URL
@@ -114,6 +114,10 @@ const UserDetail = () => {
         navigate(-1);
     };
 
+    const handleNotificationClick = () => {
+        navigate(`/sendNotification/${id}`);
+    };
+
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
 
@@ -124,6 +128,15 @@ const UserDetail = () => {
                     <ArrowBackIcon />
                 </IconButton>
                 <h1 style={styles.headerTitle}>User Profile</h1>
+                {/* Add the notification icon with tooltip */}
+                {/*TODO: this bell is only for moderator to notify by right now public can also, need to fix*/}
+                {id &&
+                    <Tooltip title="Notify User" arrow>
+                        <IconButton onClick={handleNotificationClick} style={styles.notificationIcon}>
+                            <NotificationsIcon />
+                        </IconButton>
+                    </Tooltip>
+                }
             </div>
             {user && (
                 // <div>
@@ -218,6 +231,9 @@ const styles = {
         borderRadius: '25px',  // Rounded edges
         padding: '5px',  // Padding for rectangular shape
         textAlign: 'center',  // Center text
+    },
+    notificationIcon: {
+        marginLeft: '40%',
     },
 };
 

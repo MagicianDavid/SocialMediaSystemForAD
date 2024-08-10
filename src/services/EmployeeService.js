@@ -8,6 +8,10 @@ class EmployeeService {
         return axios.get(`${EMPLOYEE_API_BASE_URL}/findAll`);
     }
 
+    getEmployeeByKeyWord(keyword) {
+        return axios.get(`${EMPLOYEE_API_BASE_URL}/findByName/${keyword}`);
+    }
+
     createEmployee(employee) {
         return axios.post(`${EMPLOYEE_API_BASE_URL}/create`, employee);
     }

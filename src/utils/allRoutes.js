@@ -17,6 +17,10 @@ const allRoutes = [
             { path: '/auths/add', menuName: 'Add Auth' },
             { path: '/auths/edit', menuName: 'Edit Auth' },
         ] },
+    { path: '/notifications', component: 'NotificationList', menuName: 'Notification', children: [
+            { path: '/notificationlist', menuName: 'Notification' },
+            { path: '/sendNotification', menuName: 'Send Notification' },
+        ] },
     { path: '/labels', component: 'LabelList', menuName: 'Label', children: [
             { path: '/labellist', menuName: 'Label List' },
             { path: '/labels/add', menuName: 'Add Label' },

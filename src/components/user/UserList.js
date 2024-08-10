@@ -1,15 +1,12 @@
-// src/components/employee/EmployeeList.js
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import EmployeeService from '../../services/EmployeeService';
 import Modal from '../common/Modal';
-import './UserProfileModal.css'
-// import UserProfileModal from "./UserProfileModal";
+import './UserList.css';
 import LoginService from "../../services/LoginService";
 
 const EmployeeList = () => {
     const [employees, setEmployees] = useState([]);
-    // const [selectedEmployee, setSelectedEmployee] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalAction, setModalAction] = useState(null);
     const navigate = useNavigate();
@@ -61,8 +58,11 @@ const EmployeeList = () => {
     };
 
     const viewEmployee = (id) => {
-        // setSelectedEmployee(id);
         navigate(`/userProfile/${id}`);
+    };
+
+    const notifyEmployee = (id) => {
+      navigate(`/sendNotification/${id}`);
     };
 
     const closeModal = () => {
@@ -77,70 +77,70 @@ const EmployeeList = () => {
     };
 
     return (
-        <div>
-            <h2>User List</h2>
-            <button onClick={addEmployee}>Add User</button>
-            {employees.length === 0 ? (
-                <p>No users found</p>
-            ) : (
-                <table>
-                    <thead>
-                    <tr>
-                        <th>Name</th>
-                        {/*<th>Gender</th>*/}
-                        {/*<th>Country</th>*/}
-                        <th>SocialScore</th>
-                        {/*<th>Email</th>*/}
-                        <th>Username</th>
-                        {/*<th>PhoneNumber</th>*/}
-                        <th>JoinDate</th>
-                        <th>Role</th>
-                        <th>Auth</th>
-                        <th>Status</th>
-                        <th>Detail</th>
-                        <th>Actions</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {employees.map(employee => (
-                        <tr key={employee.id}>
-                            <td>{employee.name}</td>
-                            {/*<td>{employee.gender}</td>*/}
-                            {/*<td>{employee.country}</td>*/}
-                            <td>{employee.socialScore}</td>
-                            {/*<td>{employee.email}</td>*/}
-                            <td>{employee.username}</td>
-                            {/*<td>{employee.phoneNum}</td>*/}
-                            <td>{employee.joinDate}</td>
-                            <td>{employee.role ? employee.role.type : 'No Role'}</td>
-                            <td>{employee.auth ? employee.auth.rank : 'No Auth'}</td>
-                            <td>{employee.status}</td>
-                            <td>
-                                <button onClick={() => viewEmployee(employee.id)}>View Detail</button>
-                            </td>
-                            <td>
-                                <button onClick={() => editEmployee(employee.id)}>Edit</button>
-                                <button onClick={() => deleteEmployee(employee.id)}>Delete</button>
-                                <button onClick={() => banEmployee(employee.id,employee.status)}>{employee.status === "ban" ? "activate":"ban"}</button>
-                            </td>
+        <>
+            <div className="employee-list-container">
+                <h2>User List</h2>
+                <div className="actions">
+                    <button className="btn add-btn" onClick={addEmployee}>Add User</button>
+                </div>
+                {employees.length === 0 ? (
+                    <p>No users found</p>
+                ) : (
+                    <table className="employee-table">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>SocialScore</th>
+                            <th>Username</th>
+                            <th>JoinDate</th>
+                            <th>Role</th>
+                            <th>Authorization</th>
+                            <th>Status</th>
+                            <th>Detail</th>
+                            <th>Actions</th>
                         </tr>
-                    ))}
-                    </tbody>
-                </table>
-            )}
-            {/*{selectedEmployee && (*/}
-            {/*    <UserProfileModal id={selectedEmployee} onClose={()=>setSelectedEmployee(null)} />*/}
-            {/*)}*/}
-            {/* prompt out a modal to ensure moderator want to delete or ban this user*/}
-            <Modal
-                isOpen={isModalOpen}
-                onClose={closeModal}
-                onConfirm={confirmModalAction}
-                title="Confirm Action"
-            >
-                <p>Are you sure you want to proceed with this action?</p>
-            </Modal>
-        </div>
+                        </thead>
+                        <tbody>
+                        {employees.map(employee => (
+                            <tr key={employee.id}>
+                                <td>{employee.name}</td>
+                                <td>{employee.socialScore}</td>
+                                <td>{employee.username}</td>
+                                <td>{employee.joinDate}</td>
+                                <td>{employee.role ? employee.role.type : 'No Role'}</td>
+                                <td>{employee.auth ? employee.auth.rank : 'No Auth'}</td>
+                                <td>{employee.status}</td>
+                                <td>
+                                    <button className="btn view-btn" onClick={() => viewEmployee(employee.id)}>View Detail</button>
+                                </td>
+                                <td>
+                                    <button className="btn edit-btn" onClick={() => editEmployee(employee.id)}>Edit
+                                    </button>
+                                    <button className="btn notify-btn" onClick={() => notifyEmployee(employee.id)}>Notify
+                                    </button>
+                                    <button className="btn delete-btn"
+                                            onClick={() => deleteEmployee(employee.id)}>Delete
+                                    </button>
+                                    <button className="btn ban-btn"
+                                            onClick={() => banEmployee(employee.id, employee.status)}>
+                                        {employee.status === "ban" ? "Activate" : "Ban"}
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                        </tbody>
+                    </table>
+                )}
+                <Modal
+                    isOpen={isModalOpen}
+                    onClose={closeModal}
+                    onConfirm={confirmModalAction}
+                    title="Confirm Action"
+                >
+                    <p>Are you sure you want to proceed with this action?</p>
+                </Modal>
+            </div>
+        </>
     );
 };
 

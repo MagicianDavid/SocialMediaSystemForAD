@@ -26,6 +26,10 @@ class RoleService {
         return axios.get(`${ROLE_API_BASE_URL}/findAllFollowingPostsAndNotDeletedByUserId/${id}`);
     }
 
+    getSearchResult(keyword) {
+        return axios.get(`${ROLE_API_BASE_URL}/searchBarResult?keyword=${keyword}`);
+    }
+
     getPostById(postId) {
         return axios.get(`${ROLE_API_BASE_URL}/findPostDetailById/${postId}`);
     }
