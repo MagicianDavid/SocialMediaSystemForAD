@@ -13,6 +13,10 @@ class LabelService {
         return axios.get(`${ROLE_API_BASE_URL}/findById/${id}`);
     }
 
+    getReportByUserId(id) {
+        return axios.get(`${ROLE_API_BASE_URL}/findByUserId/${id}`);
+    }
+
     createReport(report){
         return axios.post(`${ROLE_API_BASE_URL}/create`,report);
     }

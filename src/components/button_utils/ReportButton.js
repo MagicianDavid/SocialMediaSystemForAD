@@ -5,6 +5,7 @@ import { FlagOutlined as FlagOutlinedIcon } from '@mui/icons-material';
 import LabelService from '../../services/LabelService';
 import ReportService from '../../services/ReportService';
 import PC_MsgService from '../../services/PC_MsgService';
+  import NotificationService from "../../services/NotificationService.";
 
 const ReportButton = ({ userId, objType, reportId }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -69,6 +70,11 @@ const ReportButton = ({ userId, objType, reportId }) => {
                 setReason('');
                 setError('');
                 setIsModalOpen(false);
+                // send Notification to moderator
+                NotificationService.sendToAllModerators().then().catch(error => {
+                    console.error('There was an error sending notifications to all moderators !', error);
+                    setError(error.response.data.message);
+                });
             })
             .catch((error) => {
                 console.error('There was an error saving the report!', error);

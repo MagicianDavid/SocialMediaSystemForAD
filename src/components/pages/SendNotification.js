@@ -42,7 +42,7 @@ const SendNotification = () => {
                 return;
             }
             const notification = {
-                notificationUser: { id: selectedUser.id }, // 假设后端需要的是User对象
+                notificationUser: { id: selectedUser.id },
                 title: title,
                 message: message,
                 // other notification fields if needed

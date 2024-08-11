@@ -17,14 +17,14 @@ const Dashboard = () => {
     const navigate = useNavigate();
     const { currentUser, setCurrentUser } = useAuth();
     const [selectedTags, setSelectedTags] = useState([]);
-    const [countTags , setcountTags] = useState([]);
+    const [countTags , setCountTags] = useState([]);
 
 
     useEffect(() => {
       const fetchData = async () => {
           try {
               const response = await PC_MsgService.getTagCounts();
-              setcountTags(response.data);
+              setCountTags(response.data);
               const initialTags = Object.entries(response.data)
               .filter(([_, value]) => value > 0) 
               .map(([label, _]) => label);

@@ -11,8 +11,8 @@ const login =(username, password) => {
         password
     }).then(response => {
         if (response.status === 200) {
-            const { id, auth, username } = response.data;  // retrieve id & auth
-            sessionStorage.setItem('currentUser', JSON.stringify({ id, auth, username }));
+            const { id, auth,role, username } = response.data;  // retrieve id & auth
+            sessionStorage.setItem('currentUser', JSON.stringify({ id, auth, role, username }));
             window.location.reload();
         }
         return response.data;

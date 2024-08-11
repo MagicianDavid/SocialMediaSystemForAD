@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import { Table, Button, Form, ButtonGroup, Modal } from 'react-bootstrap';
 import ReportService from "../../services/ReportService";
 import useCurrentUser from "../customhook/CurrentUser";
+import NotificationService from "../../services/NotificationService.";
 
 const ReportList = ({ reports = [] }) => {
 
@@ -81,6 +82,13 @@ const ReportList = ({ reports = [] }) => {
                         r.id === response.data.id ? response.data : r
                     )
                 );
+                // send notification to reportUser
+                NotificationService.saveNotification({
+                    notificationUser: { id: report.reportUser.id },
+                    title: "Report status update",
+                    message: "Your report has been processed, please check.",
+                    // other notification fields if needed
+                }).then().catch((error) => {});
             })
             .catch((error) => {
                 alert("Error updating report: " + error);
@@ -96,6 +104,20 @@ const ReportList = ({ reports = [] }) => {
         }
     };
 
+    //TODO: need more effort
+    // const handleReportedIdNavigation = (reportedId) => {
+    //     if (reportedId.startsWith('p')) {
+    //         // Navigate to the post page
+    //         window.location.href = `/post/${reportedId.slice(1)}`;
+    //     } else if (reportedId.startsWith('c')) {
+    //         // Navigate to the comment page
+    //         window.location.href = `/comment/${reportedId.slice(1)}`;
+    //     } else if (reportedId.startsWith('u')) {
+    //         // Navigate to the user profile page
+    //         window.location.href = `/userProfile/${reportedId.slice(1)}`;
+    //     }
+    // };
+
     useEffect(() => {
         setReportList(reports);
     }, [reportList]);
@@ -105,7 +127,7 @@ const ReportList = ({ reports = [] }) => {
             <Table striped  hover>
                 <thead>
                 <tr>
-                    <th>Report ID</th>
+                    <th>Report User</th>
                     <th>Reported ID</th>
                     <th>Reason</th>
                     <th>Status</th>
@@ -118,8 +140,15 @@ const ReportList = ({ reports = [] }) => {
                 <tbody>
                 {reportList.map(report => (
                     <tr key={report.id}>
-                        <td>{report.id}</td>
-                        <td>{report.reportedId}</td>
+                        <td>{report.reportUser.username}</td>
+                        {/*TODO:can click and view the post or comment or userprofile according to the id*/}
+                        {/*<td style={{cursor: 'pointer', color: 'blue', textDecoration: 'underline'}}*/}
+                        {/*    onClick={() => handleReportedIdNavigation(report.reportedId)}>*/}
+                        {/*    {report.reportedId}*/}
+                        {/*</td>*/}
+                        <td>
+                            {report.reportedId}
+                        </td>
                         <td>{report.reason}</td>
                         <td>{report.status}</td>
                         <td>{new Date(report.reportDate).toLocaleString()}</td>
@@ -128,29 +157,48 @@ const ReportList = ({ reports = [] }) => {
                         {/*</td>*/}
                         <td>
                             <ButtonGroup>
-                                <Button variant="info" className="rounded-button" onClick={() => handleViewDetail(report)}>View Detail</Button>
+                                <Button variant="info" className="rounded-button"
+                                        onClick={() => handleViewDetail(report)}>View Detail</Button>
                             </ButtonGroup>
                         </td>
                         <td>{report.caseCloseDate ? new Date(report.caseCloseDate).toLocaleString() : 'N/A'}</td>
                         <td>
                             <ButtonGroup>
-                                {report.status === "Complete" && (
+                                {report.status === "Complete" && (currentUser && currentUser.role.type === "Moderator" ? (
                                     <>
-                                        <Button variant="warning" className="rounded-button" onClick={() => handleShowModal(report, 'appeal')}>Appeal</Button>
-                                    </>
-                                )}
-                                {report.status === "Pending" && (
+                                        waiting to be appealed.
+                                    </>) : (
                                     <>
-                                        <Button variant="success" className="me-2 rounded-button" onClick={() => handleShowModal(report, 'approve')}>Approve</Button>
-                                        <Button variant="danger" className="rounded-button" onClick={() => handleShowModal(report, 'reject')}>Reject</Button>
+                                        <Button variant="warning" className="rounded-button"
+                                                onClick={() => handleShowModal(report, 'appeal')}>Appeal</Button>
                                     </>
-                                )}
-                                {report.status === "Appeal" && (
+                                ))}
+                                {report.status === "Pending" && (currentUser && currentUser.id === report.reportUser.id ? (
                                     <>
-                                        <Button variant="success" className="me-2 rounded-button" onClick={() => handleShowModal(report, 'approve')}>Approve</Button>
-                                        <Button variant="danger" className="rounded-button" onClick={() => handleShowModal(report, 'reject')}>Reject</Button>
+                                        Moderator is still pending
                                     </>
-                                )}
+                                ) : (
+                                    <>
+                                        <Button variant="success" className="me-2 rounded-button"
+                                                onClick={() => handleShowModal(report, 'approve')}>Approve</Button>
+                                        <Button variant="danger" className="rounded-button"
+                                                onClick={() => handleShowModal(report, 'reject')}>Reject</Button>
+                                    </>
+                                ))}
+                                {report.status === "Appeal" &&
+                                    (currentUser && currentUser.id === report.reportUser.id ? (
+                                            <>
+                                                waiting to be pended.
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Button variant="success" className="me-2 rounded-button"
+                                                        onClick={() => handleShowModal(report, 'approve')}>Approve</Button>
+                                                <Button variant="danger" className="rounded-button"
+                                                        onClick={() => handleShowModal(report, 'reject')}>Reject</Button>
+                                            </>
+                                        )
+                                    )}
                             </ButtonGroup>
                         </td>
                     </tr>
@@ -193,19 +241,24 @@ const ReportList = ({ reports = [] }) => {
                     {selectedReport ? (
                         <>
                             <h4>Report Information</h4>
-                            <p><strong>ID:</strong> {selectedReport.id}</p>
+                            <p><strong>Report User</strong> {selectedReport.reportUser.username}</p>
                             <p><strong>Reported ID:</strong> {selectedReport.reportedId}</p>
                             <p><strong>Reason:</strong> {selectedReport.reason}</p>
                             <p><strong>Status:</strong> {selectedReport.status}</p>
+                            <p><strong>Label::</strong> {selectedReport.label.label}</p>
                             <p><strong>Report Time:</strong> {new Date(selectedReport.reportDate).toLocaleString()}</p>
-                            <p><strong>CaseClose Time:</strong> {selectedReport.caseCloseDate ? new Date(selectedReport.caseCloseDate).toLocaleString() : 'N/A'}</p>
+                            <p><strong>CaseClose
+                                Time:</strong> {selectedReport.caseCloseDate ? new Date(selectedReport.caseCloseDate).toLocaleString() : 'N/A'}
+                            </p>
 
                             <h4>Reply Stream</h4>
-                            <div style={{ maxHeight: '300px', overflowY: 'auto' }}>
+                            <div style={{maxHeight: '300px', overflowY: 'auto'}}>
                                 {selectedReport.remarks ?
                                     JSON.parse(selectedReport.remarks).map((remark, index) => (
-                                        <div key={index} style={{ marginBottom: '15px' }}>
-                                            <p><strong>{remark.user}</strong> ({new Date(remark.timestamp).toLocaleString()}):</p>
+                                        <div key={index} style={{marginBottom: '15px'}}>
+                                            <p>
+                                                <strong>{remark.user}</strong> ({new Date(remark.timestamp).toLocaleString()}):
+                                            </p>
                                             <p>{remark.text}</p>
                                         </div>
                                     )) :

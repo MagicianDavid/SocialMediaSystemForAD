@@ -17,10 +17,12 @@ const SearchBar = () => {
             <input
                 type="text"
                 value={keyword}
+                className="form-control mb-3 me-2"
                 onChange={(e) => setKeyword(e.target.value)}
-                placeholder="Search..."
             />
-            <button type="submit">Search</button>
+            <div className="input-group-append">
+                <button type="submit" className="btn btn-primary">Search</button>
+            </div>
         </form>
     );
 };
