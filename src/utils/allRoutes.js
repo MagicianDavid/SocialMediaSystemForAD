@@ -6,6 +6,7 @@ const allRoutes = [
             { path: '/users/edit', menuName: 'Edit User' },
             { path: '/users/reports', menuName:'Reports'},
             { path: '/users/reportdetail', menuName:'Report Detail'},
+            { path: '/users/csvlist', menuName:'CSV Lists'},
         ] },
     { path: '/roles', component: 'RoleList', menuName: 'Roles', children: [
             { path: '/roles', menuName: 'Roles List' },
