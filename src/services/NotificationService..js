@@ -32,8 +32,8 @@ class NotificationService {
         return axios.post(`${NOTIFICATION_API_BASE_URL}/create`, notification);
     }
 
-    sendToAllModerators() {
-        return axios.post(`${NOTIFICATION_API_BASE_URL}/sendToAllModerators`, {})
+    sendToAllModerators(title = '', message = '') {
+        return axios.post(`${NOTIFICATION_API_BASE_URL}/sendToAllModerators`, {title,message})
     }
 
     updateNotification(id, newNotification) {

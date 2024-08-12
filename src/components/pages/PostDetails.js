@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {Link, useParams } from 'react-router-dom';
+import {Link, useLocation, useParams} from 'react-router-dom';
 
 import CommentList from '../Classess/CommentList';
 import CommentForm from '../Classess/CommentForm'; 
@@ -21,10 +21,16 @@ const PostDetails = () => {
     const [comments, setComments] = useState([]);
     const currentUser = useCurrentUser();
 
+    // get chosenId from uri
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+    const chosenId = searchParams.get('chosenId');
+
     useEffect(() => {
         // Fetch post and comments concurrently
         if(id){
         fetchComments();
+        console.log("id,chosenId",id,chosenId);
         }
     }, [id]);
 
@@ -94,7 +100,7 @@ const PostDetails = () => {
                 )}
                 <h3>Comments</h3>
                 {comments.length > 0 ? (
-                    <CommentList comments={comments} />
+                    <CommentList comments={comments} chosenId={parseInt(chosenId)} />
                 ) : (
                     <p>No comments yet.</p>
                 )}

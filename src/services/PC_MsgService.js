@@ -34,6 +34,10 @@ class RoleService {
         return axios.get(`${ROLE_API_BASE_URL}/findPostDetailById/${postId}`);
     }
 
+    getPostIdByCommentId(commentId) {
+        return axios.get(`${ROLE_API_BASE_URL}/findPostIdByCommentId/${commentId}`);
+    }
+
     getCountCommentsByPostId(postId){
         return axios.get(`${ROLE_API_BASE_URL}/countAllCommentsByPostId/${postId}`);
     }

@@ -1,12 +1,13 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import { Table, Button, Form, ButtonGroup, Modal } from 'react-bootstrap';
 import ReportService from "../../services/ReportService";
 import useCurrentUser from "../customhook/CurrentUser";
 import NotificationService from "../../services/NotificationService.";
+import PC_MsgService from "../../services/PC_MsgService";
+import {useReport} from "../../services/ReportContext";
 
-const ReportList = ({ reports = [] }) => {
-
-    const [reportList, setReportList] = useState([]);
+const ReportList = () => {
+    const { reports } = useReport();
     const [selectedReport, setSelectedReport] = useState(null);
     const [remarks, setRemarks] = useState('');
     const [showModal, setShowModal] = useState(false);
@@ -56,7 +57,7 @@ const ReportList = ({ reports = [] }) => {
             selectedReport.caseCloseDate = new Date();
             // Optional for approve
             selectedReport.remarks = JSON.stringify(updateRemark(selectedReport,"Admin"));
-            updateReport(selectedReport);
+            updateReport(selectedReport,false);
             handleCloseModal();
         }
     };
@@ -69,26 +70,35 @@ const ReportList = ({ reports = [] }) => {
             }
             selectedReport.status = "Appeal";
             selectedReport.remarks = JSON.stringify(updateRemark(selectedReport,currentUser.username));
-            updateReport(selectedReport);
+            updateReport(selectedReport,true);
             handleCloseModal();
         }
     };
 
-    const updateReport = (report) => {
+    const updateReport = (report,isAppeal) => {
         ReportService.updateReport(report.id, report)
             .then((response) => {
-                setReportList((prevList) =>
-                    prevList.map((r) =>
-                        r.id === response.data.id ? response.data : r
-                    )
-                );
-                // send notification to reportUser
-                NotificationService.saveNotification({
-                    notificationUser: { id: report.reportUser.id },
-                    title: "Report status update",
-                    message: "Your report has been processed, please check.",
-                    // other notification fields if needed
-                }).then().catch((error) => {});
+                if (isAppeal) {
+                    // Notify the moderator
+                    NotificationService.sendToAllModerators(
+                        "Appeal Submitted",
+                        `User ${currentUser.username} has appealed your decision on report ID ${selectedReport.id}.`,
+                    ).then().catch(error => {
+                        alert("Error sending notification: " + error);
+                        console.log("Error sending notification: ", error);
+                    });
+                } else {
+                    // send notification to reportUser
+                    NotificationService.saveNotification({
+                        notificationUser: { id: report.reportUser.id },
+                        title: "Report status update",
+                        message: "Your report has been processed, please check.",
+                        // other notification fields if needed
+                    }).then().catch((error) => {
+                        alert("Error sending notification: " + error);
+                        console.log("Error sending notification: ", error);
+                    });
+                }
             })
             .catch((error) => {
                 alert("Error updating report: " + error);
@@ -104,23 +114,28 @@ const ReportList = ({ reports = [] }) => {
         }
     };
 
-    //TODO: need more effort
-    // const handleReportedIdNavigation = (reportedId) => {
-    //     if (reportedId.startsWith('p')) {
-    //         // Navigate to the post page
-    //         window.location.href = `/post/${reportedId.slice(1)}`;
-    //     } else if (reportedId.startsWith('c')) {
-    //         // Navigate to the comment page
-    //         window.location.href = `/comment/${reportedId.slice(1)}`;
-    //     } else if (reportedId.startsWith('u')) {
-    //         // Navigate to the user profile page
-    //         window.location.href = `/userProfile/${reportedId.slice(1)}`;
-    //     }
-    // };
+    const handleReportedIdNavigation = (reportedId) => {
+        const nId = reportedId.slice(1);
+        if (reportedId.startsWith('p')) {
+            // Navigate to the post page
+            window.location.href = `/postsdetails/${nId}`;
+        } else if (reportedId.startsWith('c')) {
+            // Navigate to the comment page
+            PC_MsgService.getPostIdByCommentId(nId).then(response => {
+                window.location.href = `/postsdetails/${response.data}?chosenId=${nId}`;
+            }).catch((error)=> {
+                alert("Error fetching post/comment: " + error);
+                console.log("Error fetching post/comment: ", error);
+            });
+        } else if (reportedId.startsWith('u')) {
+            // Navigate to the user profile page
+            window.location.href = `/userProfile/${nId}`;
+        }
+    };
 
-    useEffect(() => {
-        setReportList(reports);
-    }, [reportList]);
+    if (reports === undefined) {
+        return <p>Loading reports...</p>; // Or a spinner/loading indicator
+    }
 
     return (
         <>
@@ -138,17 +153,17 @@ const ReportList = ({ reports = [] }) => {
                 </tr>
                 </thead>
                 <tbody>
-                {reportList.map(report => (
+                {reports.map(report => (
                     <tr key={report.id}>
                         <td>{report.reportUser.username}</td>
-                        {/*TODO:can click and view the post or comment or userprofile according to the id*/}
-                        {/*<td style={{cursor: 'pointer', color: 'blue', textDecoration: 'underline'}}*/}
-                        {/*    onClick={() => handleReportedIdNavigation(report.reportedId)}>*/}
-                        {/*    {report.reportedId}*/}
-                        {/*</td>*/}
-                        <td>
+                        {/* can click and view the post or comment or userprofile according to the id*/}
+                        <td style={{cursor: 'pointer', color: 'brown', textDecoration: 'none'}}
+                            onClick={() => handleReportedIdNavigation(report.reportedId)}>
                             {report.reportedId}
                         </td>
+                        {/*<td>*/}
+                        {/*    {report.reportedId}*/}
+                        {/*</td>*/}
                         <td>{report.reason}</td>
                         <td>{report.status}</td>
                         <td>{new Date(report.reportDate).toLocaleString()}</td>

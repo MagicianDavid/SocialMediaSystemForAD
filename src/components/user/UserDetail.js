@@ -10,6 +10,7 @@ import FollowerFollowing from '../Classess/FollowerFollowingCount';
 import { useParams, useNavigate } from "react-router-dom";
 import { IconButton, Tooltip } from '@mui/material';
 import { ArrowBack as ArrowBackIcon, Notifications as NotificationsIcon } from '@mui/icons-material';
+import ReportButton from "../button_utils/ReportButton";
 
 const UserDetail = () => {
     const { id } = useParams(); // Use useParams to get the id from the URL
@@ -177,6 +178,11 @@ const UserDetail = () => {
                         <button className="btn btn-secondary" style={styles.roundedButton} onClick={toggleBlock}>
                             {isBlocked ? 'Unblock' : 'Block'}
                         </button>
+                           <ReportButton
+                               userId={currentUser.id}
+                               reportId={parseInt(id)}
+                               objType={"user"}
+                           />
                         {/* <button className="btn btn-success" style={styles.roundedButton} onClick={toggleLike}>
                             {isLiked ? 'Unlike' : 'Like'}
                         </button> */}

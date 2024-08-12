@@ -1,7 +1,7 @@
 import React from 'react';
 import Comment from './Comment';
 
-const CommentList = ({ comments, reportPost }) => {
+const CommentList = ({ comments, reportPost, chosenId }) => {
 
     return (
         <div className="list-group" >
@@ -9,7 +9,8 @@ const CommentList = ({ comments, reportPost }) => {
                 <div key={comment.id} className="list-group-item">
                     { <Comment 
                         comment={comment} 
-                        reportPost={reportPost} 
+                        reportPost={reportPost}
+                        chosenId={chosenId}
                     /> }
                 </div>
             ))}

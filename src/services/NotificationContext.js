@@ -18,8 +18,23 @@ export const NotificationProvider = ({ children }) => {
 
     useEffect(() => {
         if (currentUser) {
-            fetchReadNotifications(currentUser.id);
-            fetchUnreadNotifications(currentUser.id);
+            const socket = new WebSocket(`ws://localhost:8080/notifications?userId=${currentUser.id}`);
+
+            socket.onopen = () => {
+                console.log('WebSocket connection established');
+            };
+
+            socket.onmessage = (event) => {
+                if (event.data === 'Notification updated') {
+                    fetchUnreadNotifications(currentUser.id).then();
+                }
+            };
+
+            socket.onclose = () => {
+                console.log('WebSocket connection closed');
+            };
+            fetchUnreadNotifications(currentUser.id).then();
+            fetchReadNotifications(currentUser.id).then();
         }
     }, [currentUser]);
 

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 const SearchBar = () => {
     const [keyword, setKeyword] = useState('');
@@ -14,14 +15,19 @@ const SearchBar = () => {
 
     return (
         <form onSubmit={handleSearch}>
-            <input
-                type="text"
-                value={keyword}
-                className="form-control mb-3 me-2"
-                onChange={(e) => setKeyword(e.target.value)}
-            />
-            <div className="input-group-append">
-                <button type="submit" className="btn btn-primary">Search</button>
+            <div className="input-group">
+                <input
+                    type="text"
+                    value={keyword}
+                    className="form-control mb-3 me-2"
+                    placeholder="Enter keyword..."
+                    onChange={(e) => setKeyword(e.target.value)}
+                />
+                <div className="input-group-append">
+                    <button type="submit" className="btn btn-primary">
+                        <i className="fas fa-search"></i>
+                    </button>
+                </div>
             </div>
         </form>
     );

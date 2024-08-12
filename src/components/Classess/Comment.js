@@ -15,7 +15,7 @@ import TimeFormat from '../Classess/timeFormat';
 
 const MIN_WIDTH = 80; // Define the minimum width percentage
 
-const Comment = ({ comment, nestingLevel = 0}) => {
+const Comment = ({ comment, nestingLevel = 0, chosenId}) => {
     
     const [showReplyInput, setShowReplyInput] = useState(false);
     const [showChildComments] = useState(false);
@@ -32,6 +32,9 @@ const Comment = ({ comment, nestingLevel = 0}) => {
                     const response = await PC_MsgService.getChildrenByPCMId(comment.id);
                     setCommentCount(response.data.length);
                     setChildComments(response.data);
+                    if (response.data.filter(c => c.id === chosenId).length > 0) {
+                        setShowReplyInput(true);
+                    }
                     // console.log("myid" + currentUser.id);
                 }
             } catch (error) {
@@ -39,8 +42,8 @@ const Comment = ({ comment, nestingLevel = 0}) => {
             }
         };
         fetchData();
-    }, [showChildComments, comment, childComments,currentUser]);
-   
+    }, [showChildComments,comment,currentUser]);
+
     if (!currentUser) {
         return <div>Loading...</div>;
     }
@@ -50,10 +53,19 @@ const Comment = ({ comment, nestingLevel = 0}) => {
     };
 
     
-    const adjustedWidth = `${Math.max(100 - nestingLevel * 5, MIN_WIDTH)}%`;
+    // const adjustedWidth = `${Math.max(100 - nestingLevel * 5, MIN_WIDTH)}%`;
+
+    // Conditional styling for highlighting
+    const commentStyle = {
+        marginLeft: `${nestingLevel * 20}px`,
+        width: `${Math.max(100 - nestingLevel * 5, MIN_WIDTH)}%`,
+        border: chosenId === comment.id ? '2px solid orange' : 'none',
+        padding: '10px',
+        borderRadius: '5px',
+    };
 
     return (
-        <div style={{ marginLeft: `${nestingLevel * 20}px`, width: adjustedWidth }}>
+        <div style={commentStyle}>
             <div className="d-flex justify-content-between" > 
                 <div>
                         <h6 style={{ margin: '0', padding: '0' }}>
@@ -105,7 +117,7 @@ const Comment = ({ comment, nestingLevel = 0}) => {
                 }}
                 userId={currentUser.id}
                 />
-                <CommentChild CommentChild = {childComments} nestingLvl = {nestingLevel}/>
+                <CommentChild CommentChild = {childComments} chosnId = {chosenId} nestingLvl = {nestingLevel}/>
                 
                 </div>
             )}
