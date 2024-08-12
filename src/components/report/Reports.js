@@ -1,5 +1,5 @@
 // FollowerFollowing.js
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import ReportList from './ReportList';
 import ReportService from '../../services/ReportService';
 import useCurrentUser from "../customhook/CurrentUser";
