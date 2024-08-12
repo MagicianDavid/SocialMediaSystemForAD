@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import useCurrentUser from "../components/customhook/CurrentUser";
 import NotificationService from "./NotificationService.";
+import { BASE_WS_URL } from './config';
 
 const NotificationContext = createContext();
 
@@ -18,7 +19,7 @@ export const NotificationProvider = ({ children }) => {
 
     useEffect(() => {
         if (currentUser) {
-            const socket = new WebSocket(`ws://localhost:8080/notifications?userId=${currentUser.id}`);
+            const socket = new WebSocket(`${BASE_WS_URL}/notifications?userId=${currentUser.id}`);
 
             socket.onopen = () => {
                 console.log('WebSocket connection established');

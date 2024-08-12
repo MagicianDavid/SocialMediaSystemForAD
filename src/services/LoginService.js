@@ -1,8 +1,9 @@
 // src/services/LoginService.js
 import axios from 'axios';
 import PasswordUtils from '../utils/pwdEncryption';
+import { BASE_API_URL } from "./config";
 
-const API_URL = 'http://localhost:8080/api/user/';
+const API_URL = `${BASE_API_URL}/user/`;
 
 const login =(username, password) => {
     password = PasswordUtils.encryptUserPassword(password);

@@ -1,6 +1,7 @@
  import axios from 'axios';
+ import { BASE_API_URL } from './config';
 
-const AUTH_API_BASE_URL = "http://localhost:8080/api/auth";
+const AUTH_API_BASE_URL = `${BASE_API_URL}/auth`;
 
 class AuthService {
     getAllAuths() {
