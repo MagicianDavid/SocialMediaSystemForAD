@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 import React, {useState} from 'react';
+=======
+import React, { useState } from 'react';
+>>>>>>> Stashed changes
 import { Dropdown, Modal, Button } from 'react-bootstrap';
 import { FaBell } from 'react-icons/fa';
 import {useNotification} from "../../services/NotificationContext";

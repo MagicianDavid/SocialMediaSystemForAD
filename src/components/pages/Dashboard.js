@@ -9,6 +9,7 @@ import LatestPosts  from '../Dashboard/LatestPosts';
 
 import { PieChart } from '@mui/x-charts/PieChart';
 import PC_MsgService from '../../services/PC_MsgService';
+import LabelService from '../../services/LabelService';
 
 import {Box, FormControl, FormControlLabel, Checkbox, FormGroup, FormLabel } from '@mui/material';
 import SmCardPanel from '../Dashboard/SmCardPanel';
@@ -18,25 +19,34 @@ const Dashboard = () => {
     const { currentUser, setCurrentUser } = useAuth();
     const [selectedTags, setSelectedTags] = useState([]);
     const [countTags , setCountTags] = useState([]);
-
+    const [colorTable, setColorTable] = useState([]);
 
     useEffect(() => {
       const fetchData = async () => {
-          try {
-              const response = await PC_MsgService.getTagCounts();
-              setCountTags(response.data);
-              const initialTags = Object.entries(response.data)
-              .filter(([_, value]) => value > 0) 
-              .map(([label, _]) => label);
-              setSelectedTags(initialTags); 
-          } catch (error) {
-              console.error('Error fetching data:', error);
-          }
+        try {
+          // Fetch tag counts
+          const response = await PC_MsgService.getTagCounts();
+          setCountTags(response.data);
+    
+          // Fetch color codes from the backend service
+          const colorResponse = await LabelService.findColorCodeByLabel();
+          console.log("Color Table:", colorResponse.data);
+          setColorTable(colorResponse.data);
+          
+          // Initialize tags that have a count greater than 0
+          const initialTags = Object.entries(response.data)
+            .filter(([_, value]) => value > 0) 
+            .map(([label, _]) => label);
+          setSelectedTags(initialTags); 
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
       };
-
+    
       fetchData();
     }, []);
 
+  
     const handleTagChange = (event) => {
       const tag = event.target.value;
       setSelectedTags(prevTags =>
@@ -55,15 +65,8 @@ const Dashboard = () => {
 
 
     const getColor = (label) => {
-      const colors = {
-        toxic: '#FF6384',
-        racism: '#36A2EB',
-        attack: '#FFCE56',
-        sexism: '#66BB6A',
-        aggressive: '#FF7043',
-        undefined: '#AB47BC',
-      };
-      return colors[label] || '#8D6E63';
+      
+      return colorTable[label] || '#878787'; // Fetch color from colorTable or use default
     };
 
     const data = Object.entries(countTags).map(([label, value]) => ({

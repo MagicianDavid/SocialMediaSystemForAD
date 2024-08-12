@@ -1,6 +1,7 @@
 import axios from 'axios';
+import { BASE_API_URL } from './config';
 
-const NOTIFICATION_API_BASE_URL = "http://localhost:8080/api/notifications";
+const NOTIFICATION_API_BASE_URL = `${BASE_API_URL}/notifications`;
 
 class NotificationService {
 
