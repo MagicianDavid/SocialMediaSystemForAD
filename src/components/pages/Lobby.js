@@ -24,7 +24,6 @@ const PostList = () => {
         if (countFetchZeroPage === 2) {setLoading(false);return;}
 
         await PC_MsgService.findAllPostsPageable(currentPage, 10).then((response) => {
-            console.log("response", response);
             const fetchedData = response.data._embedded.pCMsgDTOes.map(post => {
                 return {
                     ...post,

@@ -29,6 +29,9 @@ class LabelService {
         return axios.delete(`${ROLE_API_BASE_URL}/delete/${LabelId}`);
     }
 
+    findColorCodeByLabel() {
+        return axios.get(`${ROLE_API_BASE_URL}/findColorCodeByLabel`);
+    }
 
 }
 

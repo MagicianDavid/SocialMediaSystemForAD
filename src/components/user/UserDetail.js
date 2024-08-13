@@ -130,8 +130,8 @@ const UserDetail = () => {
                 </IconButton>
                 <h1 style={styles.headerTitle}>User Profile</h1>
                 {/* Add the notification icon with tooltip */}
-                {/*TODO: this bell is only for moderator to notify by right now public can also, need to fix*/}
-                {id &&
+                {/* this bell is only for moderator to notify by right now public can also, need to fix*/}
+                {id && currentUser.role.type === "Moderator" &&
                     <Tooltip title="Notify User" arrow>
                         <IconButton onClick={handleNotificationClick} style={styles.notificationIcon}>
                             <NotificationsIcon />

@@ -20,6 +20,7 @@ const PostDetails = () => {
     const [post, setPost] = useState(null);
     const [comments, setComments] = useState([]);
     const currentUser = useCurrentUser();
+    const isAdmin = currentUser?.auth.rank === 'L1';
 
     // get chosenId from uri
     const location = useLocation();
@@ -67,9 +68,9 @@ const PostDetails = () => {
                         <h3 style={{ margin: '0', padding: '0' }}>{post.user_id.name}</h3>
                         {/* <p className="text-muted" style={{ margin: '0', padding: '0' }}>{post.timeStamp}</p> */}
                         <TimeFormat msgtimeStamp = {post.timeStamp}/>
-                        <span>  
+                        {isAdmin &&<span>
                             <TagLists tagsString={post.tag?.tag || ''} />
-                        </span>
+                        </span>}
                     </div>
                     <div>
                         <Link to="/mainmenu" className="btn btn-outline-secondary btn-sm">Back to Posts</Link>

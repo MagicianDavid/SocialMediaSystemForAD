@@ -76,7 +76,7 @@ const Post = ({ post , curId}) => {
                 <div className="d-flex justify-content-between">
                     <div>
                     <TimeFormat msgtimeStamp = {post.timeStamp}/>
-                        <span>  
+                        <span>
                             {isAdmin && <><TagLists tagsString={post.tag?.tag} /></> }
                         </span>
                     </div>
