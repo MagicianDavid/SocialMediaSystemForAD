@@ -27,7 +27,6 @@ export const ReportProvider = ({ children }) => {
                 if (event.data === 'Your report has been updated') {
                     fetchReportsByUserId(currentUser.id).then();
                 } else if (event.data === 'A report has been updated. Please review it.') {
-                    console.log('A report has been updated. Please review it.');
                     fetchAllReports().then();
                 }
             };
