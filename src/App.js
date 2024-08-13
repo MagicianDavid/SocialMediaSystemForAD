@@ -33,6 +33,7 @@ import LabelForm from './components/Label/LabelForm';
 import SendNotification from "./components/pages/SendNotification";
 import SearchResults from "./components/pages/SearchResult";
 import {ReportProvider} from "./services/ReportContext";
+import CSVList from './components/pages/download_csv/CSVList';
 
 function App() {
 
@@ -63,7 +64,7 @@ function App() {
                                     <Route path="/labellist" element={<LabelList/>} />
                                     <Route path="/labels/edit/:id" element={<LabelForm/>} />
                                     <Route path="/labels/add" element={<LabelForm/>} />
-
+                                    <Route path="/users/csvlist" element={<CSVList/>} />
 
                                     <Route element={<ProtectedRoute requiredPath="/mainmenu" />}>
                                         <Route path="/mainmenu" element={<PostList/>}/>

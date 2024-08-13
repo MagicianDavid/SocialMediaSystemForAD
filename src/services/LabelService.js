@@ -13,6 +13,10 @@ class LabelService {
         return axios.get(`${ROLE_API_BASE_URL}/findAllForReport`);
     }
 
+    findColorCodeByLabel(){
+        return axios.get(`${ROLE_API_BASE_URL}/findColorCodeByLabel`);
+    }
+
     getLabelsById(LabelId) {
         return axios.get(`${ROLE_API_BASE_URL}/findById/${LabelId}`);
     }

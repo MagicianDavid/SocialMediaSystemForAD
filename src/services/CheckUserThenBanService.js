@@ -1,6 +1,7 @@
 import axios from 'axios';
+import { BASE_API_URL } from "./config";
 
-const Ban_API_BASE_URL = "http://localhost:8080/api/checkThenBan";
+const Ban_API_BASE_URL = `${BASE_API_URL}/checkThenBan`;
 
 class CheckThenBanService {
 

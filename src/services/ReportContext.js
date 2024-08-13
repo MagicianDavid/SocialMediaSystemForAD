@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import useCurrentUser from "../components/customhook/CurrentUser";
 import ReportService from "./ReportService";
+import { BASE_WS_URL } from './config';
 
 const ReportContext = createContext();
 
@@ -16,7 +17,7 @@ export const ReportProvider = ({ children }) => {
     useEffect(() => {
         if (currentUser) {
             const moderatorUri = currentUser.role.type === "Moderator" ? "&role=Moderator" : "";
-            const socket = new WebSocket(`ws://localhost:8080/reports?userId=${currentUser.id}${moderatorUri}`);
+            const socket = new WebSocket(`${BASE_WS_URL}/reports?userId=${currentUser.id}${moderatorUri}`);
 
             socket.onopen = () => {
                 console.log('Report WebSocket connection established');
