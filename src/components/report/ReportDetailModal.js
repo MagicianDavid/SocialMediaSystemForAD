@@ -1,5 +1,6 @@
 import {Button, Modal} from "react-bootstrap";
 import React from "react";
+import TagLists from "../Classess/taglists";
 
 const ReportDetailModal = ({ show, onHide, selectedReport }) => {
     return (
@@ -17,10 +18,10 @@ const ReportDetailModal = ({ show, onHide, selectedReport }) => {
                             <p><strong>Reported ID:</strong> {selectedReport.reportedId}</p>
                             <p><strong>Reason:</strong> {selectedReport.reason}</p>
                             <p><strong>Status:</strong> {selectedReport.status}</p>
-                            <p><strong>Label::</strong> {selectedReport.label.label}</p>
-                            <p><strong>Report Time:</strong> {new Date(selectedReport.reportDate).toLocaleString()}</p>
+                            <p style={{ display: 'flex', alignItems: 'center' }}><strong>Labels:</strong><TagLists style={{ marginLeft: '8px' }} tagsString={selectedReport.label.label} /></p>
+                            <p><strong>Report Time:</strong> {new Date(selectedReport.reportDate.replace(' ', 'T') + '.000Z').toLocaleString()}</p>
                             <p><strong>CaseClose
-                                Time:</strong> {selectedReport.caseCloseDate ? new Date(selectedReport.caseCloseDate).toLocaleString() : 'N/A'}
+                                Time:</strong> { selectedReport.caseCloseDate ? new Date(selectedReport.caseCloseDate.replace(' ', 'T') + '.000Z').toLocaleString() : 'N/A'}
                             </p>
 
                             <h4>Reply Stream</h4>

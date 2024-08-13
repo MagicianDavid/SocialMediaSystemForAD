@@ -45,6 +45,12 @@ const ReportButton = ({ userId, objType, reportId }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
+        if (!reportType) {  // Check if reportType (label) is selected
+            setError('Please select a label for the report.');
+            return;
+        }
+
         let prefixedReportId = '';
         if (objType === 'user') {
             prefixedReportId = `u${reportId}`;
@@ -60,7 +66,8 @@ const ReportButton = ({ userId, objType, reportId }) => {
             reportedId: prefixedReportId,
             reportUser: { id: parseInt(userId) }, // Use a User object
             reportDate: new Date().toISOString(),
-            status:'Pending'
+            status:'Pending',
+            appealCount: 0,
         };
 
         ReportService.createReport(report)

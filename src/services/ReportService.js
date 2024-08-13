@@ -25,6 +25,10 @@ class LabelService {
         return axios.put(`${ROLE_API_BASE_URL}/update/${id}`,report);
     }
 
+    addUpAppealCount(id) {
+        return axios.put(`${ROLE_API_BASE_URL}/addUpAppealCount/${id}`);
+    }
+
     updateStatus(reportId,status){
         return axios.put(`${ROLE_API_BASE_URL}/updateStatus/${reportId}?status=${status}`);
     }

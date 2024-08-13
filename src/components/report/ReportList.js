@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import { Table, Button, Form, ButtonGroup, Modal } from 'react-bootstrap';
+import React, {useEffect, useState} from 'react';
+import { Table, Button, Form, ButtonGroup, Modal,OverlayTrigger, Tooltip } from 'react-bootstrap';
 import ReportService from "../../services/ReportService";
 import useCurrentUser from "../customhook/CurrentUser";
 import NotificationService from "../../services/NotificationService.";
@@ -52,10 +52,15 @@ const ReportList = () => {
         return updatedRemarks;
     };
 
-    const handleApproveOrReject = () => {
+    const handleApproveOrReject = (actionType) => {
         if (selectedReport) {
+            if (actionType === 'approve') {
+                console.log("i'm really here");
+                // user 200 to represent report has been approved
+                selectedReport.appealCount = 200;
+            }
             selectedReport.status = "Complete";
-            selectedReport.caseCloseDate = new Date();
+            selectedReport.caseCloseDate = new Date().toISOString();
             // Optional for approve
             selectedReport.remarks = JSON.stringify(updateRemark(selectedReport,"Admin"));
             updateReport(selectedReport,false);
@@ -71,6 +76,7 @@ const ReportList = () => {
             }
             selectedReport.status = "Appeal";
             selectedReport.remarks = JSON.stringify(updateRemark(selectedReport,currentUser.username));
+            selectedReport.appealCount = selectedReport.appealCount + 1;
             updateReport(selectedReport,true);
             handleCloseModal();
         }
@@ -80,6 +86,10 @@ const ReportList = () => {
         ReportService.updateReport(report.id, report)
             .then((response) => {
                 if (isAppeal) {
+                    // addUp Appeal count
+                    ReportService.addUpAppealCount(report.id).then().catch((error) => {
+                        console.log("Error adding up the appealCount: "+error);
+                    });
                     // Notify the moderator
                     NotificationService.sendToAllModerators(
                         "Appeal Submitted",
@@ -109,7 +119,7 @@ const ReportList = () => {
 
     const handleModalConfirm = () => {
         if (actionType === 'approve' || actionType === 'reject') {
-            handleApproveOrReject();
+            handleApproveOrReject(actionType);
         } else if (actionType === 'appeal') {
             handleAppeal();
         }
@@ -140,87 +150,119 @@ const ReportList = () => {
 
     return (
         <>
-            <Table striped  hover>
-                <thead>
-                <tr>
-                    <th>Report User</th>
-                    <th>Reported ID</th>
-                    <th>Reason</th>
-                    <th>Status</th>
-                    <th>Report Date</th>
-                    <th>Remarks</th>
-                    <th>CaseClose Date</th>
-                    <th>Action</th>
-                </tr>
-                </thead>
-                <tbody>
-                {reports.map(report => (
-                    <tr key={report.id}>
-                        <td>{report.reportUser.username}</td>
-                        {/* can click and view the post or comment or userprofile according to the id*/}
-                        <td style={{cursor: 'pointer', color: 'brown', textDecoration: 'none'}}
-                            onClick={() => handleReportedIdNavigation(report.reportedId)}>
-                            {report.reportedId}
-                        </td>
-                        {/*<td>*/}
-                        {/*    {report.reportedId}*/}
-                        {/*</td>*/}
-                        <td>{report.reason}</td>
-                        <td>{report.status}</td>
-                        <td>{new Date(report.reportDate).toLocaleString()}</td>
-                        {/*<td>*/}
-                        {/*    <Form.Control type="text" defaultValue={report.remarks} disabled/>*/}
-                        {/*</td>*/}
-                        <td>
-                            <ButtonGroup>
-                                <Button variant="info" className="rounded-button"
-                                        onClick={() => handleViewDetail(report)}>View Detail</Button>
-                            </ButtonGroup>
-                        </td>
-                        <td>{report.caseCloseDate ? new Date(report.caseCloseDate).toLocaleString() : 'N/A'}</td>
-                        <td>
-                            <ButtonGroup>
-                                {report.status === "Complete" && (currentUser && currentUser.role.type === "Moderator" ? (
-                                    <>
-                                        waiting to be appealed.
-                                    </>) : (
-                                    <>
-                                        <Button variant="warning" className="rounded-button"
-                                                onClick={() => handleShowModal(report, 'appeal')}>Appeal</Button>
-                                    </>
-                                ))}
-                                {report.status === "Pending" && (currentUser && currentUser.id === report.reportUser.id ? (
-                                    <>
-                                        Moderator is still pending
-                                    </>
-                                ) : (
-                                    <>
-                                        <Button variant="success" className="me-2 rounded-button"
-                                                onClick={() => handleShowModal(report, 'approve')}>Approve</Button>
-                                        <Button variant="danger" className="rounded-button"
-                                                onClick={() => handleShowModal(report, 'reject')}>Reject</Button>
-                                    </>
-                                ))}
-                                {report.status === "Appeal" &&
-                                    (currentUser && currentUser.id === report.reportUser.id ? (
-                                            <>
-                                                waiting to be pended.
-                                            </>
-                                        ) : (
-                                            <>
-                                                <Button variant="success" className="me-2 rounded-button"
-                                                        onClick={() => handleShowModal(report, 'approve')}>Approve</Button>
-                                                <Button variant="danger" className="rounded-button"
-                                                        onClick={() => handleShowModal(report, 'reject')}>Reject</Button>
-                                            </>
-                                        )
-                                    )}
-                            </ButtonGroup>
-                        </td>
+            {currentUser &&
+                <Table striped  hover>
+                    <thead>
+                    <tr>
+                        {currentUser.role.type === "Moderator" && <th>ID</th>}
+                        <th>Report User</th>
+                        <th>Reported ID</th>
+                        <th>Reason</th>
+                        <th>Status</th>
+                        <th>Report Date</th>
+                        <th>Remarks</th>
+                        <th>CaseClose Date</th>
+                        <th>Action</th>
                     </tr>
-                ))}
-                </tbody>
-            </Table>
+                    </thead>
+                    <tbody>
+                    {reports.map(report => (
+                        <tr key={report.id}>
+                            {currentUser.role.type === "Moderator" && <td>{report.id}</td>}
+                            <td>{report.reportUser.username}</td>
+                            {/* can click and view the post or comment or userprofile according to the id*/}
+                            <td style={{cursor: 'pointer', color: 'brown', textDecoration: 'none'}}
+                                onClick={() => handleReportedIdNavigation(report.reportedId)}>
+                                {report.reportedId}
+                            </td>
+                            {/*<td>*/}
+                            {/*    {report.reportedId}*/}
+                            {/*</td>*/}
+                            <td>{report.reason}</td>
+                            <td>{report.status}</td>
+                            <td>{new Date(report.reportDate.replace(' ', 'T') + '.000Z').toLocaleString()}</td>
+                            {/*<td>*/}
+                            {/*    <Form.Control type="text" defaultValue={report.remarks} disabled/>*/}
+                            {/*</td>*/}
+                            <td>
+                                <ButtonGroup>
+                                    <Button variant="info" className="rounded-button"
+                                            onClick={() => handleViewDetail(report)}>View Detail</Button>
+                                </ButtonGroup>
+                            </td>
+                            <td>{report.caseCloseDate ? new Date(report.caseCloseDate).toLocaleString() : 'N/A'}</td>
+                            <td>
+                                <ButtonGroup>
+                                    {report.status === "Complete" && (currentUser && currentUser.role.type === "Moderator" ? (
+                                        <>
+                                            waiting to be appealed.
+                                        </>) : (
+                                        <>
+                                            { report.appealCount >= 1 ? (
+                                                <OverlayTrigger
+                                                    placement="top"
+                                                    overlay={<Tooltip id="button-tooltip">{parseInt(report.appealCount, 10) === 200
+                                                        ? 'You report already been approved.'
+                                                        : 'You can appeal only once.'}</Tooltip>}
+                                                >
+                                            <span className="d-inline-block">
+                                                <Button
+                                                    variant="warning"
+                                                    className="rounded-button"
+                                                    onClick={() => handleShowModal(report, 'appeal')}
+                                                    disabled={report.appealCount >= 1}
+                                                    style={report.appealCount >= 1 ? { pointerEvents: 'none' } : {}}
+                                                >
+                                                    Appeal
+                                                </Button>
+                                            </span>
+                                                </OverlayTrigger>
+                                            ) :(
+                                                <Button
+                                                    variant="warning"
+                                                    className="rounded-button"
+                                                    onClick={() => handleShowModal(report, 'appeal')}
+                                                    disabled={report.appealCount >= 1}
+                                                    style={report.appealCount >= 1 ? { pointerEvents: 'none' } : {}}
+                                                >
+                                                    Appeal
+                                                </Button>
+                                            )}
+                                        </>
+                                    ))}
+                                    {report.status === "Pending" && (currentUser && currentUser.id === report.reportUser.id ? (
+                                        <>
+                                            Moderator is still pending
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Button variant="success" className="me-2 rounded-button"
+                                                    onClick={() => handleShowModal(report, 'approve')}>Approve</Button>
+                                            <Button variant="danger" className="rounded-button"
+                                                    onClick={() => handleShowModal(report, 'reject')}>Reject</Button>
+                                        </>
+                                    ))}
+                                    {report.status === "Appeal" &&
+                                        (currentUser && currentUser.id === report.reportUser.id ? (
+                                                <>
+                                                    waiting to be pended.
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <Button variant="success" className="me-2 rounded-button"
+                                                            onClick={() => handleShowModal(report, 'approve')}>Approve</Button>
+                                                    <Button variant="danger" className="rounded-button"
+                                                            onClick={() => handleShowModal(report, 'reject')}>Reject</Button>
+                                                </>
+                                            )
+                                        )}
+                                </ButtonGroup>
+                            </td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </Table>
+            }
             <Modal show={showModal} onHide={handleCloseModal}>
                 <Modal.Header closeButton>
                     <Modal.Title>{actionType === 'approve' ? 'Approve Report' : actionType === 'reject' ? 'Reject Report' : 'Appeal Report'}</Modal.Title>
