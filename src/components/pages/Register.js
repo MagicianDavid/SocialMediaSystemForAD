@@ -21,11 +21,8 @@ const RegisterForm = () => {
     // get country list
     useEffect(() => {
         CountryService.getAllCountries().then((response) => {
-            console.log(response.data)
             const countryNames = response.data.map(country => country.name.common);
             setCountries(countryNames);
-            console.log(countryNames)
-
         });
     },[]);
 

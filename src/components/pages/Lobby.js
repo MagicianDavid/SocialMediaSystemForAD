@@ -70,12 +70,20 @@ const PostList = () => {
         <div className="contentDiv">
             <SearchBar />
             <h3> Trending </h3>
-            {currentUser && <PostForm onSubmit={handlePostSubmit} userId={currentUser.id} />}
+            {/*{currentUser && <PostForm onSubmit={handlePostSubmit} userId={currentUser.id} />}*/}
             <div style={{ minHeight: '70vh', overflow: 'auto' }}>
-            {posts.map(post => (
-                <Post key={post.id} post={post} />
-            ))}
-            {loading && <div>Loading more...</div>}
+                {posts.length === 0 ?
+                    <>
+                        no posts yet.
+                    </>
+                    :
+                    <>
+                        {posts.map(post => (
+                            <Post key={post.id} post={post} />
+                        ))}
+                    </>
+                }
+                {loading && <div>Loading more...</div>}
             </div>
         </div>
     );

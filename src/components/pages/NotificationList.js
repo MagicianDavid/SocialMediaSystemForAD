@@ -20,10 +20,10 @@ const NotificationList = () => {
 
     return (
         <div className="notification-list">
-
+            <h2>Notifications:</h2>
             {unreadNotifications.length > 0 &&
                 <>
-                    Unread:
+                    <strong>Unread List:</strong>
                     {unreadNotifications
                         .sort((a, b) => new Date(b.notificationTime) - new Date(a.notificationTime))
                         .map(notification => (
@@ -37,7 +37,7 @@ const NotificationList = () => {
             }
             {readNotifications.length > 0 &&
                 <>
-                    Read:
+                    <strong>Read List:</strong>
                     {readNotifications.sort((a, b) => new Date(b.notificationTime) - new Date(a.notificationTime))
                         .map(notification => (
                             <Notification

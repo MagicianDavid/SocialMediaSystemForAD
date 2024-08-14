@@ -148,6 +148,10 @@ const ReportList = () => {
         return <p>Loading reports...</p>; // Or a spinner/loading indicator
     }
 
+    if (reports.length === 0) {
+        return <p>No Reports yet!</p>
+    }
+
     return (
         <>
             {currentUser &&

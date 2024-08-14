@@ -191,10 +191,18 @@ const UserDetail = () => {
                 </div>
             )}
                 <h2>Posts</h2>
-                {posts.map(post => (
-                <Post key={post.id} post={post} />
-            ))}
-
+                {posts.length === 0 ?
+                    <>You have no posts yet. <a
+                        onClick={()=>navigate(`/mainmenu`)}
+                        style={{ color: 'orangered', fontWeight: 'bold', textDecoration: 'none', cursor: 'pointer' }}
+                    >Submit post to start your journey~</a></>
+                    :
+                    <>
+                        {posts.map(post => (
+                            <Post key={post.id} post={post} />
+                        ))}
+                    </>
+                }
         </div>
     );
 };

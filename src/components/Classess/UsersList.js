@@ -6,52 +6,60 @@ import PropTypes from 'prop-types';
 const UserList = ({ currentUser, users, onFollow, onUnfollow, onBlock, onUnblock }) => {
     return (
         <ListGroup>
-            {users.map(user => (
-                <ListGroup.Item key={user.id}>
-                    <Row className="align-items-center">
-                        <Col xs={6}>
-                            <div>{user.username}</div>
-                            <div>{user.name}</div>
-                        </Col>
-                        <Col xs={6} className="d-flex justify-content-end">
-                            {onFollow  && !user.isBlocked && (
-                                <Button
-                                    variant="primary"
-                                    onClick={() => onFollow(currentUser,user.id)}
-                                    className="mr-2"
-                                >
-                                    Follow
-                                </Button>
-                            )}
-                            {onUnfollow  && !user.isBlocked && (
-                                <Button
-                                    variant="danger"
-                                    onClick={() => onUnfollow(currentUser,user.id)}
-                                    className="mr-2"
-                                >
-                                    Unfollow
-                                </Button>
-                            )}
-                            {onBlock && !user.isBlocked && (
-                                <Button
-                                    variant="warning"
-                                    onClick={() => onBlock(currentUser,user.id)}
-                                >
-                                    Block
-                                </Button>
-                            )}
-                            {onUnblock && (
-                                <Button
-                                    variant="secondary"
-                                    onClick={() => onUnblock(currentUser,user.id)}
-                                >
-                                    Unblock
-                                </Button>
-                            )}
-                        </Col>
-                    </Row>
-                </ListGroup.Item>
-            ))}
+            {users.length === 0 ?
+                <>
+                    No users yet.
+                </>
+                :
+                <>
+                    {users.map(user => (
+                        <ListGroup.Item key={user.id}>
+                            <Row className="align-items-center">
+                                <Col xs={6}>
+                                    <div>{user.username}</div>
+                                    <div>{user.name}</div>
+                                </Col>
+                                <Col xs={6} className="d-flex justify-content-end">
+                                    {onFollow  && !user.isBlocked && (
+                                        <Button
+                                            variant="primary"
+                                            onClick={() => onFollow(currentUser,user.id)}
+                                            className="mr-2"
+                                        >
+                                            Follow
+                                        </Button>
+                                    )}
+                                    {onUnfollow  && !user.isBlocked && (
+                                        <Button
+                                            variant="danger"
+                                            onClick={() => onUnfollow(currentUser,user.id)}
+                                            className="mr-2"
+                                        >
+                                            Unfollow
+                                        </Button>
+                                    )}
+                                    {onBlock && !user.isBlocked && (
+                                        <Button
+                                            variant="warning"
+                                            onClick={() => onBlock(currentUser,user.id)}
+                                        >
+                                            Block
+                                        </Button>
+                                    )}
+                                    {onUnblock && (
+                                        <Button
+                                            variant="secondary"
+                                            onClick={() => onUnblock(currentUser,user.id)}
+                                        >
+                                            Unblock
+                                        </Button>
+                                    )}
+                                </Col>
+                            </Row>
+                        </ListGroup.Item>
+                    ))}
+                </>
+            }
         </ListGroup>
     );
 };

@@ -13,7 +13,7 @@ const LoginForm = () => {
 
     useEffect(() => {
         if (currentUser) {
-            navigate('/dashboard');
+            navigate(currentUser.role.type === "User" ? '/mainmenu'  :'/dashboard');
         }
     }, [currentUser,navigate]);
 

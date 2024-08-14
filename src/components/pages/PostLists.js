@@ -33,10 +33,16 @@ const PostList = () => {
         <div className="contentDiv">
             <h3>News Feeds</h3>
             {/*  Post Form  */}
-            {currentUser && <PostForm onSubmit={handlePostSubmit} userId={currentUser.id} />} 
-            {posts.map(post => (
-                <Post key={post.id} post={post} curId={currentUser} />
-            ))}
+            {currentUser && <PostForm onSubmit={handlePostSubmit} userId={currentUser.id} />}
+            {posts.length === 0 ?
+                <>You have no posts yet. Submit post to start your journey~</>
+                :
+                <>
+                    {posts.map(post => (
+                        <Post key={post.id} post={post} curId={currentUser} />
+                    ))}
+                </>
+            }
         </div>
     );
 };

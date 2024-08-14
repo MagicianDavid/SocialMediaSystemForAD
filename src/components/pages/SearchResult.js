@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import {useLocation, useNavigate} from 'react-router-dom';
 import PC_MsgService from "../../services/PC_MsgService";
 import Post from "../Classess/Post";
 import UserCard from "../user/UserCard";
+import {ArrowBack as ArrowBackIcon} from "@mui/icons-material";
+import {IconButton} from "@mui/material";
 
 const SearchResults = () => {
     const [searchResult, setSearchResult] = useState({
@@ -11,7 +13,12 @@ const SearchResults = () => {
         posts: []
     });
     const location = useLocation();
+    const navigate = useNavigate();
     const query = new URLSearchParams(location.search).get('keyword');
+
+    const toggleBack = () => {
+        navigate(-1);
+    };
 
     useEffect(() => {
         if (query) {
@@ -31,9 +38,14 @@ const SearchResults = () => {
 
     return (
         <div>
-            <h1>Search Results</h1>
+            <div style={{display: 'flex',alignItems: 'center',}}>
+                <IconButton onClick={toggleBack}>
+                    <ArrowBackIcon />
+                </IconButton>
+                <h1 style={{marginLeft: '10px'}}>Search Results</h1>
+            </div>
             <div>
-                <h2>Following Users</h2>
+                <strong>Following Users</strong>
                 {searchResult.followingUsers?.length > 0 ? (
                     searchResult.followingUsers.map(user => (
                         <UserCard user={user} styles={styles} />
@@ -44,7 +56,7 @@ const SearchResults = () => {
             </div>
 
             <div>
-                <h2>All Matched Users</h2>
+                <strong>All Matched Users</strong>
                 {searchResult.allUsers?.length > 0 ? (
                     searchResult.allUsers.map(user => (
                         <UserCard user={user} styles={styles} />
@@ -55,7 +67,7 @@ const SearchResults = () => {
             </div>
 
             <div>
-                <h2>Posts</h2>
+                <strong>Posts</strong>
                 {searchResult.posts?.length > 0 ? (
                     searchResult.posts.map(post => (
                         <Post key={post.id} post={post} />
