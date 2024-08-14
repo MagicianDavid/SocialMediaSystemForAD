@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import RoleService from '../../services/RoleService';
+import { Container, Form, Button, Card} from 'react-bootstrap';
 
 const RoleForm = () => {
     const { id } = useParams();
@@ -53,18 +54,20 @@ const RoleForm = () => {
     };
 
     return (
-        <div>
-            <h2>{id ? 'Update Role' : 'Add Role'}</h2>
-            <form>
-                <div>
-                    <label>Type: </label>
-                    <input type="text" value={type} onChange={(e) => setType(e.target.value)} />
-                </div>
+        <Container className="d-flex justify-content-center">
+        <Card style={{ width: '100%', maxWidth: '400px' }}>
+            <Card.Header><h2>{id ? 'Update Role' : 'Add Role'}</h2></Card.Header>
+            <Form className='p-2'>
+                <Form.Group>
+                    <Form.Label>Type Of Role: </Form.Label>
+                    <Form.Control type="text" value={type} onChange={(e) => setType(e.target.value)} />
+                </Form.Group>
                 {error && <div style={{ color: 'red' }}>{error}</div>}
-                <button onClick={saveOrUpdateRole}>{id ? 'Update' : 'Save'}</button>
-                <button onClick={cancel}>Cancel</button>
-            </form>
-        </div>
+                <Button className='me-2 mt-2' onClick={saveOrUpdateRole}>{id ? 'Update' : 'Save'}</Button>
+                <Button className='me-2 mt-2' onClick={cancel}>Cancel</Button>
+            </Form>
+        </Card>
+      </Container>
     );
 };
 

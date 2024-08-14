@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import LabelService from "../../services/LabelService";
+import {Row, Col, Container, Form, Button, Card} from 'react-bootstrap';
 
 const LabelForm = () => {
     const {id} = useParams();
@@ -69,38 +70,46 @@ const LabelForm = () => {
     }
 
     return(
-        <div>
-            <h2>{id ? 'Update Label' : 'Add Label'}</h2>
-            <form>
-                <div>
-                    <label>Label: </label>
-                    <input type="text" name="label" value={taglabel.label} onChange={handleChange}/>
-                </div>
-                <div>
-                    <label>Penalty Score: </label>
-                    <input type="number" name="penaltyScore" value={taglabel.penaltyScore} onChange={handleChange}/>
-                </div>
-                <div>
-                    <label>Color: </label>
-                    <input 
-                        type="color" 
-                        name="colorCode" 
-                        value={taglabel.colorCode}
-                        onChange={handleChange} 
-                    />
-                        <input 
-                            type="text" 
-                            value={taglabel.colorCode} 
-                            readOnly 
-                            style={{ marginLeft: '10px', width: '80px' }}
-                        />
+        <Container className="d-flex justify-content-center">
+        <Card style={{ width: '100%', maxWidth: '50vh' }}>
 
-                </div>
+            <Card.Header><h2>{id ? 'Update Label' : 'Add Label'}</h2></Card.Header>
+            <Form className='p-3'>
+                <Form.Group>
+                    <Form.Label>Label: </Form.Label>
+                    <Form.Control  type="text" name="label" value={taglabel.label} onChange={handleChange}/>
+                </Form.Group>
+                <Form.Group>
+                    <Form.Label>Penalty Score: </Form.Label>
+                    <Form.Control  type="number" name="penaltyScore" value={taglabel.penaltyScore} onChange={handleChange}/>
+                </Form.Group>
+                <Form.Group>
+                    <Form.Label>Color: </Form.Label>
+                    <Row className="align-items-center">
+                        <Col xs="auto">
+                            <Form.Control  
+                                type="color" 
+                                name="colorCode" 
+                                value={taglabel.colorCode}
+                                onChange={handleChange} 
+                            />
+                        </Col>
+                        <Col xs="auto">
+                            <Form.Control  
+                                type="text" 
+                                value={taglabel.colorCode} 
+                                readOnly 
+                                style={{ width: '80px' }}
+                            />
+                        </Col>
+                    </Row>
+                </Form.Group>
                 {error && <div style={{ color: 'red' }}>{error}</div>}
-                <button onClick={saveOrUpdateLabel}>{id ? 'Update' : 'Save'}</button>
-                <button onClick={cancel}>Cancel</button>
-            </form>
-        </div>
+                <Button className='me-2 mt-2' onClick={saveOrUpdateLabel}>{id ? 'Update' : 'Save'}</Button>
+                <Button className='me-2 mt-2' onClick={cancel}>Cancel</Button>
+            </Form>
+        </Card>
+        </Container>
     );
 
 };

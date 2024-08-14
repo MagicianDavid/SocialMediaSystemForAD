@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Container, Form, Button, Card} from 'react-bootstrap';
 
 const RouteSelectionForm = ({ routes, initialSelectedRoutes, onChange }) => {
     const [selectedRoutes, setSelectedRoutes] = useState([]);
@@ -78,20 +79,22 @@ const RouteSelectionForm = ({ routes, initialSelectedRoutes, onChange }) => {
     return (
         <div>
             <h3>Select Routes:</h3>
-            <button type="button" onClick={handleSelectAll}>Select All</button>
-            <button type="button" onClick={handleDeselectAll}>Deselect All</button>
+            <Button className="me-2" type="button" onClick={handleSelectAll}>Select All</Button>
+            <Button type="button" onClick={handleDeselectAll}>Deselect All</Button>
             {selectedRoutes.map((route, index) => (
-                <div key={index}>
+                <div className ="mt-2 mb-2"key={index}>
                     <input
+                        class="form-check-input me-1"
                         type="checkbox"
                         id={`route-${index}`}
                         checked={route.selected}
                         onChange={() => handleCheckboxChange(index, false)}
                     />
-                    <label htmlFor={`route-${index}`}>{route.menuName}</label>
+                    <label class="form-check-label" htmlFor={`route-${index}`}> <b>{route.menuName}</b></label>
                     {route.children && route.children.map((child, childIndex) => (
                         <div key={childIndex} style={{ paddingLeft: '20px' }}>
                             <input
+                                class="form-check-input me-1"
                                 type="checkbox"
                                 id={`child-route-${index}-${childIndex}`}
                                 checked={child.selected}

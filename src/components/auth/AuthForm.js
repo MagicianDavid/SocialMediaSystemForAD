@@ -4,6 +4,7 @@ import AuthService from '../../services/AuthService';
 import RouteSelectionForm from './RouteSelectionForm';
 import {useAuth} from "../../services/AuthContext";
 import {getAllRoutes} from "../../utils/allRoutes";
+import { Container, Form, Button, Card} from 'react-bootstrap';
 
 const AuthForm = () => {
     const { id } = useParams();
@@ -74,24 +75,27 @@ const AuthForm = () => {
     };
 
     return (
-        <div>
-            <h2>{id ? 'Update Auth' : 'Add Auth'}</h2>
-            <form onSubmit={saveOrUpdateAuth}>
-                <div>
-                    <label>Rank: </label>
-                    <input type="text" name="rank" value={auth.rank} onChange={handleChange} />
-                </div>
-                <div>
+        <Container className="d-flex justify-content-center">
+            <Card style={{ width: '100%', maxWidth: '500px' }}>
+
+            <Card.Header><h2>{id ? 'Update Auth' : 'Add Auth'}</h2></Card.Header>
+            <Form className='p-3' onSubmit={saveOrUpdateAuth}>
+                <Form.Group>
+                    <Form.Label>Rank: </Form.Label>
+                    <Form.Control type="text" name="rank" value={auth.rank} onChange={handleChange} />
+                </Form.Group>
+                <Form.Group>
                     <RouteSelectionForm
                         routes={routes}
                         initialSelectedRoutes={getAllPaths(selectedRoutes)}
                         onChange={handleRoutesChange}
                     />
-                </div>
-                <button type="submit">{id ? 'Update' : 'Save'}</button>
-                <button type="button" onClick={cancel}>Cancel</button>
-            </form>
-        </div>
+                </Form.Group>
+                <Button className="me-2" type="submit">{id ? 'Update' : 'Save'}</Button>
+                <Button type="button" onClick={cancel}>Cancel</Button>
+            </Form>
+            </Card>
+        </Container>
     );
 };
 

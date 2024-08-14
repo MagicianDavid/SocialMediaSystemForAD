@@ -2,6 +2,10 @@
 import React, { Component } from 'react';
 import RoleService from '../../services/RoleService';
 import { useNavigate } from 'react-router-dom';
+import { Container, Button, Table } from 'react-bootstrap';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import CreateIcon from '@mui/icons-material/Create';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 
 class RoleList extends Component {
     constructor(props) {
@@ -26,10 +30,10 @@ class RoleList extends Component {
     render() {
         const { navigate } = this.props;
         return (
-            <div>
+            <Container className='contentDiv'>
                 <h2>Role List</h2>
-                <button onClick={() => navigate('/roles/add')}>Add Role</button>
-                <table>
+                <Button className='mb-3 btn-dark' onClick={() => navigate('/roles/add')}> <AddCircleIcon className='icon-thing'/> Add Role</Button>
+                <Table bordered hover className="w-30">
                     <thead>
                     <tr>
                         <th>ID</th>
@@ -43,14 +47,14 @@ class RoleList extends Component {
                             <td>{role.id}</td>
                             <td>{role.type}</td>
                             <td>
-                                <button onClick={() => navigate(`/roles/edit/${role.id}`)}>Edit</button>
-                                <button onClick={() => this.deleteRole(role.id)}>Delete</button>
+                                <Button className='me-2' onClick={() => navigate(`/roles/edit/${role.id}`)}><CreateIcon className='icon-thing'/>Edit</Button>
+                                <Button onClick={() => this.deleteRole(role.id)}><DeleteOutlineIcon className='icon-thing'/>Delete</Button>
                             </td>
                         </tr>
                     ))}
                     </tbody>
-                </table>
-            </div>
+                    </Table>
+            </Container>
         );
     }
 

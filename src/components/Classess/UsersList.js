@@ -3,7 +3,7 @@ import React from 'react';
 import { ListGroup, Button, Row, Col } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
-const UserList = ({ currentUser, users, onFollow, onUnfollow, onBlock, onUnblock }) => {
+const UserList = ({ currentUser, users, onFollow, onUnfollow, onBlock, onUnblock}) => {
     return (
         <ListGroup>
             {users.length === 0 ?
@@ -29,7 +29,7 @@ const UserList = ({ currentUser, users, onFollow, onUnfollow, onBlock, onUnblock
                                             Follow
                                         </Button>
                                     )}
-                                    {onUnfollow  && !user.isBlocked && (
+                                    {onUnfollow  && !user.isBlocked &&  (
                                         <Button
                                             variant="danger"
                                             onClick={() => onUnfollow(currentUser,user.id)}
@@ -38,6 +38,7 @@ const UserList = ({ currentUser, users, onFollow, onUnfollow, onBlock, onUnblock
                                             Unfollow
                                         </Button>
                                     )}
+                                    
                                     {onBlock && !user.isBlocked && (
                                         <Button
                                             variant="warning"
@@ -57,6 +58,7 @@ const UserList = ({ currentUser, users, onFollow, onUnfollow, onBlock, onUnblock
                                 </Col>
                             </Row>
                         </ListGroup.Item>
+                        
                     ))}
                 </>
             }

@@ -13,6 +13,21 @@ class CSVservice {
         });
     }
 
+    getPC_tags(){
+        return axios.get(CSV_API_BASE_URL+"/pc_tags", {
+            responseType: 'blob' // Important to handle binary data
+        });
+    }
+    getReports(){
+        return axios.get(CSV_API_BASE_URL+"/reports", {
+            responseType: 'blob' // Important to handle binary data
+        });
+    }
+    getLabels(){
+        return axios.get(CSV_API_BASE_URL+"/labels", {
+            responseType: 'blob' // Important to handle binary data
+        });
+    }
 
 
 }

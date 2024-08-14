@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import AuthService from '../../services/AuthService';
 import { useNavigate } from 'react-router-dom';
+import { Container, Button, Table } from 'react-bootstrap';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import CreateIcon from '@mui/icons-material/Create';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 
 const AuthList = () => {
     const [auths, setAuths] = useState([]);
@@ -55,15 +59,15 @@ const AuthList = () => {
     // };
 
     return (
-        <div>
+        <Container className="contentDiv" style={{width:'50%'}}>
             <h2>Auth List</h2>
-            <button onClick={addAuth}>Add Auth</button>
+            <Button className='mb-3 btn-dark'  onClick={addAuth}><AddCircleIcon className='icon-thing'/>Add Auth</Button>
             {loading ? (
                 <p>Loading...</p>
             ) : auths.length === 0 ? (
                 <p>No auths found.</p>
             ) : (
-                <table>
+                <Table bordered hover>
                     <thead>
                     <tr>
                         <th>ID</th>
@@ -114,15 +118,15 @@ const AuthList = () => {
                                 </ul>
                             </td>
                             <td>
-                                <button onClick={() => editAuth(auth.id)}>Edit</button>
-                                <button onClick={() => deleteAuth(auth.id)}>Delete</button>
+                                <Button className='me-2 mb-2 w-100' onClick={() => editAuth(auth.id)}> <CreateIcon className='icon-thing'/>Edit</Button>
+                                <Button className='btn-danger w-100' onClick={() => deleteAuth(auth.id)}> <DeleteOutlineIcon className='icon-thing'/>Delete</Button>
                             </td>
                         </tr>
                     ))}
                     </tbody>
-                </table>
+                </Table>
             )}
-        </div>
+        </Container>
     );
 };
 

@@ -9,6 +9,9 @@ import CountryService from '../../services/CountryService';
 import {useAuth} from "../../services/AuthContext";
 import PasswordUtils from '../../utils/pwdEncryption';
 import {getUserAllStatus} from "../../utils/userAllStatus";
+import { Row, Col, Container, Form, Button, Card} from 'react-bootstrap';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 
 const EmployeeForm = () => {
@@ -143,16 +146,18 @@ const EmployeeForm = () => {
     };
 
     return (
-        <div>
-            <h2>{id ? 'Update User' : 'Add User'}</h2>
-            <form>
-                <div>
-                    <label>Name: </label>
-                    <input type="text" name="name" value={employee.name} onChange={handleChange}/>
-                </div>
-                <div>
-                    <label>Gender: </label>
-                    <select name="gender" value={employee.gender} onChange={handleChange}>
+        <Container className="d-flex justify-content-center">
+        <Card style={{ width: '100%', maxWidth: '500px' }}>
+           
+            <Card.Header><h2>{id ? 'Update User' : 'Add User'}</h2></Card.Header>
+            <Form className='p-3'>
+                <Form.Group>
+                    <Form.Label>Name: </Form.Label>
+                    <Form.Control type="text" name="name" value={employee.name} onChange={handleChange}/>
+                </Form.Group>
+                <Form.Group>
+                    <Form.Label>Gender: </Form.Label>
+                    <select className="form-select"  name="gender" value={employee.gender} onChange={handleChange}>
                         <option value="">Select Gender</option>
                         {genderOptions.map((gender) => (
                             <option key={gender} value={gender}>
@@ -160,34 +165,40 @@ const EmployeeForm = () => {
                             </option>
                         ))}
                     </select>
-                </div>
-                <div>
-                    <label>Email: </label>
-                    <input type="email" name="email" value={employee.email} onChange={handleChange}/>
-                </div>
-                <div>
-                    <label>Username: </label>
-                    <input type="text" name="username" value={employee.username} onChange={handleChange}/>
-                </div>
-                <div>
-                    <label>Password: </label>
-                    <input
-                        type={showPassword ? 'text' : 'password'}
-                        name="password"
-                        value={showPassword ? PasswordUtils.decryptUserPassword(employee.password) : '•'.repeat(PasswordUtils.decryptUserPassword(employee.password).length)}
-                        onChange={handlePwdChange}
-                    />
-                    <button type="button" onClick={toggleShowPassword}>
-                        {showPassword ? 'Hide' : 'Show'}
-                    </button>
-                </div>
-                <div>
-                    <label>Phone Number: </label>
-                    <input type="text" name="phoneNum" value={employee.phoneNum} onChange={handleChange}/>
-                </div>
-                <div>
-                    <label>Country: </label>
-                    <select name="country" value={employee.country} onChange={handleChange}>
+                </Form.Group>
+                <Form.Group>
+                    <Form.Label>Email: </Form.Label>
+                    <Form.Control type="email" name="email" value={employee.email} onChange={handleChange}/>
+                </Form.Group>
+                <Form.Group>
+                    <Form.Label>Username: </Form.Label>
+                    <Form.Control type="text" name="username" value={employee.username} onChange={handleChange}/>
+                </Form.Group>
+                <Form.Group>
+                    <Form.Label>Password:</Form.Label>
+                    <Row>
+                        <Col xs={9} className="pr-1">
+                            <Form.Control
+                                type={showPassword ? 'text' : 'password'}
+                                name="password"
+                                value={showPassword ? PasswordUtils.decryptUserPassword(employee.password) : '•'.repeat(PasswordUtils.decryptUserPassword(employee.password).length)}
+                                onChange={handlePwdChange}
+                            />
+                        </Col>
+                        <Col xs={3}>
+                            <Button type="button" onClick={toggleShowPassword} className="w-100">
+                                {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                            </Button>
+                        </Col>
+                    </Row>
+                </Form.Group>
+                <Form.Group>
+                    <Form.Label>Phone Number: </Form.Label>
+                    <Form.Control type="text" name="phoneNum" value={employee.phoneNum} onChange={handleChange}/>
+                </Form.Group>
+                <Form.Group>
+                    <Form.Label>Country: </Form.Label>
+                    <select className="form-select" name="country" value={employee.country} onChange={handleChange}>
                         <option value="">Select Country</option>
                         {countries.map((country) => (
                             <option key={country} value={country}>
@@ -195,36 +206,36 @@ const EmployeeForm = () => {
                             </option>
                         ))}
                     </select>
-                </div>
-                <div>
-                    <label>Join Date: </label>
-                    <input type="date" name="joinDate" value={employee.joinDate} onChange={handleChange}/>
-                </div>
-                <div>
-                    <label>Role: </label>
-                    <select name="role" value={employee.role.id} onChange={handleRoleChange}>
+                </Form.Group>
+                <Form.Group>
+                    <Form.Label>Join Date: </Form.Label>
+                    <Form.Control type="date" name="joinDate" value={employee.joinDate} onChange={handleChange}/>
+                </Form.Group>
+                <Form.Group>
+                    <Form.Label>Role: </Form.Label>
+                    <select  className="form-select" name="role" value={employee.role.id} onChange={handleRoleChange}>
                         <option value="">Select Role</option>
                         {roles.map(role => (
                             <option key={role.id} value={role.id}>{role.type}</option>
                         ))}
                     </select>
-                </div>
-                <div>
-                    <label>Auth: </label>
-                    <select name="auth" value={employee.auth.id} onChange={handleAuthChange}>
+                </Form.Group>
+                <Form.Group>
+                    <Form.Label>Auth: </Form.Label>
+                    <select  className="form-select" name="auth" value={employee.auth.id} onChange={handleAuthChange}>
                         <option value="">Select Auth</option>
                         {auths.map(auth => (
                             <option key={auth.id} value={auth.id}>{auth.rank}</option>
                         ))}
                     </select>
-                </div>
-                <div>
-                    <label>Social Score: </label>
-                    <input type="text" name="socialScore" value={employee.socialScore == null ? 0 : employee.socialScore} onChange={handleChange}/>
-                </div>
-                <div>
-                    <label>Status: </label>
-                    <select name="status" value={employee.status} onChange={handleChange}>
+                </Form.Group>
+                <Form.Group>
+                    <Form.Label>Social Score: </Form.Label>
+                    <Form.Control type="text" name="socialScore" value={employee.socialScore == null ? 0 : employee.socialScore} onChange={handleChange}/>
+                </Form.Group>
+                <Form.Group>
+                    <Form.Label>Status: </Form.Label>
+                    <select className="form-select" name="status" value={employee.status} onChange={handleChange}>
                         <option value="">Select Status</option>
                         {statuses.map((s) => (
                             <option key={s} value={s}>
@@ -232,11 +243,13 @@ const EmployeeForm = () => {
                             </option>
                         ))}
                     </select>
-                </div>
-                <button onClick={saveOrUpdateEmployee}>{id ? 'Update' : 'Save'}</button>
-                <button onClick={cancel}>Cancel</button>
-            </form>
-        </div>
+                </Form.Group>
+                <Button className="my-3" onClick={saveOrUpdateEmployee}>{id ? 'Update' : 'Save'}</Button>
+                <Button className="mx-2 my-3" onClick={cancel}>Cancel</Button>
+            </Form>
+            
+        </Card>
+        </Container>
     );
 };
 

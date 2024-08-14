@@ -37,7 +37,7 @@ const SearchResults = () => {
     }, [query]);
 
     return (
-        <div>
+        <div className="contentDiv">
             <div style={{display: 'flex',alignItems: 'center',}}>
                 <IconButton onClick={toggleBack}>
                     <ArrowBackIcon />

@@ -5,6 +5,14 @@ import Modal from '../common/Modal';
 import './UserList.css';
 import LoginService from "../../services/LoginService";
 
+import { Container, Button, Table } from 'react-bootstrap';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
+import CreateIcon from '@mui/icons-material/Create';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import CircleNotificationsIcon from '@mui/icons-material/CircleNotifications';
+import PageviewIcon from '@mui/icons-material/Pageview';
+
 const EmployeeList = () => {
     const [employees, setEmployees] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -78,15 +86,14 @@ const EmployeeList = () => {
 
     return (
         <>
-            <div className="employee-list-container">
-                <h2>User List</h2>
-                <div className="actions">
-                    <button className="btn add-btn" onClick={addEmployee}>Add User</button>
-                </div>
+        <Container style={{width:'100%'}}>
+        <h2>User List</h2>
+                    <Button className='mb-3 btn-dark'  onClick={addEmployee}><AddCircleIcon className='icon-thing'/>Add User</Button>
+             
                 {employees.length === 0 ? (
                     <p>No users found</p>
                 ) : (
-                    <table className="employee-table">
+                    <Table bordered hover>
                         <thead>
                         <tr>
                             <th>Name</th>
@@ -111,25 +118,32 @@ const EmployeeList = () => {
                                 <td>{employee.auth ? employee.auth.rank : 'No Auth'}</td>
                                 <td>{employee.status}</td>
                                 <td>
-                                    <button className="btn view-btn" onClick={() => viewEmployee(employee.id)}>View Detail</button>
+                                    <Button className="btn view-btn me-2" onClick={() => viewEmployee(employee.id)}>
+                                        <PageviewIcon className='icon-thing'/>
+                                        Detail</Button>
                                 </td>
                                 <td>
-                                    <button className="btn edit-btn" onClick={() => editEmployee(employee.id)}>Edit
-                                    </button>
-                                    <button className="btn notify-btn" onClick={() => notifyEmployee(employee.id)}>Notify
-                                    </button>
-                                    <button className="btn delete-btn"
-                                            onClick={() => deleteEmployee(employee.id)}>Delete
-                                    </button>
-                                    <button className="btn ban-btn"
+                                    <Button className="me-2" onClick={() => editEmployee(employee.id)}>
+                                        <CreateIcon className='icon-thing'/>Edit
+                                    </Button>
+                                    <Button className="btn-success me-2" onClick={() => notifyEmployee(employee.id)}>
+                                        <CircleNotificationsIcon className='icon-thing'/>
+                                        Notify
+                                    </Button>
+                                    <Button className='btn-danger me-2'
+                                            onClick={() => deleteEmployee(employee.id)}> 
+                                            <DeleteOutlineIcon className='icon-thing'/>Delete
+                                    </Button>
+                                    <Button className="btn-dark"
                                             onClick={() => banEmployee(employee.id, employee.status)}>
+                                        <RemoveCircleOutlineIcon className='icon-thing'/>
                                         {employee.status === "ban" ? "Activate" : "Ban"}
-                                    </button>
+                                    </Button>
                                 </td>
                             </tr>
                         ))}
                         </tbody>
-                    </table>
+                    </Table>
                 )}
                 <Modal
                     isOpen={isModalOpen}
@@ -139,7 +153,7 @@ const EmployeeList = () => {
                 >
                     <p>Are you sure you want to proceed with this action?</p>
                 </Modal>
-            </div>
+            </Container>
         </>
     );
 };

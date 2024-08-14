@@ -109,6 +109,8 @@ const FollowerFollowing = ({ userId }) => {
         setTabIndex(selectedTab);
     };
 
+
+
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
 
@@ -122,13 +124,13 @@ const FollowerFollowing = ({ userId }) => {
                 className="mb-3"
             >
                 <Tab eventKey={TAB_NAMES.FOLLOWING} title="Following">
-                    <UserList currentUser={currentUser.id} users={following} onFollow={null} onUnfollow={handleUnfollow} onBlock={handleBlock} onUnblock={null} />
+                    <UserList currentUser={currentUser.id} users={following} onFollow={null} onUnfollow={handleUnfollow} onBlock={handleBlock} onUnblock={null} isFollowing={null} />
                 </Tab>
                 <Tab eventKey={TAB_NAMES.FOLLOWERS} title="Followers">
-                    <UserList currentUser={currentUser.id} users={followers} onFollow={handleFollow} onUnfollow={null} onBlock={handleBlock} onUnblock={null} />
+                    <UserList currentUser={currentUser.id} users={followers} onFollow={handleFollow} onUnfollow={null} onBlock={handleBlock} onUnblock={null} isFollowing={following} />
                 </Tab>
                 <Tab eventKey={TAB_NAMES.BLOCKED} title="Blocked">
-                    <UserList currentUser={currentUser.id} users={blocked} onFollow={null} onUnfollow={null} onBlock={null} onUnblock={handleUnblock} />
+                    <UserList currentUser={currentUser.id} users={blocked} onFollow={null} onUnfollow={null} onBlock={null} onUnblock={handleUnblock} isFollowing={null}/>
                 </Tab>
 
             </Tabs>

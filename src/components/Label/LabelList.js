@@ -2,6 +2,11 @@ import React, { Component } from 'react';
 import { useNavigate } from 'react-router-dom';
 import LabelService from '../../services/LabelService';
 
+import { Container, Button, Table } from 'react-bootstrap';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import CreateIcon from '@mui/icons-material/Create';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+
 class LabelList extends Component {
     constructor(props){
         super(props);
@@ -43,10 +48,10 @@ class LabelList extends Component {
     render () {
         const { navigate } = this.props;
         return(
-            <div>
+            <Container className="contentDiv" style={{width:'40%'}}>
                 <h2>Label List</h2>
-                <button onClick={() => navigate('/labels/add')}>Add New Label</button>
-                <table>
+                <Button className='mb-3 btn-dark' onClick={() => navigate('/labels/add')}><AddCircleIcon className='icon-thing'/>Add New Label</Button>
+                <Table bordered hover>
                     <thead>
                         <tr>
                             <th>Id</th>
@@ -69,14 +74,14 @@ class LabelList extends Component {
                                 />
                             </td>
                             <td>
-                                <button onClick={() => navigate(`/labels/edit/${label.id}`)}>Edit</button>
-                                <button onClick={() => this.deleteLabel(label.id)}>Delete</button>
+                                <Button className='me-2'  onClick={() => navigate(`/labels/edit/${label.id}`)}> <CreateIcon className='icon-thing'/>Edit</Button>
+                                <Button className='btn-danger'  onClick={() => this.deleteLabel(label.id)}> <DeleteOutlineIcon className='icon-thing'/>Delete</Button>
                             </td>
                         </tr>
                     ))}
                     </tbody>
-                </table>
-            </div>
+                    </Table>
+        </Container>
         );
     }
 

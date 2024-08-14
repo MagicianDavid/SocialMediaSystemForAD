@@ -21,9 +21,9 @@ const TagLists = ({ tagsString }) => {
     return (
         <div>
             {getTagsArray(tagsString).map((tag, index) => (
-                <Chip key={index} label={tag.trim()} className="tag"
+                <Chip key={index} label={tag.trim()} className="tag me-1"
                       style={{
-                          backgroundColor: labelsColors[tag.trim()] || 'defaultColor', // Apply RGB color based on the tag name
+                          backgroundColor: labelsColors[tag.trim()] || '#5e5e5e', // Apply RGB color based on the tag name
                           color: '#fff', // Adjust text color for better contrast
                       }}/>
             ))}

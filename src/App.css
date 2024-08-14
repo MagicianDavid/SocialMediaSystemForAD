@@ -135,3 +135,18 @@
   background-color: #f8f9fa;
   text-align: center;
 }
+
+
+
+
+.icon-thing {
+  font-size: 30px;
+  color: #ffffff;
+  margin-right: 5px;
+  margin-left: -5px;
+}
+
+.table-header {
+  background-color: #000000; /* Black background */
+  color: #ffffff;           /* White text */
+}

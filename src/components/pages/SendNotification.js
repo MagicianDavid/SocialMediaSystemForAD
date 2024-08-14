@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import EmployeeService from "../../services/EmployeeService";
 import NotificationService from "../../services/NotificationService.";
 import {useParams} from "react-router-dom";
+import { Container, Form, Button, Card} from 'react-bootstrap';
 
 const SendNotification = () => {
     const [query, setQuery] = useState('');
@@ -76,8 +77,11 @@ const SendNotification = () => {
     },[id]);
 
     return (
-        <div style={styles.container}>
-            <h2>Send Notification</h2>
+        <Container className="d-flex justify-content-center">
+            <Card style={{ width: '100%', maxWidth: '50vh' }}>
+
+            <Card.Header><h2>Send Notification</h2></Card.Header>
+            <Form className='p-3'>
             <div style={styles.formGroup}>
                 <label>User:</label>
                 <input
@@ -118,7 +122,10 @@ const SendNotification = () => {
                 />
             </div>
             <button onClick={handleSendNotification} style={styles.button}>Send Notification</button>
-        </div>
+            </Form>
+            </Card>
+
+        </Container>
     );
 };
 
