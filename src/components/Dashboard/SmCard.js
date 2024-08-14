@@ -4,7 +4,7 @@ import {useNavigate} from "react-router-dom";
 
 const SmCard = ({ title, number }) => {
   const navigate = useNavigate();
-  const navLink  = title === "Reports" ? "users/reports"
+  const navLink  = title === "Reports" ? "reports"
       : title === "Users" ? "users"
           : "lobby";
   return (

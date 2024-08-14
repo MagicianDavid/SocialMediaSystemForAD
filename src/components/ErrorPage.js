@@ -11,7 +11,7 @@ const ErrorPage = () => {
             {currentUser ? (
                 <div>
                     <p>You do not have permission to view this page. Please contact your administrator.</p>
-                    <Link to="/dashboard">Go to Dashboard</Link>
+                    <Link to="/">Go to HomePage</Link>
                 </div>
             ) : (
                 <div>

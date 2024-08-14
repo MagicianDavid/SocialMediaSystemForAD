@@ -27,13 +27,13 @@ import NotificationList from './components/pages/NotificationList';
 import Reports from './components/report/Reports'
 import UserHistory from './components/pages/UserHistory';
 import Lobby from './components/pages/Lobby'
-import ScrollPosts from "./components/pages/TestPageable";
 import LabelList from "./components/Label/LabelList";
 import LabelForm from './components/Label/LabelForm';
 import SendNotification from "./components/pages/SendNotification";
 import SearchResults from "./components/pages/SearchResult";
 import {ReportProvider} from "./services/ReportContext";
 import CSVList from './components/pages/download_csv/CSVList';
+import NotFound from "./components/pages/NotFound";
 
 function App() {
 
@@ -51,20 +51,53 @@ function App() {
                                     <Route path="/login" element={<LoginForm/>}/>
                                     <Route path="/register" element={<RegisterForm/>}/>
                                     <Route path="/error" element={<ErrorPage />} />
-                                    <Route path="/search" element={<SearchResults />} />
+                                    {/*route not found*/}
+                                    <Route path="*" element={<NotFound />} />
                                     {/* Delete post or comments not implemented yet*/}
                                     {/* lays parts */}
-                                    <Route path="/sendNotification/:id?" element={<SendNotification />} />
-                                    <Route path="/postsPageable" element={<ScrollPosts />} />
-                                    <Route path="/userProfile/:id?" element={<UserProfile />} />
-                                    {/* Not protected yet */}
-                                    <Route path="/postsdetails/:id" element={<PostDetails />} />
-                                    <Route path="/lobby" element={<Lobby/>} />
-                                    <Route path="/:id/friends" element={<FollowerFollowing/>}/>
-                                    <Route path="/labellist" element={<LabelList/>} />
-                                    <Route path="/labels/edit/:id" element={<LabelForm/>} />
-                                    <Route path="/labels/add" element={<LabelForm/>} />
-                                    <Route path="/users/csvlist" element={<CSVList/>} />
+                                    <Route element={<ProtectedRoute requiredPath="/notificationlist" />}>
+                                        <Route path="/notificationlist" element={<NotificationList/>}/>
+                                    </Route>
+
+                                    <Route element={<ProtectedRoute requiredPath="/sendNotification/:id?" />}>
+                                        <Route path="/sendNotification/:id?" element={<SendNotification />} />
+                                    </Route>
+
+                                    <Route element={<ProtectedRoute requiredPath="/userProfile/:id?" />}>
+                                        <Route path="/userProfile/:id?" element={<UserProfile />} />
+                                    </Route>
+
+                                    <Route element={<ProtectedRoute requiredPath="/postsdetails/:id" />}>
+                                        <Route path="/postsdetails/:id" element={<PostDetails />} />
+                                    </Route>
+
+                                    <Route element={<ProtectedRoute requiredPath="/lobby" />}>
+                                        <Route path="/lobby" element={<Lobby/>} />
+                                    </Route>
+
+                                    <Route element={<ProtectedRoute requiredPath="/search" />}>
+                                        <Route path="/search" element={<SearchResults />} />
+                                    </Route>
+
+                                    <Route element={<ProtectedRoute requiredPath="/:id/friends" />}>
+                                        <Route path="/:id/friends" element={<FollowerFollowing/>}/>
+                                    </Route>
+
+                                    <Route element={<ProtectedRoute requiredPath="/labellist" />}>
+                                        <Route path="/labellist" element={<LabelList/>} />
+                                    </Route>
+
+                                    <Route element={<ProtectedRoute requiredPath="/labels/edit/:id" />}>
+                                        <Route path="/labels/edit/:id" element={<LabelForm/>} />
+                                    </Route>
+
+                                    <Route element={<ProtectedRoute requiredPath="/labels/add" />}>
+                                        <Route path="/labels/add" element={<LabelForm/>} />
+                                    </Route>
+
+                                    <Route element={<ProtectedRoute requiredPath="/users/csvlist" />}>
+                                        <Route path="/users/csvlist" element={<CSVList/>} />
+                                    </Route>
 
                                     <Route element={<ProtectedRoute requiredPath="/mainmenu" />}>
                                         <Route path="/mainmenu" element={<PostList/>}/>
@@ -74,21 +107,12 @@ function App() {
                                         <Route path="/friends" element={<FollowerFollowing/>}/>
                                     </Route>
 
-                                    <Route element={<ProtectedRoute requiredPath="/notificationlist" />}>
-                                        <Route path="/notificationlist" element={<NotificationList/>}/>
-                                    </Route>
-
-                                    {/*<Route element={<ProtectedRoute requiredPath="/users/reportdetail/:id" />}>*/}
-                                    {/*    <Route path="/users/reportdetail/:reportId" element={<ReportDetail />} />*/}
-                                    {/*</Route>*/}
-
                                     <Route element={<ProtectedRoute requiredPath="/userdetails/:userId" />}>
                                         <Route path="/userdetails/:userId" element={<UserHistory/>} />
                                     </Route>
 
-
-                                    <Route element={<ProtectedRoute requiredPath="/users/reports" />}>
-                                        <Route path="/users/reports" element={<Reports/>}/>
+                                    <Route element={<ProtectedRoute requiredPath="/reports" />}>
+                                        <Route path="/reports" element={<Reports/>}/>
                                     </Route>
 
                                     {/* David parts */}

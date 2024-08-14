@@ -65,7 +65,7 @@ const LatestReports = () => {
           ) : (
               <p>No latest reports available</p>
           )}
-          <Button variant="link" onClick={() => navigate('/users/reports')}>View All</Button>
+          <Button variant="link" onClick={() => navigate('/reports')}>View All</Button>
         </div>
         <ReportDetailModal
             show={isDetailModalOpen}

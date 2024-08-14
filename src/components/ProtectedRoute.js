@@ -16,7 +16,7 @@ const ProtectedRoute = ({ requiredPath }) => {
         hasAccess = menuViewJason.some(item => item.path === requiredPath
                 // || requiredPath.slice(0,requiredPath.length-4) === item.path
                 || item.children.some(c => c.path === requiredPath)
-                || item.children.some(c => c.path === requiredPath.slice(0,requiredPath.length-4) && c.path.includes("edit")));
+                || item.children.some(c => requiredPath.includes(c.path)));
     }
 
     return hasAccess ? <Outlet /> : <Navigate to="/error" />;

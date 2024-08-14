@@ -24,12 +24,12 @@ const PostList = () => {
         if (countFetchZeroPage === 2) {setLoading(false);return;}
 
         await PC_MsgService.findAllPostsPageable(currentPage, 10).then((response) => {
-            const fetchedData = response.data._embedded.pCMsgDTOes.map(post => {
+            const fetchedData = response.data._embedded ? response.data._embedded.pCMsgDTOes.map(post => {
                 return {
                     ...post,
                     user_id: post.user,
                 };
-            });
+            }) : [];
             setPosts(prevData => [...prevData, ...fetchedData]);
             setHasMore(currentPage < response.data.page.totalPages - 1);
         }).catch ((error) => {
@@ -50,7 +50,6 @@ const PostList = () => {
 
     useEffect(() => {
         if (currentUser) {
-            console.log(currentUser.id);
             fetchData(page).then();
         }
     }, [currentUser,page]);
