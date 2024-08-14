@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useState } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import Notification from '../Classess/Notification';
 import './NotificationList.css'
 import {useNotification} from "../../services/NotificationContext";
+import {FaCheckCircle} from "react-icons/fa";
 
 const NotificationList = () => {
     const { unreadNotifications,readNotifications, markAsRead } = useNotification();
@@ -18,9 +18,23 @@ const NotificationList = () => {
         }
     };
 
+    const markAllAsRead = () => {
+        unreadNotifications.forEach(notification => {
+            markAsRead(notification.id);
+        });
+    };
+
     return (
         <div className="notification-list">
             <h2>Notifications:</h2>
+            {unreadNotifications.length > 0 && (
+                <div>
+                    <Button variant="outline-primary" onClick={markAllAsRead}>
+                        <FaCheckCircle style={{ marginRight: '5px' }} />
+                        Mark All as Read
+                    </Button>
+                </div>
+            )}
             {unreadNotifications.length > 0 &&
                 <>
                     <strong>Unread List:</strong>

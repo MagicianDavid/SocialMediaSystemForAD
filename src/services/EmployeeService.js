@@ -38,6 +38,14 @@ class EmployeeService {
         return axios.get(`${EMPLOYEE_API_BASE_URL}/${userId}/followings`);
     }
 
+    getFollowCount(userId){
+        return axios.get(`${EMPLOYEE_API_BASE_URL}/${userId}/followersCount`);
+    }
+
+    getFollowingCount(userId){
+        return axios.get(`${EMPLOYEE_API_BASE_URL}/${userId}/followingsCount`);
+    }
+
     getUserBlockList(userId){
         return axios.get(`${EMPLOYEE_API_BASE_URL}/findAllBlockUserByUId/${userId}`);
     }

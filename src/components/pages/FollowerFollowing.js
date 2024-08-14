@@ -26,6 +26,7 @@ const FollowerFollowing = ({ userId }) => {
     const [following, setFollowing] = useState([]);
     const [followers, setFollowers] = useState([]);
     const [blocked, setBlocked] = useState([]);
+    const [viewUser, setViewUser] = useState(null);
 
     const fetchUsers = async () => {
         // try {
@@ -50,9 +51,11 @@ const FollowerFollowing = ({ userId }) => {
             const followingResponse = await EmployeeService.getFollowingList(actualUserId);
             const followersResponse = await EmployeeService.getFollowList(actualUserId);
             const blockedResponse = await EmployeeService.getUserBlockList(actualUserId);
+            const actualUserResponse = await EmployeeService.getEmployeeById(actualUserId);
             setFollowing(followingResponse.data);
             setFollowers(followersResponse.data);
             setBlocked(blockedResponse.data);
+            setViewUser(actualUserResponse.data.username);
             setLoading(false);
         } catch (err) {
             setError(err.message);
@@ -111,7 +114,7 @@ const FollowerFollowing = ({ userId }) => {
 
     return (
         <div className='contentDiv'>
-            <h2>Followers and Following</h2>
+            <h2> {viewUser && viewUser + "'s "}Followers and Following</h2>
             <Tabs
                 id="follower-following-tabs"
                 activeKey={tabIndex}

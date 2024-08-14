@@ -57,8 +57,8 @@ const EmployeeForm = () => {
                 let employeeData = response.data;
                 setEmployee({
                     ...employeeData,
-                    role: employeeData.role || { id: '' },
-                    auth: employeeData.auth || { id: '' },
+                    // role: employeeData.role || { id: '' },
+                    // auth: employeeData.auth || { id: '' },
                 });
             });
         } else {
@@ -113,16 +113,24 @@ const EmployeeForm = () => {
         e.preventDefault();
         if (id) {
             EmployeeService.updateEmployee(id, employee).then(() => {
-                const { auth, username } = employee;  // retrieve id & auth
-                // if the updated employee is the one who logging in
-                if(currentUser.username === username){
-                    setCurrentUser(JSON.stringify({ id, auth, username }));
-                    sessionStorage.setItem('currentUser', JSON.stringify({ id, auth, username }));
-                }
-                navigate('/users');
+                // add changeAndBan APi
+                CheckUserThenBanService.updateUserAuthAndNotify(id).then(() => {}).catch((error) => {
+                    console.log("Error updating Authorization with userId: "+ id,error);
+                });
+                EmployeeService.getEmployeeById(id).then((response) => {
+                    const { auth,role, username } = response.data;  // retrieve id & auth
+                    // if the updated employee is the one who logging in
+                    if(currentUser.username === username){
+                        setCurrentUser(JSON.stringify({ id, auth,role, username }));
+                        sessionStorage.setItem('currentUser', JSON.stringify({ id, auth,role, username }));
+                    }
+                    navigate('/users');
+                }).catch((error) => {
+                    console.log("Error fetching User with id: "+ id,error);
+                });
+            }).catch((error) => {
+                console.log("Error Updating User with id: "+ id,error);
             });
-            // add changeAndBan APi
-            CheckUserThenBanService.updateUserAuthAndNotify(id).then(() => {});
         } else {
             EmployeeService.createEmployee(employee).then(() => {
                 navigate('/users');

@@ -1,11 +1,21 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
+import EmployeeService from "../../services/EmployeeService";
 
-const FollowerFollowingCount = ({ userId, followingCount, followerCount }) => {
+const FollowerFollowingCount = ({ userId}) => {
     const navigate = useNavigate();
+    const [followingCount, setFollowingCount] = React.useState(0);
+    const [followerCount, setFollowerCount] = React.useState(0);
 
+    useEffect(() => {
+        EmployeeService.getFollowingCount(userId).then((response)=>{
+            setFollowingCount(response.data);
+        }).catch((e) => console.log("Error fetching followingCount: ",e));
+        EmployeeService.getFollowCount(userId).then((response)=>{
+            setFollowerCount(response.data);
+        }).catch((e) => console.log("Error fetching followerCount: ",e));
+    }, []);
 
-    
     const handleClick = () => {
         navigate(`/${userId}/friends`);
     };
