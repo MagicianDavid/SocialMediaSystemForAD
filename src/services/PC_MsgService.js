@@ -14,6 +14,10 @@ class RoleService {
         return axios.get(`${ROLE_API_BASE_URL}/findHotPosts`);
     }
 
+    isPCMsgBelongToUser(pcmsgId,userId) {
+        return axios.get(`${ROLE_API_BASE_URL}/${pcmsgId}/belongsTo/${userId}`);
+    }
+
     findAllPostsPageable(currentPage,size) {
         return axios.get(`${ROLE_API_BASE_URL}/findAllPostsPageable?page=${currentPage}&size=${size}`);
     }

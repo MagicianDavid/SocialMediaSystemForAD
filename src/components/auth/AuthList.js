@@ -10,6 +10,7 @@ const AuthList = () => {
     const [auths, setAuths] = useState([]);
     const [loading, setLoading] = useState(true); // loading status
     const navigate = useNavigate();
+    const fixedAuthIds = [1, 2, 4, 5, 6, 8, 9, 10]; // Store IDs of existing auths
 
     useEffect(() => {
         loadAuths();
@@ -41,6 +42,12 @@ const AuthList = () => {
     };
 
     const deleteAuth = (id) => {
+        // can not delete the fixed auths
+        if (fixedAuthIds.includes(id)) {
+            alert('This auth cannot be deleted.');
+            return;
+        }
+
         AuthService.deleteAuth(id)
             .then(() => {
                 setAuths(prevAuths => prevAuths.filter(auth => auth.id !== id));

@@ -13,6 +13,7 @@ const ReportButton = ({ userId, objType, reportId }) => {
     const [reportType, setReportType] = useState('');
     const [reason, setReason] = useState('');
     const [error, setError] = useState('');
+    const [isReportSelf, setIsReportSelf] = useState(false);
 
     useEffect(()=>{
         LabelService.getAllLabels()
@@ -23,6 +24,11 @@ const ReportButton = ({ userId, objType, reportId }) => {
             .catch((error) => {
                 console.error('There was an error retrieving the labels!', error);
             });
+        PC_MsgService.isPCMsgBelongToUser(reportId,userId).then((response) => {
+            setIsReportSelf(response);
+        }).catch((error)=>{
+           console.error('There was an error reporting self!', error);
+        });
     }, []);
 
     const handleReportClick = () => {
@@ -45,6 +51,12 @@ const ReportButton = ({ userId, objType, reportId }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
+        // do not allow report him/herself
+        if (isReportSelf || userId === reportId) {
+            setError('You can not report your own post/comment or even yourself!');
+            return;
+        }
 
         if (!reportType) {  // Check if reportType (label) is selected
             setError('Please select a label for the report.');

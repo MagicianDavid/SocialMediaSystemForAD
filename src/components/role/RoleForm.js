@@ -8,6 +8,7 @@ const RoleForm = () => {
     const navigate = useNavigate();
     const [type, setType] = useState('');
     const [error, setError] = useState('');
+    const fixedRoleId = [1,3,4]; // Store IDs of existing roles
 
     useEffect(() => {
         if (id) {
@@ -49,6 +50,15 @@ const RoleForm = () => {
         }
     };
 
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        if (name === 'type' && fixedRoleId.includes(Number(id))) {
+            // Prevent rank change for existing auths
+            return;
+        }
+        setType(value);
+    };
+
     const cancel = () => {
         navigate('/roles');
     };
@@ -60,7 +70,12 @@ const RoleForm = () => {
             <Form className='p-2'>
                 <Form.Group>
                     <Form.Label>Type Of Role: </Form.Label>
-                    <Form.Control type="text" value={type} onChange={(e) => setType(e.target.value)} />
+                    <Form.Control
+                        type="text"
+                        value={type}
+                        onChange={handleChange}
+                        disabled={id && fixedRoleId.includes(Number(id))} // Disable if existing auth
+                    />
                 </Form.Group>
                 {error && <div style={{ color: 'red' }}>{error}</div>}
                 <Button className='me-2 mt-2' onClick={saveOrUpdateRole}>{id ? 'Update' : 'Save'}</Button>

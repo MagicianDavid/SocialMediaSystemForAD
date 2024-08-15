@@ -7,6 +7,8 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import CreateIcon from '@mui/icons-material/Create';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 
+const fixedRoleIds = [1, 3, 4]; // Store IDs of existing auths
+
 class RoleList extends Component {
     constructor(props) {
         super(props);
@@ -26,6 +28,20 @@ class RoleList extends Component {
             console.error('There was an error!', error);
         });
     }
+
+    deleteRole(id) {
+        if (fixedRoleIds.includes(id)) {
+            alert('This role cannot be deleted.');
+            return;
+        }
+
+        RoleService.deleteRole(id).then(() => {
+            this.loadRoles();
+        }).catch((error) => {
+            console.error('There was an error!', error);
+        });
+    }
+
 
     render() {
         const { navigate } = this.props;
@@ -56,12 +72,6 @@ class RoleList extends Component {
                     </Table>
             </Container>
         );
-    }
-
-    deleteRole(id) {
-        RoleService.deleteRole(id).then(() => {
-            this.loadRoles();
-        });
     }
 }
 

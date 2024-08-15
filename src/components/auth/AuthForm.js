@@ -10,6 +10,7 @@ const AuthForm = () => {
     const { id } = useParams();
     const { currentUser,setCurrentUser } = useAuth();
     const navigate = useNavigate();
+    const fixedAuthIds = [1,2,4,5,6,8,9,10]; // Store IDs of existing auths
     const [auth, setAuth] = useState({
         rank: '',
         menuViewJason: '[]',
@@ -32,6 +33,10 @@ const AuthForm = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
+        if (name === 'rank' && fixedAuthIds.includes(Number(id))) {
+            // Prevent rank change for existing auths
+            return;
+        }
         setAuth((prevState) => ({
             ...prevState,
             [name]: value,
@@ -82,7 +87,13 @@ const AuthForm = () => {
             <Form className='p-3' onSubmit={saveOrUpdateAuth}>
                 <Form.Group>
                     <Form.Label>Rank: </Form.Label>
-                    <Form.Control type="text" name="rank" value={auth.rank} onChange={handleChange} />
+                    <Form.Control
+                        type="text"
+                        name="rank"
+                        value={auth.rank}
+                        onChange={handleChange}
+                        disabled={id && fixedAuthIds.includes(Number(id))} // Disable if existing auth
+                    />
                 </Form.Group>
                 <Form.Group>
                     <RouteSelectionForm

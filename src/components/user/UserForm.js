@@ -65,8 +65,8 @@ const EmployeeForm = () => {
                 let employeeData = response.data;
                 setEmployee({
                     ...employeeData,
-                    // role: employeeData.role || { id: '' },
-                    // auth: employeeData.auth || { id: '' },
+                    role: employeeData.role || { id: '' },
+                    auth: employeeData.auth || { id: '' },
                 });
                 setOriginalSocialScore(employeeData.socialScore); // Store original score
                 setOriginalAuth(employeeData.auth);
@@ -81,10 +81,8 @@ const EmployeeForm = () => {
         const { name, value } = e.target;
 
         if (name === "socialScore" && parseInt(value) !== originalSocialScore) {
-            console.log("shit happens1");
             setIsScoreChanged(true);
         } else if (name === "socialScore" && parseInt(value) === originalSocialScore) {
-            console.log("shit happens");
             setIsScoreChanged(false);
         }
 
@@ -108,7 +106,7 @@ const EmployeeForm = () => {
         const selectedRole = roles.find(role => role.id === parseInt(roleId));
         setEmployee((prevState) => ({
             ...prevState,
-            role: selectedRole,
+            role: selectedRole || { id: '' },
         }));
     };
 
@@ -124,7 +122,7 @@ const EmployeeForm = () => {
 
         setEmployee((prevState) => ({
             ...prevState,
-            auth: selectedAuth,
+            auth: selectedAuth || { id: '' },
         }));
     };
 
