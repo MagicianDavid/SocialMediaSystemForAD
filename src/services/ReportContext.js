@@ -34,7 +34,8 @@ export const ReportProvider = ({ children }) => {
             socket.onclose = () => {
                 console.log('Report WebSocket connection closed');
             };
-            if (currentUser.role.type !== 'Moderator' || currentUser.role.type !== 'Manager') {
+            //once added manager, it does not work.
+            if (currentUser.role.type !== 'Moderator') {
                 fetchReportsByUserId(currentUser.id).then();
             } else {
                 fetchAllReports().then();
