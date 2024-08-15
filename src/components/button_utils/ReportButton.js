@@ -51,9 +51,12 @@ const ReportButton = ({ userId, objType, reportId }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
+        // console.log("here")
+        // console.log(isReportSelf.data);
+        // console.log(userId === reportId);
+        
         // do not allow report him/herself
-        if (isReportSelf || userId === reportId) {
+        if (isReportSelf.data || userId === reportId) {
             setError('You can not report your own post/comment or even yourself!');
             return;
         }
