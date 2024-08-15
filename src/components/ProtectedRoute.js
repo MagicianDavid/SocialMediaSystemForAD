@@ -1,10 +1,12 @@
 // src/components/ProtectedRoute.js
 import { Navigate, Outlet } from 'react-router-dom';
+import {useAuth} from "../services/AuthContext";
 // used for url block
 
 const ProtectedRoute = ({ requiredPath }) => {
 
-    const currentUser  = JSON.parse(sessionStorage.getItem('currentUser'));
+    // const currentUser  = JSON.parse(sessionStorage.getItem('currentUser'));
+    const { currentUser } = useAuth();
     let hasAccess = false;
 
     if (currentUser && currentUser.auth) {

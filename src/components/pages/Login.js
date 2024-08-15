@@ -9,7 +9,7 @@ const LoginForm = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const { currentUser } = useAuth();
+    const { currentUser,setCurrentUser } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -20,9 +20,12 @@ const LoginForm = () => {
 
     const handleLogin = (e) => {
         e.preventDefault();
-        LoginService.login(username, password).then().catch((e) => {
-            setError(e.response.data.message);
-        });
+        LoginService.login(username, password).then((response) =>
+            {
+                setCurrentUser(response);
+            }).catch((e) => {
+                setError(e.response.data.message);
+            });
 
     };
 

@@ -12,8 +12,9 @@ const login =(username, password) => {
         password
     }).then(response => {
         if (response.status === 200) {
-            const { id, auth,role, username } = response.data;  // retrieve id & auth
-            sessionStorage.setItem('currentUser', JSON.stringify({ id, auth, role, username }));
+            // const { id, auth,role, username } = response.data;  // retrieve id & auth
+            // sessionStorage.setItem('currentUser', JSON.stringify({ id, auth, role, username }));
+            sessionStorage.setItem('currentUser', JSON.stringify(response.data));
             window.location.reload();
         }
         return response.data;
@@ -36,11 +37,7 @@ const register=(name,username, email, password,phoneNum,country,gender)=> {
         gender,
     }).then(response => {
         if (response.status === 200) {
-            sessionStorage.setItem('currentUser', JSON.stringify({
-                id: response.data.id,
-                auth: response.data.auth,
-                username: response.data.username
-            }));
+            sessionStorage.setItem('currentUser', JSON.stringify(response.data));
         }
         return response.data;
     });

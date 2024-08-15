@@ -12,12 +12,16 @@ import CreateIcon from '@mui/icons-material/Create';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import CircleNotificationsIcon from '@mui/icons-material/CircleNotifications';
 import PageviewIcon from '@mui/icons-material/Pageview';
+import currentUser from "../customhook/CurrentUser";
+import useCurrentUser from "../customhook/CurrentUser";
+import {useAuth} from "../../services/AuthContext";
 
 const EmployeeList = () => {
     const [employees, setEmployees] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalAction, setModalAction] = useState(null);
     const navigate = useNavigate();
+    const {currentUser} = useAuth();
 
     useEffect(() => {
         loadEmployees();
@@ -38,7 +42,7 @@ const EmployeeList = () => {
             });
             // if moderator is now deleting him/herself once confirm he no longer has the permission to access
             // we will navigate him to login page
-            if (id === JSON.parse(sessionStorage.getItem('currentUser')).id) {
+            if (id === currentUser.id) {
                 LoginService.logout();
                 navigate('/login');
                 window.location.reload();

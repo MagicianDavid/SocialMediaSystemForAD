@@ -48,12 +48,12 @@ const AuthForm = () => {
         if (id) {
             AuthService.updateAuth(id, updatedAuth).then(() => {
                 // update user session if the updated user is the one who logged in
-                if(JSON.stringify(currentUser.auth.id) === id){
-                    currentUser.auth = updatedAuth;
-                    console.log("newUser",currentUser);
-                    setCurrentUser(JSON.stringify(currentUser));
-                    sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
-                }
+                // if(JSON.stringify(currentUser.auth.id) === id){
+                //     currentUser.auth = updatedAuth;
+                //     console.log("newUser",currentUser);
+                //     setCurrentUser(JSON.stringify(currentUser));
+                //     sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
+                // }
                 navigate('/auths');
             });
         } else {

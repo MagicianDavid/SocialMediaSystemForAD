@@ -25,12 +25,13 @@ const Navigation = () => {
     const location = useLocation();
 
     // every time the url change, we set the current user auth
-    useEffect(() => {
-        setCurrentUser(LoginService.getCurrentUser());
-    }, [location,setCurrentUser]);
+    // now using websocket
+    // useEffect(() => {
+    //     setCurrentUser(LoginService.getCurrentUser());
+    // }, [location,setCurrentUser]);
 
     useEffect(() => {
-        if (currentUser && currentUser.auth) {
+        if (currentUser) {
             const menuViewJason = JSON.parse(currentUser.auth.menuViewJason || '[]');
             setMenuItems(menuViewJason);
         }

@@ -1,19 +1,7 @@
-import { useState, useEffect } from 'react';
+import {useAuth} from "../../services/AuthContext";
 
 const useCurrentUser = () => {
-    const [currentUser, setCurrentUser] = useState(null);
-
-    useEffect(() => {
-        const storedUser = sessionStorage.getItem('currentUser');
-        
-        if (storedUser) {
-            const user = JSON.parse(storedUser);
-            setCurrentUser(user);
-        } else {
-            console.error('No currentUser found in sessionStorage');
-        }
-    }, []);
-
+    const {currentUser, setCurrentUse} = useAuth();
     return currentUser;
 };
 

@@ -38,6 +38,11 @@ const EmployeeForm = () => {
     const [auths, setAuths] = useState([]);
     const [countries, setCountries] = useState([]);
     const [showPassword, setShowPassword] = useState(false);
+    const [plainPassword, setPlainPassword] = useState('');
+    const [isScoreChanged, setIsScoreChanged] = useState(false);
+    const [isAuthChanged, setIsAuthChanged] = useState(false);
+    const [originalSocialScore, setOriginalSocialScore] = useState(employee.socialScore);
+    const [originalAuth, setOriginalAuth] = useState(employee.auth);
 
     const genderOptions = ['Male', 'Female', 'Other'];
 
@@ -63,6 +68,8 @@ const EmployeeForm = () => {
                     // role: employeeData.role || { id: '' },
                     // auth: employeeData.auth || { id: '' },
                 });
+                setOriginalSocialScore(employeeData.socialScore); // Store original score
+                setOriginalAuth(employeeData.auth);
             });
         } else {
             // when creating new user, his/her status can only be active
@@ -72,6 +79,15 @@ const EmployeeForm = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
+
+        if (name === "socialScore" && parseInt(value) !== originalSocialScore) {
+            console.log("shit happens1");
+            setIsScoreChanged(true);
+        } else if (name === "socialScore" && parseInt(value) === originalSocialScore) {
+            console.log("shit happens");
+            setIsScoreChanged(false);
+        }
+
         setEmployee((prevState) => ({
             ...prevState,
             [name]: value,
@@ -79,10 +95,11 @@ const EmployeeForm = () => {
     };
 
     const handlePwdChange = (e) => {
-        const pwd = PasswordUtils.encryptUserPassword(e.target.value);
+        const pwd = e.target.value;
+        setPlainPassword(pwd);
         setEmployee((prevState) => ({
             ...prevState,
-            password: pwd,
+            password: PasswordUtils.encryptUserPassword(pwd),
         }));
     };
 
@@ -98,6 +115,13 @@ const EmployeeForm = () => {
     const handleAuthChange = (e) => {
         const authId = e.target.value;
         const selectedAuth = auths.find(auth => auth.id === parseInt(authId));
+
+        if (selectedAuth && selectedAuth.id !== originalAuth.id) {
+            setIsAuthChanged(true);
+        } else if (selectedAuth && selectedAuth.id === originalAuth.id) {
+            setIsAuthChanged(false);
+        }
+
         setEmployee((prevState) => ({
             ...prevState,
             auth: selectedAuth,
@@ -115,25 +139,36 @@ const EmployeeForm = () => {
     const saveOrUpdateEmployee = (e) => {
         e.preventDefault();
         if (id) {
-            EmployeeService.updateEmployee(id, employee).then(() => {
-                // add changeAndBan APi
-                CheckUserThenBanService.updateUserAuthAndNotify(id).then(() => {}).catch((error) => {
-                    console.log("Error updating Authorization with userId: "+ id,error);
-                });
-                EmployeeService.getEmployeeById(id).then((response) => {
-                    const { auth,role, username } = response.data;  // retrieve id & auth
-                    // if the updated employee is the one who logging in
-                    if(currentUser.username === username){
-                        setCurrentUser(JSON.stringify({ id, auth,role, username }));
-                        sessionStorage.setItem('currentUser', JSON.stringify({ id, auth,role, username }));
-                    }
+            if (isScoreChanged) {
+                console.log("here dude");
+                EmployeeService.updateEmployee(id, employee).then(() => {
+                    // add changeAndBan APi
+                    CheckUserThenBanService.updateUserAuthAndNotify(id).then(() => {}).catch((error) => {
+                        console.log("Error updating Authorization with userId: "+ id,error);
+                    });
+                    // EmployeeService.getEmployeeById(id).then((response) => {
+                    //     const { auth,role, username } = response.data;  // retrieve id & auth
+                    //     // if the updated employee is the one who logging in
+                    //     if(currentUser.username === username){
+                    //         setCurrentUser(JSON.stringify({ id, auth,role, username }));
+                    //         sessionStorage.setItem('currentUser', JSON.stringify({ id, auth,role, username }));
+                    //     }
+                    //     navigate('/users');
+                    // }).catch((error) => {
+                    //     console.log("Error fetching User with id: "+ id,error);
+                    // });
                     navigate('/users');
                 }).catch((error) => {
-                    console.log("Error fetching User with id: "+ id,error);
+                    console.log("Error Updating User with id: "+ id,error);
                 });
-            }).catch((error) => {
-                console.log("Error Updating User with id: "+ id,error);
-            });
+            } else {
+                console.log("here dude2");
+                EmployeeService.updateEmployee(id, employee).then(() => {
+                    navigate('/users');
+                }).catch((error) => {
+                    console.log("Error Updating User with id: "+ id,error);
+                });
+            }
         } else {
             EmployeeService.createEmployee(employee).then(() => {
                 navigate('/users');
@@ -181,7 +216,7 @@ const EmployeeForm = () => {
                             <Form.Control
                                 type={showPassword ? 'text' : 'password'}
                                 name="password"
-                                value={showPassword ? PasswordUtils.decryptUserPassword(employee.password) : '•'.repeat(PasswordUtils.decryptUserPassword(employee.password).length)}
+                                value={plainPassword ? plainPassword : PasswordUtils.decryptUserPassword(employee.password)}
                                 onChange={handlePwdChange}
                             />
                         </Col>

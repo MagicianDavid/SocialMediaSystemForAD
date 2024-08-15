@@ -158,7 +158,7 @@ const ReportList = () => {
                 <Table striped  hover>
                     <thead>
                     <tr>
-                        {currentUser.role.type === "Moderator" && <th>ID</th>}
+                        {(currentUser.role.type === "Moderator" ||  currentUser.role.type === "Manager") && <th>ID</th>}
                         <th>Report User</th>
                         <th>Reported ID</th>
                         <th>Reason</th>
@@ -197,7 +197,7 @@ const ReportList = () => {
                             <td>{report.caseCloseDate ? new Date(report.caseCloseDate).toLocaleString() : 'N/A'}</td>
                             <td>
                                 <ButtonGroup>
-                                    {report.status === "Complete" && (currentUser && currentUser.role.type === "Moderator" ? (
+                                    {report.status === "Complete" && (currentUser && (currentUser.role.type === "Moderator" || currentUser.role.type === "Manager") ? (
                                         <>
                                             waiting to be appealed.
                                         </>) : (
