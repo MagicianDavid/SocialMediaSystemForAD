@@ -8,7 +8,6 @@ const PostList = () => {
     const [posts, setPosts] = useState([]);
     const [newPostSubmitted, setNewPostSubmitted] = useState(false);
     const currentUser = useCurrentUser();
-
     //Fetch Post by User ID, User Follower
     useEffect(() => {      
         if (currentUser) {

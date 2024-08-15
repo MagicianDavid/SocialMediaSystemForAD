@@ -21,6 +21,7 @@ const UserDetail = () => {
     const [isFollowed, setIsFollowed] = useState(false);
     const [isBlocked, setIsBlocked] = useState(false);
     const [isLiked, setIsLiked] = useState(false);
+    const [refreshCount, setRefreshCount] = useState(false);
     const [posts, setPosts] = useState([]);
     const navigate = useNavigate();
 
@@ -30,7 +31,9 @@ const UserDetail = () => {
                 try {
                     setLoading(true);
                     const findId = id ? id : currentUser.id;
-                    let isFollower = true; // Default to false if the user is visiting their own profile
+                    //console.log("userId" + findId);
+                    //console.log("currentUserId" + currentUser.id);
+                    //let isFollower = true; // Default to false if the user is visiting their own profile
                 
                     const [employeeResponse, postsResponse] = await Promise.all([
                         EmployeeService.getEmployeeById(findId),
@@ -40,7 +43,7 @@ const UserDetail = () => {
                     // Only check if the user is a follower if they are visiting another user's profile
                     if (findId !== currentUser.id) {
                         const isFollowerResponse = await EmployeeService.isfollower(currentUser.id, findId);
-                        isFollower = isFollowerResponse.data;
+                        setIsFollowed(isFollowerResponse.data);
                     }
                 
                     const employeeData = employeeResponse.data;
@@ -72,7 +75,7 @@ const UserDetail = () => {
         };
 
         fetchUserData();
-    }, [currentUser, id]);
+    }, [currentUser, id]); 
 
 
     const toggleFollow = () => {
@@ -84,6 +87,7 @@ const UserDetail = () => {
             EmployeeService.unfollowUser(currentUser.id, id)
                 .then(() => {
                     setIsFollowed(false);
+                    setRefreshCount(prev => !prev); 
                 })
                 .catch((error) => {
                     setError(error.message);
@@ -92,6 +96,7 @@ const UserDetail = () => {
             EmployeeService.followUser(currentUser.id, id)
                 .then(() => {
                     setIsFollowed(true);
+                    setRefreshCount(prev => !prev); 
                 })
                 .catch((error) => {
                     setError(error.message);
@@ -142,21 +147,6 @@ const UserDetail = () => {
                 }
             </div>
             {user && (
-                // <div>
-                //     <p><strong>ID:</strong> {user.id}</p>
-                //     <p><strong>Name:</strong> {user.name}</p>
-                //     <p><strong>Email:</strong> {user.email}</p>
-                //     <p><strong>Username:</strong> {user.username}</p>
-                //     <p><strong>Gender:</strong> {user.gender}</p>
-                //     <p><strong>Country:</strong> {user.country}</p>
-                //     <p><strong>Status:</strong> {user.status}</p>
-                //     <p><strong>Social Score:</strong> {user.socialScore}</p>
-                //     <p><strong>Block List:</strong> {user.blockList}</p>
-                //     <p><strong>Phone Number:</strong> {user.phoneNum}</p>
-                //     <p><strong>Join Date:</strong> {user.joinDate}</p>
-                //     <p><strong>Role:</strong> {user.role ? user.role.type : 'N/A'}</p>
-                //     <p><strong>Auth:</strong> {user.auth ? user.auth.rank : 'N/A'}</p>
-                // </div>
                 <div style={styles.profileContainer}>
                     <div style={styles.profileHeader}>
                     <h2 style={{ margin: '0' }}>{user.name}</h2>
@@ -165,6 +155,7 @@ const UserDetail = () => {
                     <p style={{ margin: '0' }}>{user.email} | {user.country} | Joined: {new Date(user.joinDate).toLocaleDateString()} </p>
                     <FollowerFollowing 
                         userId={user.id} 
+                        refresh={refreshCount} 
                     />
 
                     </div>
@@ -200,7 +191,9 @@ const UserDetail = () => {
                     >Submit post to start your journey~</a></>
                     :
                     <>
-                        {posts.map(post => (
+                        {posts
+                            .filter(post => post.status !== 'delete' && post.status !== 'hide')
+                            .map(post => (
                             <Post key={post.id} post={post} />
                         ))}
                     </>

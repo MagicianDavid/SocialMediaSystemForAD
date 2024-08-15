@@ -5,7 +5,7 @@ import { IconButton } from '@mui/material';
 import { Favorite as FavoriteIcon, FavoriteBorder as FavoriteBorderIcon} from '@mui/icons-material';
 import PC_MsgService from '../../services/PC_MsgService';
 
-const LikeButton = ({ msgId }) => {
+const LikeButton = ({ msgId , disabled }) => {
     const [isLiked, setIsLiked] = useState(false);
     const [likeCount, setLikeCount] = useState(0);
     const currentUser = useCurrentUser();
@@ -51,7 +51,7 @@ const LikeButton = ({ msgId }) => {
 
     return (
         <span>
-            <IconButton aria-label="likes" sx={{ ml: 2 }} onClick={handleLikeClick}>
+            <IconButton aria-label="likes" sx={{ ml: 2 }} onClick={handleLikeClick} disabled={disabled}>
                 {isLiked ? <FavoriteIcon /> : <FavoriteBorderIcon />}
             </IconButton>
             {likeCount}

@@ -25,7 +25,7 @@ const PostDetails = () => {
     // get chosenId from uri
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
-    const chosenId = searchParams.get('chosenId');
+    const chosenId = searchParams.get('chosenId'); // what is this for?
 
     useEffect(() => {
         // Fetch post and comments concurrently

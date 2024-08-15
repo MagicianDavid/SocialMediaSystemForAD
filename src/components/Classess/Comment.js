@@ -21,6 +21,8 @@ const Comment = ({ comment, nestingLevel = 0, chosenId}) => {
     const [showChildComments] = useState(false);
     const [childComments, setChildComments] = useState([]);
     const [commentCount, setCommentCount] = useState(0);
+    const [commetidset, setcommetId] = useState(0);
+    const [refresh, setRefresh] = useState(false);
     const currentUser = useCurrentUser();
     const isAdmin = currentUser?.auth.rank === 'L1';
     const isCommentRemoved = !isAdmin && (comment.status === 'delete' || comment.status === 'hide');
@@ -32,7 +34,9 @@ const Comment = ({ comment, nestingLevel = 0, chosenId}) => {
                     const response = await PC_MsgService.getChildrenByPCMId(comment.id);
                     setCommentCount(response.data.length);
                     setChildComments(response.data);
-                    if (response.data.filter(c => c.id === chosenId).length > 0) {
+                    console.log(JSON.stringify(response.data,null,2));
+                    //how can i get comments values?
+                    if (response.data.flat().filter(c => c.sourceId === comment.id).length > 0) {
                         setShowReplyInput(true);
                     }
                     // console.log("myid" + currentUser.id);
@@ -42,14 +46,18 @@ const Comment = ({ comment, nestingLevel = 0, chosenId}) => {
             }
         };
         fetchData();
-    }, [showChildComments,comment,currentUser]);
+    }, [showReplyInput,comment,currentUser,refresh]);
 
     if (!currentUser) {
         return <div>Loading...</div>;
     }
 
     const handleReplyClick = () => {
-        setShowReplyInput(!showReplyInput);
+        setShowReplyInput(prev => !prev);
+    };
+
+    const refreshTags = () => {
+        setRefresh(prev => !prev); // Toggle the refresh state to trigger useEffect
     };
 
     
@@ -84,8 +92,9 @@ const Comment = ({ comment, nestingLevel = 0, chosenId}) => {
                             </span>
                         </>}
                 </div>
-                <MoreOption id={comment.id} auth={isAdmin} />
-
+                {(Number(comment.user_id.id) === Number(currentUser.id) || isAdmin) && (
+                    <MoreOption id={comment.id} auth={isAdmin} status={comment.status} refreshTags={refreshTags} />
+                )}
             </div>
             <p>{isCommentRemoved ? 'Comments have been removed.' : comment.content}</p>
          
@@ -112,9 +121,7 @@ const Comment = ({ comment, nestingLevel = 0, chosenId}) => {
                 <div>
                 <CommentForm
                 sourceId={comment.id}
-                onCommentSubmit={() => {
-                    setShowReplyInput(true);
-                }}
+                onCommentSubmit={handleReplyClick}
                 userId={currentUser.id}
                 />
                 <CommentChild CommentChild = {childComments} chosnId = {chosenId} nestingLvl = {nestingLevel}/>

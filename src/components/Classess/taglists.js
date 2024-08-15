@@ -12,7 +12,7 @@ const TagLists = ({ tagsString }) => {
         }).catch((err) => {
             console.log("Error getting color code", err);
         });
-    }, []);
+    }, [Chip]);
 
     const getTagsArray = (tagsString) => {
         return tagsString ? tagsString.split(",").filter(tag => tag !== 'none') : [];

@@ -19,7 +19,6 @@ const FollowerFollowing = ({ userId }) => {
     const actualUserId = userId || paramId || (currentUser ? currentUser.id : null);
 
     const [tabIndex, setTabIndex] = useState(TAB_NAMES.FOLLOWING);
-    // const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [actionTrigger, setActionTrigger] = useState(false);
@@ -29,23 +28,6 @@ const FollowerFollowing = ({ userId }) => {
     const [viewUser, setViewUser] = useState(null);
 
     const fetchUsers = async () => {
-        // try {
-        //     setLoading(true);
-        //     let response;
-        //     if (tabIndex === TAB_NAMES.FOLLOWING) {
-        //         response = await EmployeeService.getFollowingList(actualUserId);
-        //     } else if (tabIndex === TAB_NAMES.FOLLOWERS) {
-        //         response = await EmployeeService.getFollowList(actualUserId);
-        //     } else if (tabIndex === TAB_NAMES.BLOCKED) {
-        //         response = await EmployeeService.getUserBlockList(actualUserId);
-        //     }
-        //     console.log(response.data);
-        //     setUsers(response.data);
-        //     setLoading(false);
-        // } catch (err) {
-        //     setError(err.message);
-        //     setLoading(false);
-        // }
         try {
             setLoading(true);
             const followingResponse = await EmployeeService.getFollowingList(actualUserId);
@@ -69,23 +51,25 @@ const FollowerFollowing = ({ userId }) => {
         }
     }, [tabIndex, actualUserId, currentUser, actionTrigger]);
 
-    const handleFollow = async (currentUser,userId) => {
+
+    //false- show follow else show following
+  // Handle follow/unfollow based on status
+    const handleFollowOrNot = async (userId) => {
+        const isFollowing = following.some(user => user.id === userId);
+
         try {
-            await EmployeeService.followUser(currentUser,userId);
+            if (isFollowing) {
+                await EmployeeService.unfollowUser(currentUser.id, userId);
+            } else {
+                await EmployeeService.followUser(currentUser.id, userId);
+            }
             setActionTrigger(!actionTrigger); // Toggle actionTrigger to trigger useEffect
         } catch (err) {
-            console.error("Error following user", err);
+            console.error("Error in follow/unfollow", err);
         }
     };
 
-    const handleUnfollow = async (currentUser,userId) => {
-        try {
-            await EmployeeService.unfollowUser(currentUser,userId);
-            setActionTrigger(!actionTrigger); // Toggle actionTrigger to trigger useEffect
-        } catch (err) {
-            console.error("Error unfollowing user", err);
-        }
-    };
+
 
     const handleBlock = async (currentUser,userId) => {
         try {
@@ -109,7 +93,9 @@ const FollowerFollowing = ({ userId }) => {
         setTabIndex(selectedTab);
     };
 
-
+    const isUserFollowing = (userId) => {
+        return following.some(user => user.id === userId);
+    };
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
@@ -124,13 +110,33 @@ const FollowerFollowing = ({ userId }) => {
                 className="mb-3"
             >
                 <Tab eventKey={TAB_NAMES.FOLLOWING} title="Following">
-                    <UserList currentUser={currentUser.id} users={following} onFollow={null} onUnfollow={handleUnfollow} onBlock={handleBlock} onUnblock={null} isFollowing={null} />
+                    <UserList
+                        currentUser={currentUser.id}
+                        users={following}
+                        onToggleFollow={handleFollowOrNot}
+                        onBlock={handleBlock}
+                        onUnblock={null}
+                        isUserFollowing={(userId) => following.some(user => user.id === userId)} // Passing function
+                    />                
                 </Tab>
                 <Tab eventKey={TAB_NAMES.FOLLOWERS} title="Followers">
-                    <UserList currentUser={currentUser.id} users={followers} onFollow={handleFollow} onUnfollow={null} onBlock={handleBlock} onUnblock={null} isFollowing={following} />
+                    <UserList
+                        currentUser={currentUser.id}
+                        users={followers}
+                        onToggleFollow={handleFollowOrNot} 
+                        onBlock={handleBlock}
+                        onUnblock={null}
+                        isUserFollowing={isUserFollowing}
+                    />                  
                 </Tab>
                 <Tab eventKey={TAB_NAMES.BLOCKED} title="Blocked">
-                    <UserList currentUser={currentUser.id} users={blocked} onFollow={null} onUnfollow={null} onBlock={null} onUnblock={handleUnblock} isFollowing={null}/>
+                    <UserList currentUser={currentUser.id} 
+                              users={blocked} 
+                              onToggleFollow={null} 
+                              onBlock={null} 
+                              onUnblock={handleUnblock}
+                              isUserFollowing={null} 
+                            />
                 </Tab>
 
             </Tabs>

@@ -3,6 +3,7 @@ import React, {useEffect, useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import LoginService from '../../services/LoginService';
 import CountryService from "../../services/CountryService";
+import { Row, Col, Container, Form, Button, Card} from 'react-bootstrap';
 
 const RegisterForm = () => {
     const [name, setName] = useState('');
@@ -36,32 +37,34 @@ const RegisterForm = () => {
     };
 
     return (
-        <div>
-            <h2>Register</h2>
-            <form onSubmit={handleRegister}>
-                <div>
-                    <label>Name: </label>
-                    <input type="text" value={name} onChange={(e) => setName(e.target.value)} required/>
-                </div>
-                <div>
-                    <label>Password: </label>
-                    <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required/>
-                </div>
-                <div>
-                    <label>Username: </label>
-                    <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} required/>
-                </div>
-                <div>
-                    <label>Email: </label>
-                    <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required/>
-                </div>
-                <div>
-                    <label>Phone Number: </label>
-                    <input type="text" value={phoneNum} onChange={(e) => setPhoneNum(e.target.value)} required/>
-                </div>
-                <div>
-                    <label>Gender: </label>
-                    <select name="gender" value={gender} onChange={(e) => setGender(e.target.value)}>
+        <Container className="d-flex justify-content-center">
+        <Card style={{ width: '100%', maxWidth: '500px' }}>
+
+            <Card.Header><h2>Register</h2></Card.Header>
+            <Form onSubmit={handleRegister} className='p-3'>
+                <Form.Group>
+                    <Form.Label>Name: </Form.Label>
+                    <Form.Control type="text" value={name} onChange={(e) => setName(e.target.value)} required/>
+                </Form.Group>
+                <Form.Group>
+                    <Form.Label>Password: </Form.Label>
+                    <Form.Control type="password" value={password} onChange={(e) => setPassword(e.target.value)} required/>
+                </Form.Group>
+                <Form.Group>
+                    <Form.Label>Username: </Form.Label>
+                    <Form.Control type="text" value={username} onChange={(e) => setUsername(e.target.value)} required/>
+                </Form.Group>
+                <Form.Group>
+                    <Form.Label>Email: </Form.Label>
+                    <Form.Control type="email" value={email} onChange={(e) => setEmail(e.target.value)} required/>
+                </Form.Group>
+                <Form.Group>
+                    <Form.Label>Phone Number: </Form.Label>
+                    <Form.Control type="text" value={phoneNum} onChange={(e) => setPhoneNum(e.target.value)} required/>
+                </Form.Group>
+                <Form.Group>
+                    <Form.Label>Gender: </Form.Label>
+                    <select className="form-select" name="gender" value={gender} onChange={(e) => setGender(e.target.value)}>
                         <option value="">Select Gender</option>
                         {genderOptions.map((gender) => (
                             <option key={gender} value={gender}>
@@ -69,10 +72,10 @@ const RegisterForm = () => {
                             </option>
                         ))}
                     </select>
-                </div>
-                <div>
-                    <label>Country: </label>
-                    <select name="country" value={country} onChange={(e) => setCountry(e.target.value)}>
+                </Form.Group>
+                <Form.Group>
+                    <Form.Label>Country: </Form.Label>
+                    <select className="form-select" name="country" value={country} onChange={(e) => setCountry(e.target.value)}>
                         <option value="">Select Country</option>
                         {countries.map((country) => (
                             <option key={country} value={country}>
@@ -80,11 +83,13 @@ const RegisterForm = () => {
                             </option>
                         ))}
                     </select>
-                </div>
+                </Form.Group>
                 {error && <div style={{color: 'red'}}>{error}</div>}
-                <button type="submit">Register</button>
-            </form>
-        </div>
+                <Button className="my-3" type="submit">Register</Button>
+            </Form>
+
+        </Card>
+        </Container>
     );
 };
 
