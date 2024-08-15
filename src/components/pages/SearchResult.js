@@ -69,7 +69,9 @@ const SearchResults = () => {
             <div>
                 <strong>Posts</strong>
                 {searchResult.posts?.length > 0 ? (
-                    searchResult.posts.map(post => (
+                    searchResult.posts
+                        .filter(post => post.status !== 'delete' && post.status !== 'hide')
+                        .map(post => (
                         <Post key={post.id} post={post} />
                     ))
                 ) : (

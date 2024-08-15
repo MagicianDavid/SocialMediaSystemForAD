@@ -1,7 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import useCurrentUser from '../customhook/CurrentUser';
 import Post from '../Classess/Post';
-import PostForm from '../Classess/PostForm';
 import PC_MsgService from '../../services/PC_MsgService';
 import { debounce } from "lodash";
 import SearchBar from "../button_utils/SearchBar";
@@ -77,7 +76,9 @@ const PostList = () => {
                     </>
                     :
                     <>
-                        {posts.map(post => (
+                        {posts
+                            .filter(post => post.status !== 'delete' && post.status !== 'hide')
+                            .map(post => (
                             <Post key={post.id} post={post} />
                         ))}
                     </>

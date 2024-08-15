@@ -48,7 +48,7 @@ const LoginForm = () => {
         //     </Form>
         // </Container >
         
-        <Container className="d-flex justify-content-center">
+        <Container className="d-flex justify-content-center" style={{marginLeft:'-25px'}}>
         <Card style={{ width: '100%', maxWidth: '400px' }}>
           <Card.Body>
             <h2 className="text-center mb-4">Login</h2>

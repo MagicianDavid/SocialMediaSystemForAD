@@ -11,8 +11,7 @@ const handleDelete = async (id) => {
     try {
         if(id){
             const response = await PC_MsgService.deletePost(id);
-            console.log(`Post ${id} deleted successfully.`);
-            // Perform any additional actions, like updating state or UI
+            //console.log(`Post ${id} deleted successfully.`);
         }
     } catch (error) {
         console.error('Error deleting post:', error);
@@ -23,8 +22,7 @@ const handleHide = async (id) => {
     console.log("Hide " + id);
     try {
         const response = await PC_MsgService.hidePost(id);
-        console.log(`Post ${id} hidden successfully.`);
-        // Perform any additional actions, like updating state or UI
+        //console.log(`Post ${id} hidden successfully.`);
     } catch (error) {
         console.error('Error hiding post:', error);
     }
@@ -36,7 +34,7 @@ const handleEdit = async (id) => {
 };
 
 
-const MoreOption = ({ id, auth, refreshTags}) => {
+const MoreOption = ({ id, auth, refreshTags, status}) => {
     const [open, setOpen] = useState(false);
     const [tagData, setTagData] = useState({ tag: '', remark: '' });
     const [loading, setLoading] = useState(false);
@@ -67,6 +65,7 @@ const MoreOption = ({ id, auth, refreshTags}) => {
         try {
             await PC_MsgService.updateTag(tagData.id, tagData);
             setOpen(false);
+            console.log("moreOption save");
             refreshTags(); // Trigger refresh in parent component
         } catch (error) {
             console.error('Error updating tag data:', error);
@@ -97,7 +96,9 @@ const MoreOption = ({ id, auth, refreshTags}) => {
             <Menu {...bindMenu(popupState)}>
                 {/* <MenuItem onClick={() => handleEdit(id)}>Edit</MenuItem> */}
                 <MenuItem onClick={() => handleDelete(id)}>Delete</MenuItem>
-                <MenuItem onClick={() => handleHide(id)}>Hide</MenuItem>
+                <MenuItem onClick={() => handleHide(id)}>
+                    {status === 'hide' ? 'Unhide' : 'Hide'}
+                </MenuItem>
                 {auth && (<MenuItem onClick={() => handleEdit(id)}>Edit</MenuItem>)}
                 </Menu>
           </React.Fragment>
